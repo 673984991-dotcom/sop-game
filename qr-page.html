@@ -3,84 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>石家庄明旺SOP段位挑战赛 - 二维码</title>
+    <title>石家庄明旺SOP段位挑战赛</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);
+            padding:20px
         }
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 500px;
+        .card{
+            background:#fff;border-radius:20px;padding:30px 20px;
+            box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;
+            max-width:440px;width:100%
         }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 24px;
+        h1{color:#333;font-size:20px;line-height:1.5;margin-bottom:6px}
+        .sub{color:#999;font-size:12px;margin-bottom:18px}
+        .qr-box{
+            margin:16px auto;width:280px;height:300px;border-radius:14px;
+            border:2px solid #eee;overflow:hidden;display:flex;align-items:center;justify-content:center;
+            background:#fafafa
         }
-        .qr-code {
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        .qr-code img {
-            max-width: 100%;
-            height: auto;
-        }
-        .hint {
-            color: #666;
-            margin-top: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 16px;
-            transition: transform 0.2s;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 20px;
-            }
+        .qr-box img{width:100%;height:auto}
+        .tip{color:#888;font-size:13px;margin-top:14px;line-height:1.7}
+        .btn{
+            display:inline-block;margin-top:18px;padding:11px 28px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff;text-decoration:none;border-radius:24px;font-size:15px;
+            -webkit-tap-highlight-color:transparent
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏆 石家庄明旺各岗位SOP段位挑战赛 🏆</h1>
-        <div class="qr-code">
-            <img src="qr.png" alt="SOP闯关游戏二维码">
+    <div class="card">
+        <h1>🏆 石家庄明旺各岗位<br>SOP段位挑战赛 🏆</h1>
+        <p class="sub">长按二维码保存到相册，或扫码进入游戏</p>
+        <div class="qr-box">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAISCAIAAACMJhuEAAAOZklEQVR4nO3dzWtcZR/H4TNtsFStDFJFHO1K0YUp1YCgqDUaFUUrYtWNq2xcudN2GeLChf4BgtCKW9GNuOmiIKIQfAdF8QWKJt1UlNailQYyLgIlLp55mp45uc93znWteqSZuc/M5MPN2B93bzgcVgCk2VZ6AQBcCvkGiCTfAJHkGyCSfANEkm+ASPINEEm+ASLJN0Ak+QaIJN8AkeQbIJJ8A0SSb4BI8g0QSb4BIsk3QCT5Bogk3wCR5BsgknwDRJJvgEjyDRBJvgEiyTdAJPkGiCTfAJHkGyCSfANEkm+ASPINEEm+mVhffvnlww8/PDs7+9BDDy0vL1dV9dZbb83MzNx1110zMzNvv/32+l+7/PLL77///tnZ2Xvuueezzz4rumTYhKnSC2DC9Xq9J598cmpqanV19f3336+qamsuh8Ph/Pz8Bx98cMMNN7z33nsvvfTS/Pz8kSNHjh8/3u/3T58+/fjjjw8Gg7m5ucsuu+zDDz+squqbb76Zn5///PPPx7iGIq85HSHfNOvOO+989NFHX3jhhSNHjpw6dWptbW1rLquqOnXq1D///FNV1YEDB669trFxcXXX3+93+9XVdXv91977bWFhYW5ubkLS52enj5x4sQYF1zoJacr5Jtm3XjjjTt27FhaWhoMBoPBoKqqLbt89dVX77333scee+z555+fnZ39/vvvb7/99gsLu+OOO7777ruNSz1+/Pi+ffv6/f4Y1wANGkKTnn766dXV1QMHDqz/ecsu15/9jz/+OHr06N69excWFq6//vpz585dWNjff/89GAyGw+HOnTv3799/3333PfHEEydOnBj7GqAhvaGv52jSwYMHH3nkkd27d09NTa3/38KtuXzjjTd++umnu+++u6qq3377bXp6enp6enFxcf2/VFX1ySefvPLKK8eOHVv/KryJBb/77rtb90LTPf7lCc1aXl4+d+7cU089tby8fPLkyS277PV6zz777Po/OPn999/37Nnz8ssvHzp06MyZM1VVnT59+vDhw4cOHWp0wVv9WtMxvvumWZ9++ul11130Ucfra6uLi0tVVW1NZe7d+9+8803n3nmmZ07d27fvv3o0aO33XbbysrK7Ozsjh07zp8//+KLLz744INNLxia48sTgEi+PAGIJN8AkeQbIJJ8A0SSb4BI8g0QSb4BIsk3QCT5Bogk3wCR5BsgknwDRJJvgEjyDRBJvgEiyTdAJPkGiCTfAJHkGyCSfANEkm+ASPINEEm+ASLJN0Ak+QaIJN8AkeQbIJJ8A0SSb4BI8g0QSb4BIsk3QCT5Bogk3wCR5BsgknwDRJJvgEjyDRBJvgEiyTdAJPkGiCTfAJHkGyCSfANEkm+ASPINEEm+ASLJN0Ak+QaIJN8AkeQbINK/kgAcgsSwJroAAAAASUVORK5CYII=" alt="二维码">
         </div>
-        <div class="hint">
-            📱 长按二维码保存图片<br>
-            或扫码直接进入游戏
-        </div>
-        <a href="https://673984991-dotcom.github.io/sop-game/" class="btn">🎮 直接进入游戏</a>
+        <p class="tip">📱 长按上方图片 → 保存相册<br>然后发微信给同事，或打印张贴</p>
+        <a href="https://673984991-dotcom.github.io/sop-game/" class="btn" onclick="this.textContent='正在跳转...';return true;">▶ 直接进入游戏</a>
     </div>
 </body>
 </html>
