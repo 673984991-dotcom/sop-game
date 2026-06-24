@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>SOP闯关游戏 - 石家庄明旺乳业（多包机岗）</title>
+<title>SOP闯关游戏 - 石家庄明旺乳业（多包）</title>
 <style>
 :root {
   --bg: #1a1a2e;
@@ -519,7 +519,7 @@ body {
   <div class="home-header">
     <div class="logo">🏆</div>
     <h1>SOP闯关游戏</h1>
-    <div class="sub">TBA19线多包机岗位 · 知识挑战</div>
+    <div class="sub">TBA19线多包收缩岗位 · 知识挑战</div>
     <div class="dept">石家庄明旺乳业有限公司</div>
   </div>
 
@@ -548,8 +548,8 @@ body {
     </div>
     <div class="rank-info">
       <span id="rankMin">0分</span>
-      <span id="rankNext">下一段位：1000分</span>
-      <span id="rankMax">1000分</span>
+      <span id="rankNext">下一段位：700分</span>
+      <span id="rankMax">700分</span>
     </div>
     <div class="rank-stats">
       <div>总得分<br><span id="totalScore">0</span></div>
@@ -668,27 +668,27 @@ body {
   <div style="background:var(--card);border-radius:var(--radius);padding:16px;">
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥉 青铜段位</div>
-      <div style="font-size:13px;color:var(--text2);">0 - 999分</div>
+      <div style="font-size:13px;color:var(--text2);">0 - 699分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">初入江湖，SOP知识刚刚起步</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥈 白银段位</div>
-      <div style="font-size:13px;color:var(--text2);">1000 - 2499分</div>
+      <div style="font-size:13px;color:var(--text2);">700 - 1749分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">略有小成，基础操作已掌握</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥇 黄金段位</div>
-      <div style="font-size:13px;color:var(--text2);">2500 - 4499分</div>
+      <div style="font-size:13px;color:var(--text2);">1750 - 3149分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">炉火纯青，调配流程烂熟于心</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">💎 钻石段位</div>
-      <div style="font-size:13px;color:var(--text2);">4500 - 6999分</div>
+      <div style="font-size:13px;color:var(--text2);">3150 - 5249分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">登峰造极，异常处理游刃有余</div>
     </div>
     <div>
       <div style="font-size:28px;">👑 王者段位</div>
-      <div style="font-size:13px;color:var(--text2);">7000分以上</div>
+      <div style="font-size:13px;color:var(--text2);">5250分以上</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">利乐大师，调配段无所不知</div>
     </div>
   </div>
@@ -1000,18 +1000,16 @@ function playRankUpSound() {
     });
   } catch(e) {}
 }
-}
 
-// ==================== 段位系统（总分7000+王者，每题满分35分） ====================
-// 一轮10题满分350，200题全满分7000分
+// ==================== 段位系统（总分5250+王者，每题满分35分） ====================
+// 一轮10题满分350，150题全满分5250分
 const RANKS = [
-  {name:'青铜段位', icon:'🥉', min:0,    max:999,   cls:'rank-bronze'},
-  {name:'白银段位', icon:'🥈', min:1000, max:2499,  cls:'rank-silver'},
-  {name:'黄金段位', icon:'🥇', min:2500, max:4499,  cls:'rank-gold'},
-  {name:'钻石段位', icon:'💎', min:4500, max:6999,  cls:'rank-diamond'},
-  {name:'王者段位', icon:'👑', min:7000, max:99999, cls:'rank-master'},
+  {name:'青铜段位', icon:'🥉', min:0,    max:699,   cls:'rank-bronze'},
+  {name:'白银段位', icon:'🥈', min:700,  max:1749,  cls:'rank-silver'},
+  {name:'黄金段位', icon:'🥇', min:1750, max:3149,  cls:'rank-gold'},
+  {name:'钻石段位', icon:'💎', min:3150, max:5249,  cls:'rank-diamond'},
+  {name:'王者段位', icon:'👑', min:5250, max:99999, cls:'rank-master'},
 ];
-
 // ==================== 状态管理 ====================
 const STORAGE_KEY = 'sop_game_data';
 const LB_KEY = 'sop_game_leaderboard';
@@ -1020,8 +1018,8 @@ function getData() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
 }
 function saveData(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  try { showSaveBadge(); } catch(e) {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  showSaveBadge();
 }
 function showSaveBadge() {
   const b = document.getElementById('saveBadge');
@@ -1101,40 +1099,22 @@ function init() {
 }
 
 function startGame() {
-  try {
-    const nameInput = document.getElementById('userName');
-    if (!nameInput) { alert('页面加载异常，请刷新重试'); return; }
-    const name = nameInput.value.trim();
-    if (!name) { alert('请输入你的姓名'); return; }
-    state.userName = name;
-    state.totalScore = 0;
-    state.totalQuestions = 0;
-    state.totalCorrect = 0;
-    state.wrongBook = [];
-    state.answeredToday = 0;
-    state.lastPlayDate = new Date().toDateString();
-    state.levelCleared = {};
-    state.levelScores = {};
+  const nameInput = document.getElementById('userName');
+  const name = nameInput.value.trim();
+  if (!name) { alert('请输入你的姓名'); return; }
+  state.userName = name;
+  state.totalScore = 0;
+  state.totalQuestions = 0;
+  state.totalCorrect = 0;
+  state.wrongBook = [];
+  state.answeredToday = 0;
+  state.lastPlayDate = new Date().toDateString();
 
-    // 隐藏登录区，显示菜单
-    try {
-      const loginArea = document.getElementById('loginArea');
-      const menuGrid = document.getElementById('menuGrid');
-      if (loginArea) loginArea.style.display = 'none';
-      if (menuGrid) menuGrid.style.display = 'grid';
-    } catch(e) {}
-
-    // 更新显示
-    try { updateHomeDisplay(); } catch(e) {}
-
-    // 保存数据
-    try { persistAll(); } catch(e) {}
-    try { updateLeaderboard(); } catch(e) {}
-
-    console.log('startGame 成功，用户名:', name);
-  } catch(e) {
-    alert('启动失败，请刷新页面重试。错误信息：' + e.message);
-  }
+  document.getElementById('loginArea').style.display = 'none';
+  document.getElementById('menuGrid').style.display = 'grid';
+  updateHomeDisplay();
+  persistAll();
+  updateLeaderboard();
 }
 
 // ==================== 关卡系统 ====================
@@ -1530,7 +1510,7 @@ function finishRound() {
   // 清除答题状态
   const saved = getData();
   delete saved.quizState;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
     totalScore: state.totalScore,
     totalQuestions: state.totalQuestions,
     totalCorrect: state.totalCorrect,
@@ -1538,7 +1518,7 @@ function finishRound() {
     lastPlayDate: state.lastPlayDate,
     levelCleared: state.levelCleared,
     levelScores: state.levelScores,
-  })); } catch(e) {}
+  }));
 
   // 检查段位变化
   const oldRank = getRank(saved.totalScore || 0);
@@ -1650,11 +1630,11 @@ function quitQuiz() {
     // 保存当前进度
     const saved = getData();
     saved.quizState = state.currentRound;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
       totalScore: state.totalScore,
       totalQuestions: state.totalQuestions,
       totalCorrect: state.totalCorrect,
-    })); } catch(e) {}
+    }));
     state.quizActive = true;
     goHome();
   }
@@ -1689,39 +1669,26 @@ function showRankInfo() {
 
 // ==================== 首页显示 ====================
 function updateHomeDisplay() {
-  try {
-    const rd = document.getElementById('rankDisplay');
-    if (state.userName) {
-      rd.classList.add('show');
-      const nameEl = document.getElementById('userName');
-      if (nameEl) nameEl.value = state.userName;
-      const rank = getRank(state.totalScore);
-      const rankIcon = document.getElementById('rankIcon');
-      const rankName = document.getElementById('rankName');
-      const totalScore = document.getElementById('totalScore');
-      const totalQuestions = document.getElementById('totalQuestions');
-      const accuracy = document.getElementById('accuracy');
-      const rankBar = document.getElementById('rankBar');
-      const rankMin = document.getElementById('rankMin');
-      const rankNext = document.getElementById('rankNext');
-      const rankMax = document.getElementById('rankMax');
-      if (rankIcon) rankIcon.textContent = rank.icon;
-      if (rankName) { rankName.textContent = rank.name; rankName.className = 'rank-name ' + rank.cls; }
-      if (totalScore) totalScore.textContent = state.totalScore;
-      if (totalQuestions) totalQuestions.textContent = state.totalQuestions;
-      if (accuracy) {
-        const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
-        accuracy.textContent = acc + '%';
-      }
-      const nextRank = getNextRank(state.totalScore);
-      const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
-      if (rankBar) rankBar.style.width = Math.min(progress, 100) + '%';
-      if (rankMin) rankMin.textContent = rank.min + '分';
-      if (rankNext) rankNext.textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
-      if (rankMax) rankMax.textContent = nextRank ? nextRank.min + '分' : '∞';
-    }
-  } catch(e) {
-    console.error('updateHomeDisplay 错误:', e);
+  const rd = document.getElementById('rankDisplay');
+  if (state.userName) {
+    rd.classList.add('show');
+    document.getElementById('userName').value = state.userName;
+    const rank = getRank(state.totalScore);
+    document.getElementById('rankIcon').textContent = rank.icon;
+    document.getElementById('rankName').textContent = rank.name;
+    document.getElementById('rankName').className = 'rank-name ' + rank.cls;
+    document.getElementById('totalScore').textContent = state.totalScore;
+    document.getElementById('totalQuestions').textContent = state.totalQuestions;
+    const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
+    document.getElementById('accuracy').textContent = acc + '%';
+
+    // 进度条
+    const nextRank = getNextRank(state.totalScore);
+    const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
+    document.getElementById('rankBar').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('rankMin').textContent = rank.min + '分';
+    document.getElementById('rankNext').textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
+    document.getElementById('rankMax').textContent = nextRank ? nextRank.min + '分' : '∞';
   }
 }
 
@@ -1765,7 +1732,7 @@ function updateLeaderboard() {
     });
   }
   lb.sort((a, b) => b.totalScore - a.totalScore);
-  try { localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50))); } catch(e) {}
+  localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50)));
 }
 
 function getLeaderboard() {

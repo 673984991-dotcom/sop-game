@@ -590,6 +590,9 @@ body {
       <div class="desc">清除所有记录</div>
     </div>
   </div>
+      <div class="desc">清除所有记录</div>
+    </div>
+  </div>
 </div>
 
 <!-- ==================== 答题页 ==================== -->
@@ -727,12 +730,6 @@ body {
 </div>
 
 <script>
-// 全局错误捕获
-window.onerror = function(msg, url, line, col, error) {
-  alert('页面错误: ' + msg + '\n位置: 第' + line + '行');
-  return false;
-};
-
 // ==================== 题库（200道） ====================
 const QUESTION_BANK = [
   // ===== 模块1：交接班与进入车间 (题1-10) =====
@@ -1092,8 +1089,8 @@ function getData() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
 }
 function saveData(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  try { showSaveBadge(); } catch(e) {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  showSaveBadge();
 }
 function showSaveBadge() {
   const b = document.getElementById('saveBadge');
@@ -1118,100 +1115,77 @@ let state = {
 
 // ==================== 初始化 ====================
 function init() {
-  try {
-    const saved = getData();
-    if (saved.userName) {
-      state.userName = saved.userName;
-      state.totalScore = saved.totalScore || 0;
-      state.totalQuestions = saved.totalQuestions || 0;
-      state.totalCorrect = saved.totalCorrect || 0;
-      state.wrongBook = saved.wrongBook || [];
-      state.answeredToday = saved.answeredToday || 0;
-      state.lastPlayDate = saved.lastPlayDate || '';
-      state.levelCleared = saved.levelCleared || {};
-      state.levelScores = saved.levelScores || {};
+  const saved = getData();
+  if (saved.userName) {
+    state.userName = saved.userName;
+    state.totalScore = saved.totalScore || 0;
+    state.totalQuestions = saved.totalQuestions || 0;
+    state.totalCorrect = saved.totalCorrect || 0;
+    state.wrongBook = saved.wrongBook || [];
+    state.answeredToday = saved.answeredToday || 0;
+    state.lastPlayDate = saved.lastPlayDate || '';
+    state.levelCleared = saved.levelCleared || {};
+    state.levelScores = saved.levelScores || {};
 
-      // 检查是否新的一天
-      const today = new Date().toDateString();
-      if (state.lastPlayDate !== today) {
-        state.answeredToday = 0;
-        state.lastPlayDate = today;
-      }
-
-      // 恢复未完成的答题
-      if (saved.quizState && saved.quizState.questions && saved.quizState.questions.length > 0) {
-        state.quizActive = true;
-        state.currentRound = saved.quizState;
-      }
-
-      document.getElementById('loginArea').style.display = 'none';
-      document.getElementById('menuGrid').style.display = 'grid';
-      updateHomeDisplay();
-      updateWrongCount();
+    // 检查是否新的一天
+    const today = new Date().toDateString();
+    if (state.lastPlayDate !== today) {
+      state.answeredToday = 0;
+      state.lastPlayDate = today;
     }
 
-    // 检查是否有未完成的答题 — 弹窗询问，不直接跳入
-    if (state.quizActive && state.currentRound.questions.length > 0) {
-      document.getElementById('loginArea').style.display = 'none';
-      document.getElementById('menuGrid').style.display = 'grid';
-      updateHomeDisplay();
-      updateWrongCount();
-      // 弹窗询问是否继续
-      setTimeout(() => {
-        if (confirm('检测到上次未完成的答题，是否继续？\n（选择"取消"将放弃本轮进度）')) {
-          showPage('pageQuiz');
-          renderQuestion();
-        } else {
-          // 放弃进度
-          state.quizActive = false;
-          state.currentRound = { questions:[], currentIndex:0, score:0, correct:0 };
-          const saved2 = getData();
-          delete saved2.quizState;
-          saveData(saved2);
-        }
-      }, 300);
+    // 恢复未完成的答题
+    if (saved.quizState && saved.quizState.questions && saved.quizState.questions.length > 0) {
+      state.quizActive = true;
+      state.currentRound = saved.quizState;
     }
-  } catch(e) {
-    console.error('init() 错误:', e);
-    alert('初始化错误: ' + e.message);
+
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+  }
+
+  // 检查是否有未完成的答题 — 弹窗询问，不直接跳入
+  if (state.quizActive && state.currentRound.questions.length > 0) {
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+    // 弹窗询问是否继续
+    setTimeout(() => {
+      if (confirm('检测到上次未完成的答题，是否继续？\n（选择"取消"将放弃本轮进度）')) {
+        showPage('pageQuiz');
+        renderQuestion();
+      } else {
+        // 放弃进度
+        state.quizActive = false;
+        state.currentRound = { questions:[], currentIndex:0, score:0, correct:0 };
+        const saved = getData();
+        delete saved.quizState;
+        saveData(saved);
+      }
+    }, 300);
   }
 }
 
 function startGame() {
-  try {
-    const nameInput = document.getElementById('userName');
-    if (!nameInput) { alert('页面加载异常，请刷新重试'); return; }
-    const name = nameInput.value.trim();
-    if (!name) { alert('请输入你的姓名'); return; }
-    state.userName = name;
-    state.totalScore = 0;
-    state.totalQuestions = 0;
-    state.totalCorrect = 0;
-    state.wrongBook = [];
-    state.answeredToday = 0;
-    state.lastPlayDate = new Date().toDateString();
-    state.levelCleared = {};
-    state.levelScores = {};
+  const nameInput = document.getElementById('userName');
+  const name = nameInput.value.trim();
+  if (!name) { alert('请输入你的姓名'); return; }
+  state.userName = name;
+  state.totalScore = 0;
+  state.totalQuestions = 0;
+  state.totalCorrect = 0;
+  state.wrongBook = [];
+  state.answeredToday = 0;
+  state.lastPlayDate = new Date().toDateString();
 
-    // 隐藏登录区，显示菜单
-    try {
-      const loginArea = document.getElementById('loginArea');
-      const menuGrid = document.getElementById('menuGrid');
-      if (loginArea) loginArea.style.display = 'none';
-      if (menuGrid) menuGrid.style.display = 'grid';
-    } catch(e) {}
-
-    // 更新显示
-    try { updateHomeDisplay(); } catch(e) {}
-
-    // 保存数据
-    try { persistAll(); } catch(e) {}
-    try { updateLeaderboard(); } catch(e) {}
-
-    console.log('startGame 成功，用户名:', name);
-  } catch(e) {
-    alert('启动失败，请刷新页面重试。错误信息：' + e.message);
-  }
+  document.getElementById('loginArea').style.display = 'none';
+  document.getElementById('menuGrid').style.display = 'grid';
+  updateHomeDisplay();
+  persistAll();
+  updateLeaderboard();
 }
 
 // ==================== 关卡系统 ====================
@@ -1607,7 +1581,7 @@ function finishRound() {
   // 清除答题状态
   const saved = getData();
   delete saved.quizState;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
     totalScore: state.totalScore,
     totalQuestions: state.totalQuestions,
     totalCorrect: state.totalCorrect,
@@ -1615,7 +1589,7 @@ function finishRound() {
     lastPlayDate: state.lastPlayDate,
     levelCleared: state.levelCleared,
     levelScores: state.levelScores,
-  })); } catch(e) {}
+  }));
 
   // 检查段位变化
   const oldRank = getRank(saved.totalScore || 0);
@@ -1727,11 +1701,11 @@ function quitQuiz() {
     // 保存当前进度
     const saved = getData();
     saved.quizState = state.currentRound;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
       totalScore: state.totalScore,
       totalQuestions: state.totalQuestions,
       totalCorrect: state.totalCorrect,
-    })); } catch(e) {}
+    }));
     state.quizActive = true;
     goHome();
   }
@@ -1766,39 +1740,26 @@ function showRankInfo() {
 
 // ==================== 首页显示 ====================
 function updateHomeDisplay() {
-  try {
-    const rd = document.getElementById('rankDisplay');
-    if (state.userName) {
-      rd.classList.add('show');
-      const nameEl = document.getElementById('userName');
-      if (nameEl) nameEl.value = state.userName;
-      const rank = getRank(state.totalScore);
-      const rankIcon = document.getElementById('rankIcon');
-      const rankName = document.getElementById('rankName');
-      const totalScore = document.getElementById('totalScore');
-      const totalQuestions = document.getElementById('totalQuestions');
-      const accuracy = document.getElementById('accuracy');
-      const rankBar = document.getElementById('rankBar');
-      const rankMin = document.getElementById('rankMin');
-      const rankNext = document.getElementById('rankNext');
-      const rankMax = document.getElementById('rankMax');
-      if (rankIcon) rankIcon.textContent = rank.icon;
-      if (rankName) { rankName.textContent = rank.name; rankName.className = 'rank-name ' + rank.cls; }
-      if (totalScore) totalScore.textContent = state.totalScore;
-      if (totalQuestions) totalQuestions.textContent = state.totalQuestions;
-      if (accuracy) {
-        const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
-        accuracy.textContent = acc + '%';
-      }
-      const nextRank = getNextRank(state.totalScore);
-      const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
-      if (rankBar) rankBar.style.width = Math.min(progress, 100) + '%';
-      if (rankMin) rankMin.textContent = rank.min + '分';
-      if (rankNext) rankNext.textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
-      if (rankMax) rankMax.textContent = nextRank ? nextRank.min + '分' : '∞';
-    }
-  } catch(e) {
-    console.error('updateHomeDisplay 错误:', e);
+  const rd = document.getElementById('rankDisplay');
+  if (state.userName) {
+    rd.classList.add('show');
+    document.getElementById('userName').value = state.userName;
+    const rank = getRank(state.totalScore);
+    document.getElementById('rankIcon').textContent = rank.icon;
+    document.getElementById('rankName').textContent = rank.name;
+    document.getElementById('rankName').className = 'rank-name ' + rank.cls;
+    document.getElementById('totalScore').textContent = state.totalScore;
+    document.getElementById('totalQuestions').textContent = state.totalQuestions;
+    const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
+    document.getElementById('accuracy').textContent = acc + '%';
+
+    // 进度条
+    const nextRank = getNextRank(state.totalScore);
+    const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
+    document.getElementById('rankBar').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('rankMin').textContent = rank.min + '分';
+    document.getElementById('rankNext').textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
+    document.getElementById('rankMax').textContent = nextRank ? nextRank.min + '分' : '∞';
   }
 }
 
@@ -1842,7 +1803,7 @@ function updateLeaderboard() {
     });
   }
   lb.sort((a, b) => b.totalScore - a.totalScore);
-  try { localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50))); } catch(e) {}
+  localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50)));
 }
 
 function getLeaderboard() {
