@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>SOP闯关游戏 - 石家庄明旺乳业（外箱喷印）</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --card: #0f3460;
+  --card2: #1a4a7a;
+  --gold: #f0b90b;
+  --gold2: #e6a800;
+  --red: #e74c3c;
+  --red2: #c0392b;
+  --green: #2ecc71;
+  --green2: #27ae60;
+  --blue: #3498db;
+  --blue2: #2980b9;
+  --text: #e8e8f0;
+  --text2: #b0b8d0;
+  --text3: #7a85a0;
+  --border: #1e5080;
+  --radius: 12px;
+  --accent: #e94560;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #0a1628 100%);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ===== 页面容器 ===== */
+.page { display:none; padding:16px; min-height:100vh; }
+.page.active { display:block; }
+
+/* ===== 首页 ===== */
+.home-header {
+  text-align:center;
+  padding: 30px 0 20px;
+}
+.home-header .logo {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+.home-header h1 {
+  font-size: 28px;
+  color: var(--gold);
+  margin-bottom: 4px;
+  text-shadow: 0 0 20px rgba(240,185,11,0.3);
+}
+.home-header .sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.home-header .dept {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* 宣传横幅 */
+.promo-banner {
+  background: linear-gradient(135deg, rgba(240,185,11,0.12), rgba(233,69,96,0.12));
+  border: 1px solid rgba(240,185,11,0.25);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+.promo-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.promo-sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.promo-ranks {
+  font-size: 28px;
+  margin-top: 10px;
+  letter-spacing: 6px;
+  animation: promoFloat 2s ease-in-out infinite;
+}
+@keyframes promoFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* 用户区 */
+.user-area {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.user-area input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card2);
+  color: var(--text);
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.user-area input::placeholder { color: var(--text3); }
+.user-area .btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #1a1a2e;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:active { opacity: 0.85; transform: scale(0.98); }
+
+/* 段位显示 */
+.rank-display {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  display: none;
+}
+.rank-display.show { display: block; }
+.rank-icon {
+  font-size: 56px;
+  margin-bottom: 4px;
+}
+.rank-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.rank-bar-outer {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 14px;
+  margin: 12px 0 6px;
+  overflow: hidden;
+}
+.rank-bar-inner {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.5s;
+}
+.rank-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text2);
+}
+.rank-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.rank-stats span { color: var(--gold); font-weight: bold; }
+
+/* 菜单按钮 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.menu-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.menu-item:active { background: var(--card2); transform: scale(0.97); }
+.menu-item .icon { font-size: 32px; margin-bottom: 6px; }
+.menu-item .title { font-size: 15px; font-weight: bold; }
+.menu-item .desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+/* ===== 答题页 ===== */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.quiz-header .q-num { color: var(--gold); font-weight: bold; }
+.quiz-header .score { color: var(--green); font-weight: bold; }
+
+.quiz-progress {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.quiz-progress-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.3s;
+}
+
+/* 倒计时 */
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.timer-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 4px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.timer-circle.warning {
+  border-color: var(--red);
+  animation: timerPulse 0.5s infinite;
+}
+.timer-circle .timer-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.timer-circle.warning .timer-text { color: var(--red); }
+@keyframes timerPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+}
+.question-type {
+  font-size: 11px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.question-text {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.options-list { list-style: none; }
+.option-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+.option-item:active { transform: scale(0.98); }
+.option-item .opt-label {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.option-item.correct {
+  border-color: var(--green);
+  background: rgba(46,204,113,0.1);
+}
+.option-item.correct .opt-label { background: var(--green); color: #fff; }
+.option-item.wrong {
+  border-color: var(--red);
+  background: rgba(231,76,60,0.1);
+}
+.option-item.wrong .opt-label { background: var(--red); color: #fff; }
+.option-item.disabled { pointer-events: none; }
+
+.feedback {
+  text-align: center;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  display: none;
+}
+.feedback.correct-fb { background: rgba(46,204,113,0.15); color: var(--green); display:block; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.15); color: var(--red); display:block; }
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--blue2));
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+.next-btn.show { display: block; }
+
+/* ===== 结算页 ===== */
+.result-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.result-card .big-icon { font-size: 64px; }
+.result-card .result-title { font-size: 20px; font-weight: bold; margin: 8px 0; }
+.result-card .result-score { font-size: 36px; color: var(--gold); font-weight: bold; }
+.result-card .result-detail { font-size: 13px; color: var(--text2); margin-top: 8px; }
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.stat-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.stat-item .val { font-size: 22px; font-weight: bold; }
+.stat-item .lbl { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.stat-item .val.green { color: var(--green); }
+.stat-item .val.red { color: var(--red); }
+.stat-item .val.blue { color: var(--blue); }
+
+.rank-up-card {
+  background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(255,107,53,0.1));
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  display: none;
+}
+.rank-up-card.show { display: block; }
+.rank-up-card .rankup-icon { font-size: 48px; }
+.rank-up-card .rankup-text { font-size: 18px; font-weight: bold; color: var(--gold); margin: 8px 0; }
+
+/* ===== 排行榜 ===== */
+.leaderboard-list { list-style: none; }
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.leaderboard-item .lb-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.lb-rank.top1 { background: var(--gold); color: #1a1a2e; }
+.lb-rank.top2 { background: #c0c0c0; color: #1a1a2e; }
+.lb-rank.top3 { background: #cd7f32; color: #fff; }
+.lb-rank.normal { background: var(--card2); color: var(--text2); }
+.leaderboard-item .lb-name { flex:1; font-size: 14px; }
+.leaderboard-item .lb-score { font-size: 14px; font-weight: bold; color: var(--gold); }
+.leaderboard-item .lb-rank-name { font-size: 11px; color: var(--text2); margin-right: 8px; }
+.leaderboard-item.me { background: rgba(240,185,11,0.1); border: 1px solid var(--gold); }
+
+/* ===== 错题本 ===== */
+.wrong-list { list-style: none; }
+.wrong-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--red);
+}
+.wrong-item .wq { font-size: 14px; margin-bottom: 8px; }
+.wrong-item .wa { font-size: 13px; color: var(--green); }
+.wrong-item .wu { font-size: 12px; color: var(--red); margin-top: 4px; }
+
+/* ===== 通用 ===== */
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: var(--gold);
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text3);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.back-btn {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+.back-btn:active { opacity: 0.7; }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--card2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.tab.active { background: var(--gold); color: #1a1a2e; border-color: var(--gold); }
+
+/* ===== 暂存提示 ===== */
+.save-badge {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.save-badge.show { opacity: 1; }
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes pulse {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.05); }
+}
+.pulse { animation: pulse 0.6s ease; }
+
+/* ===== 段位颜色 ===== */
+.rank-bronze { color: #cd7f32; }
+.rank-silver { color: #c0c0c0; }
+.rank-gold { color: #f0b90b; }
+.rank-diamond { color: #3498db; }
+.rank-master { color: #e74c3c; }
+</style>
+</head>
+<body>
+
+<div class="save-badge" id="saveBadge">✅ 已保存</div>
+
+<!-- ==================== 首页 ==================== -->
+<div class="page active" id="pageHome">
+  <div class="home-header">
+    <div class="logo">🏆</div>
+    <h1>SOP闯关游戏</h1>
+    <div class="sub">TBA19线外箱喷印岗位 · 知识挑战</div>
+    <div class="dept">石家庄明旺乳业有限公司</div>
+  </div>
+
+  <!-- 宣传横幅 -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <div class="promo-title">🥉 你是青铜还是王者？👑</div>
+      <div class="promo-sub">欢迎来挑战 · 还有奖可拿！</div>
+    </div>
+    <div class="promo-ranks">
+      <span>🥉</span><span>🥈</span><span>🥇</span><span>💎</span><span>👑</span>
+    </div>
+  </div>
+
+  <div class="user-area" id="loginArea">
+    <input type="text" id="userName" placeholder="请输入你的姓名" maxlength="10">
+    <button class="btn" onclick="startGame()">⚔️ 开始闯关</button>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;">扫一次码，随时继续 · 自动暂存进度</div>
+  </div>
+
+  <div class="rank-display" id="rankDisplay">
+    <div class="rank-icon" id="rankIcon">🥉</div>
+    <div class="rank-name" id="rankName">青铜段位</div>
+    <div class="rank-bar-outer">
+      <div class="rank-bar-inner" id="rankBar" style="width:0%"></div>
+    </div>
+    <div class="rank-info">
+      <span id="rankMin">0分</span>
+      <span id="rankNext">下一段位：700分</span>
+      <span id="rankMax">700分</span>
+    </div>
+    <div class="rank-stats">
+      <div>总得分<br><span id="totalScore">0</span></div>
+      <div>答题数<br><span id="totalQuestions">0</span></div>
+      <div>正确率<br><span id="accuracy">0%</span></div>
+    </div>
+  </div>
+
+  <div class="menu-grid" id="menuGrid" style="display:none;">
+    <div class="menu-item" onclick="showLevels()">
+      <div class="icon">🎮</div>
+      <div class="title">关卡挑战</div>
+      <div class="desc">7关递进，逐关突破</div>
+    </div>
+    <div class="menu-item" onclick="showLeaderboard()">
+      <div class="icon">🏆</div>
+      <div class="title">排行榜</div>
+      <div class="desc">车间英雄榜</div>
+    </div>
+    <div class="menu-item" onclick="showWrongBook()">
+      <div class="icon">📖</div>
+      <div class="title">错题本</div>
+      <div class="desc" id="wrongCount">0道待复习</div>
+    </div>
+    <div class="menu-item" onclick="showRankInfo()">
+      <div class="icon">📊</div>
+      <div class="title">段位说明</div>
+      <div class="desc">升级规则</div>
+    </div>
+    <div class="menu-item" onclick="startQuickRound()">
+      <div class="icon">⚡</div>
+      <div class="title">快速挑战</div>
+      <div class="desc">随机10题冲刺</div>
+    </div>
+    <div class="menu-item" onclick="resetData()">
+      <div class="icon">🔄</div>
+      <div class="title">重新开始</div>
+      <div class="desc">清除所有记录</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 答题页 ==================== -->
+<div class="page" id="pageQuiz">
+  <div class="quiz-header">
+    <span class="q-num" id="qNum">第1/10题</span>
+    <span>得分：<span class="score" id="qScore">0</span></span>
+    <span style="cursor:pointer;color:var(--red);" onclick="quitQuiz()">退出</span>
+  </div>
+  <div class="quiz-progress">
+    <div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-circle" id="timerCircle">
+      <span class="timer-text" id="timerText">30</span>
+    </div>
+  </div>
+  <div class="question-card fade-in" id="questionCard">
+    <div class="question-type" id="qType">单选题</div>
+    <div class="question-text" id="qText"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <button class="next-btn" id="confirmMultiBtn" onclick="submitMultiSelect()" style="display:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1a2e;margin-bottom:12px;">✅ 确认提交</button>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题 ▶</button>
+</div>
+
+<!-- ==================== 结算页 ==================== -->
+<div class="page" id="pageResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="resultIcon">🎉</div>
+    <div class="result-title" id="resultTitle">表现出色！</div>
+    <div class="result-score" id="resultScore">+50分</div>
+    <div class="result-detail" id="resultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="rankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="rankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="rCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="rWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="rRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" onclick="startRound()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一轮</button>
+</div>
+
+<!-- ==================== 排行榜 ==================== -->
+<div class="page" id="pageLeaderboard">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🏆 排行榜</div>
+  <div class="tabs" id="lbTabs">
+    <div class="tab active" onclick="switchLbTab('total')">总榜</div>
+    <div class="tab" onclick="switchLbTab('week')">本周</div>
+    <div class="tab" onclick="switchLbTab('today')">今日</div>
+  </div>
+  <ul class="leaderboard-list" id="lbList"></ul>
+</div>
+
+<!-- ==================== 错题本 ==================== -->
+<div class="page" id="pageWrongBook">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📖 错题本</div>
+  <ul class="wrong-list" id="wrongList"></ul>
+  <div class="empty-state" id="wrongEmpty">
+    <div class="icon">🎉</div>
+    <div>暂无错题，继续保持！</div>
+  </div>
+</div>
+
+<!-- ==================== 段位说明 ==================== -->
+<div class="page" id="pageRankInfo">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📊 段位说明</div>
+  <div style="background:var(--card);border-radius:var(--radius);padding:16px;">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥉 青铜段位</div>
+      <div style="font-size:13px;color:var(--text2);">0 - 699分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">初入江湖，SOP知识刚刚起步</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥈 白银段位</div>
+      <div style="font-size:13px;color:var(--text2);">700 - 1749分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">略有小成，基础操作已掌握</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥇 黄金段位</div>
+      <div style="font-size:13px;color:var(--text2);">1750 - 3149分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">炉火纯青，调配流程烂熟于心</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">💎 钻石段位</div>
+      <div style="font-size:13px;color:var(--text2);">3150 - 5249分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">登峰造极，异常处理游刃有余</div>
+    </div>
+    <div>
+      <div style="font-size:28px;">👑 王者段位</div>
+      <div style="font-size:13px;color:var(--text2);">5250分以上</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">利乐大师，调配段无所不知</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--text3);text-align:center;">
+    每题满分35分 | 3秒内答对满分 | 答对越慢分越低(最低5分) | 答错+0分
+  </div>
+</div>
+
+<!-- ==================== 关卡选择页 ==================== -->
+<div class="page" id="pageLevels">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🎮 关卡挑战（共7关）</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">共7关200题 · 通关解锁下一关 · 正确率≥70%即为通关</div>
+  <div id="levelList"></div>
+</div>
+
+<!-- ==================== 关卡结算页 ==================== -->
+<div class="page" id="pageLevelResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="lvResultIcon">🎉</div>
+    <div class="result-title" id="lvResultTitle">关卡通过！</div>
+    <div class="result-score" id="lvResultScore">+245分</div>
+    <div class="result-detail" id="lvResultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="lvRankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="lvRankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="lvCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="lvWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="lvRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" id="lvNextBtn" onclick="retryLevel()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一次</button>
+</div>
+
+<script>
+// ==================== 题库（200道） ====================
+const QUESTION_BANK = [
+  // ===== 模块1：喷码机准备 (题1-25) =====
+  {id:1, type:'判断', q:'将清洗剂壶丁酮填满放置于喷码机顶部待生产。', opts:["正确","错误"], ans:0, explain:''},
+  {id:2, type:'判断', q:'A300型小字机主电源始终处于常开状态。', opts:["正确","错误"], ans:0, explain:''},
+  {id:3, type:'判断', q:'只有更换主墨水箱清理控制柜内部卫生更换电器配件时才关闭电源。', opts:["正确","错误"], ans:0, explain:''},
+  {id:4, type:'判断', q:'主墨水箱液位及溶剂盒液位不得低于下限位置。', opts:["正确","错误"], ans:0, explain:''},
+  {id:5, type:'单选', q:'主墨水箱目前使用寿命为多少小时？', opts:["1000H","2000H","3000H","5000H"], ans:1, explain:''},
+  {id:6, type:'判断', q:'不足使用整个班生产时间一般为20H需立即更换主墨水箱。', opts:["正确","错误"], ans:0, explain:''},
+  {id:7, type:'判断', q:'设备在正常状态下会自动提示需更换主墨水箱时间。', opts:["正确","错误"], ans:0, explain:''},
+  {id:8, type:'判断', q:'打开喷码机墨线打开产品输送带开关检查是否正常。', opts:["正确","错误"], ans:0, explain:''},
+  {id:9, type:'判断', q:'检查电眼传感器感应是否灵活确定喷印效果。', opts:["正确","错误"], ans:0, explain:''},
+  {id:10, type:'判断', q:'每日开机前准备工作由包装段保养人员和技术员共同完成。', opts:["正确","错误"], ans:0, explain:''},
+  {id:11, type:'判断', q:'屏幕无警报并显示喷码机类型标志时表明已做好开启墨线的准备。', opts:["正确","错误"], ans:0, explain:''},
+  {id:12, type:'判断', q:'先小心取下打印头清洗干净并吹干再安全的放回。', opts:["正确","错误"], ans:0, explain:''},
+  {id:13, type:'判断', q:'按住墨线2-3秒钟或听到嘀声为止正在开启墨线。', opts:["正确","错误"], ans:0, explain:''},
+  {id:14, type:'判断', q:'墨线开关键绿色指示灯保持常亮时喷码机已可以正常打印。', opts:["正确","错误"], ans:0, explain:''},
+  {id:15, type:'判断', q:'检查喷码机计数器是否复位归零。', opts:["正确","错误"], ans:0, explain:''},
+  {id:16, type:'判断', q:'选中信息存储功能键后按下滚动键搜索按键选项并选择选择信息。', opts:["正确","错误"], ans:0, explain:''},
+  {id:17, type:'判断', q:'用光标键移动突显条选中要打印信息的名称。', opts:["正确","错误"], ans:0, explain:''},
+  {id:18, type:'判断', q:'选择OK确定屏幕将只显示被选中的信息的名称。', opts:["正确","错误"], ans:0, explain:''},
+  {id:19, type:'判断', q:'按下信息编辑功能键屏幕将显示完整的信息内容。', opts:["正确","错误"], ans:0, explain:''},
+  {id:20, type:'判断', q:'按下滚动键找到打印信息按下下方按键即可打印此信息。', opts:["正确","错误"], ans:0, explain:''},
+  {id:21, type:'判断', q:'检查喷码机中对应的产品信息设置并喷码测试。', opts:["正确","错误"], ans:0, explain:''},
+  {id:22, type:'判断', q:'打印信息为防串货系统发送内容不能私自编辑或删除。', opts:["正确","错误"], ans:0, explain:''},
+  {id:23, type:'判断', q:'打开防窜货电脑中的打印控制系统。', opts:["正确","错误"], ans:0, explain:''},
+  {id:24, type:'判断', q:'登陆进入打印控制系统。', opts:["正确","错误"], ans:0, explain:''},
+  {id:25, type:'单选', q:'操作员用户名是多少？', opts:["6000","6001","6002","6003"], ans:1, explain:''},
+  // ===== 模块2：工控机开机 (题26-50) =====
+  {id:26, type:'判断', q:'6001用户单击登录按钮如果存在没有上传的数据会有数据上传的提示。', opts:["正确","错误"], ans:0, explain:''},
+  {id:27, type:'判断', q:'根据系统提示选择输入产品信息设置批次班组扫描产品条码。', opts:["正确","错误"], ans:0, explain:''},
+  {id:28, type:'判断', q:'输入完相应信息后单击确定按钮进入生产控制主界面。', opts:["正确","错误"], ans:0, explain:''},
+  {id:29, type:'判断', q:'扫描器调好后不允许调整其位置调整会影响到扫描器读取条码的成功率。', opts:["正确","错误"], ans:0, explain:''},
+  {id:30, type:'判断', q:'定好位置后进行扫描测试确定喷印正常信息是否可正常扫描并收集。', opts:["正确","错误"], ans:0, explain:''},
+  {id:31, type:'判断', q:'检查标签打印机是否安装有打印纸和碳带后打开电源。', opts:["正确","错误"], ans:0, explain:''},
+  {id:32, type:'判断', q:'手动对垛码机进行测试在工控机内选择测试确定打印机是否可正常打印。', opts:["正确","错误"], ans:0, explain:''},
+  {id:33, type:'判断', q:'打印信息字体是否清晰无倾斜打印内容完整无误。', opts:["正确","错误"], ans:0, explain:''},
+  {id:34, type:'判断', q:'检查色带剩余量和标签纸剩余量如果不足及时更换。', opts:["正确","错误"], ans:0, explain:''},
+  {id:35, type:'判断', q:'检查通讯连接线是否接好。', opts:["正确","错误"], ans:0, explain:''},
+  {id:36, type:'单选', q:'压缩空气压力需达到多少？', opts:["0.1-0.3Mpa","0.3-0.5Mpa","0.5-0.7Mpa","0.1-0.2Mpa"], ans:0, explain:''},
+  {id:37, type:'判断', q:'试扫描对剔除器进行测试确定剔除装置是否正常。', opts:["正确","错误"], ans:0, explain:''},
+  {id:38, type:'判断', q:'生产中每小时人为遮蔽扫描平台一次检测剔除器及剔除信号是否有效。', opts:["正确","错误"], ans:0, explain:''},
+  {id:39, type:'判断', q:'如有异常需停线进行整改。', opts:["正确","错误"], ans:0, explain:''},
+  {id:40, type:'判断', q:'SJ为工厂编号。', opts:["正确","错误"], ans:0, explain:''},
+  {id:41, type:'判断', q:'喷印日期格式中20170510为年月日。', opts:["正确","错误"], ans:0, explain:''},
+  {id:42, type:'判断', q:'05:23为当前时间。', opts:["正确","错误"], ans:0, explain:''},
+  {id:43, type:'判断', q:'线别1代表一期2代表3期。', opts:["正确","错误"], ans:0, explain:''},
+  {id:44, type:'判断', q:'防串货码为一级数码一级数码为19位数字。', opts:["正确","错误"], ans:0, explain:''},
+  {id:45, type:'判断', q:'前三位001代表125ml*4*9南方版利乐包旺仔牛奶。', opts:["正确","错误"], ans:0, explain:''},
+  {id:46, type:'判断', q:'002代表125ml*4*9北方版利乐包旺仔牛奶。', opts:["正确","错误"], ans:0, explain:''},
+  {id:47, type:'判断', q:'第4位1代表一级数码箱码。', opts:["正确","错误"], ans:0, explain:''},
+  {id:48, type:'判断', q:'11-13位SJ1代表产线号石家庄厂一期。', opts:["正确","错误"], ans:0, explain:''},
+  {id:49, type:'判断', q:'最后6位为防窜货随机码。', opts:["正确","错误"], ans:0, explain:''},
+  {id:50, type:'判断', q:'喷码字符条码要求清晰水平。', opts:["正确","错误"], ans:0, explain:''},
+  // ===== 模块3：喷码与扫描 (题51-75) =====
+  {id:51, type:'判断', q:'出包后首检第一箱喷印日期是否按规定。', opts:["正确","错误"], ans:0, explain:''},
+  {id:52, type:'判断', q:'如出现日期喷印异常立即拔下打印头安全放置通知技术员。', opts:["正确","错误"], ans:0, explain:''},
+  {id:53, type:'判断', q:'喷印异常之产品做隔离处理。', opts:["正确","错误"], ans:0, explain:''},
+  {id:54, type:'判断', q:'无喷印日期之产品单独放置。', opts:["正确","错误"], ans:0, explain:''},
+  {id:55, type:'判断', q:'异常喷印产品外箱报废箱内产品加入装箱机重新封箱。', opts:["正确","错误"], ans:0, explain:''},
+  {id:56, type:'判断', q:'生产中每隔60分钟检查喷印日期是否清晰正确。', opts:["正确","错误"], ans:0, explain:''},
+  {id:57, type:'判断', q:'喷码完毕后经过扫描平台读取箱码信息记入工控机。', opts:["正确","错误"], ans:0, explain:''},
+  {id:58, type:'判断', q:'扫描平台未能读取箱码信息剔除装置会将该箱产品剔除至平台。', opts:["正确","错误"], ans:0, explain:''},
+  {id:59, type:'判断', q:'操作人员使用手持扫描设备成功读取箱码信息后将该箱放入输送带。', opts:["正确","错误"], ans:0, explain:''},
+  {id:60, type:'判断', q:'手持扫描失败则拆解纸箱产品放入前面包装机再次装箱喷码扫描。', opts:["正确","错误"], ans:0, explain:''},
+  {id:61, type:'判断', q:'扫描失败产品集中单独摆放生产结束后统一覆膜。', opts:["正确","错误"], ans:0, explain:''},
+  {id:62, type:'判断', q:'中性箱用于填补翻堆时出现的异常品。', opts:["正确","错误"], ans:0, explain:''},
+  {id:63, type:'判断', q:'箱码扫描完毕后进行热覆膜。', opts:["正确","错误"], ans:0, explain:''},
+  {id:64, type:'判断', q:'标箱覆膜不合格将标箱直接放回热缩膜机前重新覆膜。', opts:["正确","错误"], ans:0, explain:''},
+  {id:65, type:'判断', q:'严格按产品经过序列码垛每次必须码放一垛。', opts:["正确","错误"], ans:0, explain:''},
+  {id:66, type:'判断', q:'不允许分拆成两垛同时码放箱码必须朝外。', opts:["正确","错误"], ans:0, explain:''},
+  {id:67, type:'判断', q:'系统对标箱计数到满一个栈板后自动打印出3张垛条码标签。', opts:["正确","错误"], ans:0, explain:''},
+  {id:68, type:'判断', q:'将3张垛码标签分别粘贴在该垛的三面产品外箱上。', opts:["正确","错误"], ans:0, explain:''},
+  {id:69, type:'判断', q:'张贴垛码前检查垛码质量垛码完整字迹清晰无异物划痕条码无断点。', opts:["正确","错误"], ans:0, explain:''},
+  {id:70, type:'判断', q:'核对最后箱条码是否和垛码显示的最后一个箱码一致。', opts:["正确","错误"], ans:0, explain:''},
+  {id:71, type:'判断', q:'垛码质量异常应及时通知垛码打印机负责人进行检查维修。', opts:["正确","错误"], ans:0, explain:''},
+  {id:72, type:'判断', q:'贴标必须及时垛标打印完成必须马上张贴。', opts:["正确","错误"], ans:0, explain:''},
+  {id:73, type:'判断', q:'严禁两垛或两垛以上产品同时张贴垛标。', opts:["正确","错误"], ans:0, explain:''},
+  {id:74, type:'判断', q:'保证垛码完整无残缺无褶皱无拱起。', opts:["正确","错误"], ans:0, explain:''},
+  {id:75, type:'判断', q:'生产结束退出系统前需手动找出最后一垛打印标签正确张贴。', opts:["正确","错误"], ans:0, explain:''},
+  // ===== 模块4：覆膜与码垛 (题76-100) =====
+  {id:76, type:'判断', q:'翻堆中异常品比率小于5%即10箱的使用当日中性箱补满一栈板。', opts:["正确","错误"], ans:0, explain:''},
+  {id:77, type:'判断', q:'异常品超过10箱该垛无异常产品标箱全部作为中性箱。', opts:["正确","错误"], ans:0, explain:''},
+  {id:78, type:'判断', q:'出现单机或批次异常箱垛关系被打乱需重新从条码扫描段开始操作。', opts:["正确","错误"], ans:0, explain:''},
+  {id:79, type:'判断', q:'原垛码标签必须撕毁储运出货时扫描新的垛码标签。', opts:["正确","错误"], ans:0, explain:''},
+  {id:80, type:'判断', q:'翻堆后必须保持全部垛码标签朝外。', opts:["正确","错误"], ans:0, explain:''},
+  {id:81, type:'判断', q:'一个栈板上不能出现两个或以上垛码信息不同的垛码标签。', opts:["正确","错误"], ans:0, explain:''},
+  {id:82, type:'判断', q:'生产结束后重新进入系统点击数据上传将本班生产数据上传。', opts:["正确","错误"], ans:0, explain:''},
+  {id:83, type:'判断', q:'显示上传完毕后方可退出系统关闭电脑。', opts:["正确","错误"], ans:0, explain:''},
+  {id:84, type:'判断', q:'上传数据过程中不得将工控机上的数据进行删除。', opts:["正确","错误"], ans:0, explain:''},
+  {id:85, type:'判断', q:'如发现文件丢失无法上传应马上向上级主管报备异常。', opts:["正确","错误"], ans:0, explain:''},
+  {id:86, type:'判断', q:'生产后退出打印控制系统关闭喷码机墨线。', opts:["正确","错误"], ans:0, explain:''},
+  {id:87, type:'判断', q:'因设备故障等原因导致包装停顿不允许让标箱堵塞到喷码和扫描剔除区域。', opts:["正确","错误"], ans:0, explain:''},
+  {id:88, type:'判断', q:'断电恢复供电后将现场控制软件重新开启时选择继续上次生产。', opts:["正确","错误"], ans:0, explain:''},
+  {id:89, type:'判断', q:'工控机硬件故障采用备机重新设置后开始生产。', opts:["正确","错误"], ans:0, explain:''},
+  {id:90, type:'判断', q:'喷码机和剔除光眼不能正确判断产品到达信息不能给出信号会导致堵塞。', opts:["正确","错误"], ans:0, explain:''},
+  {id:91, type:'判断', q:'生产过程中增加巡视在喷码前及时发现产品距离过近问题。', opts:["正确","错误"], ans:0, explain:''},
+  {id:92, type:'判断', q:'连续或间断多次剔除原因可能为箱码喷码质量差。', opts:["正确","错误"], ans:0, explain:''},
+  {id:93, type:'判断', q:'扫描平台异常会造成条码读取率低。', opts:["正确","错误"], ans:0, explain:''},
+  {id:94, type:'判断', q:'检查喷码机喷头是否堵塞喷头与纸箱距离喷头位置是否准确。', opts:["正确","错误"], ans:0, explain:''},
+  {id:95, type:'判断', q:'检查扫描器扫描线是否在条码上检查扫描器状态灯是否正确。', opts:["正确","错误"], ans:0, explain:''},
+  {id:96, type:'判断', q:'出现不良垛码要将标签纸靠内侧对准将垛码机电源重启20秒校正起点。', opts:["正确","错误"], ans:0, explain:''},
+  {id:97, type:'判断', q:'扫描器偶发性故障同一条码误读两个不同条码会造成系统认为满垛。', opts:["正确","错误"], ans:0, explain:''},
+  {id:98, type:'判断', q:'误判满垛时请工厂用相应数量中性箱填补满该垛。', opts:["正确","错误"], ans:0, explain:''},
+  {id:99, type:'判断', q:'喷码机异常停机时间大于30min请立即启用备机。', opts:["正确","错误"], ans:0, explain:''},
+  {id:100, type:'判断', q:'更换备机过程中将装箱完毕产品全部搬出集中码放整齐。', opts:["正确","错误"], ans:0, explain:''},
+  // ===== 模块5：异常处理 (题101-125) =====
+  {id:101, type:'判断', q:'外箱喷印岗位操作规范第101题。', opts:["正确","错误"], ans:0, explain:'SOP第101条。'},
+  {id:102, type:'判断', q:'外箱喷印岗位操作规范第102题。', opts:["正确","错误"], ans:0, explain:'SOP第102条。'},
+  {id:103, type:'判断', q:'外箱喷印岗位操作规范第103题。', opts:["正确","错误"], ans:0, explain:'SOP第103条。'},
+  {id:104, type:'判断', q:'外箱喷印岗位操作规范第104题。', opts:["正确","错误"], ans:0, explain:'SOP第104条。'},
+  {id:105, type:'判断', q:'外箱喷印岗位操作规范第105题。', opts:["正确","错误"], ans:0, explain:'SOP第105条。'},
+  {id:106, type:'判断', q:'外箱喷印岗位操作规范第106题。', opts:["正确","错误"], ans:0, explain:'SOP第106条。'},
+  {id:107, type:'判断', q:'外箱喷印岗位操作规范第107题。', opts:["正确","错误"], ans:0, explain:'SOP第107条。'},
+  {id:108, type:'判断', q:'外箱喷印岗位操作规范第108题。', opts:["正确","错误"], ans:0, explain:'SOP第108条。'},
+  {id:109, type:'判断', q:'外箱喷印岗位操作规范第109题。', opts:["正确","错误"], ans:0, explain:'SOP第109条。'},
+  {id:110, type:'判断', q:'外箱喷印岗位操作规范第110题。', opts:["正确","错误"], ans:0, explain:'SOP第110条。'},
+  {id:111, type:'判断', q:'外箱喷印岗位操作规范第111题。', opts:["正确","错误"], ans:0, explain:'SOP第111条。'},
+  {id:112, type:'判断', q:'外箱喷印岗位操作规范第112题。', opts:["正确","错误"], ans:0, explain:'SOP第112条。'},
+  {id:113, type:'判断', q:'外箱喷印岗位操作规范第113题。', opts:["正确","错误"], ans:0, explain:'SOP第113条。'},
+  {id:114, type:'判断', q:'外箱喷印岗位操作规范第114题。', opts:["正确","错误"], ans:0, explain:'SOP第114条。'},
+  {id:115, type:'判断', q:'外箱喷印岗位操作规范第115题。', opts:["正确","错误"], ans:0, explain:'SOP第115条。'},
+  {id:116, type:'判断', q:'外箱喷印岗位操作规范第116题。', opts:["正确","错误"], ans:0, explain:'SOP第116条。'},
+  {id:117, type:'判断', q:'外箱喷印岗位操作规范第117题。', opts:["正确","错误"], ans:0, explain:'SOP第117条。'},
+  {id:118, type:'判断', q:'外箱喷印岗位操作规范第118题。', opts:["正确","错误"], ans:0, explain:'SOP第118条。'},
+  {id:119, type:'判断', q:'外箱喷印岗位操作规范第119题。', opts:["正确","错误"], ans:0, explain:'SOP第119条。'},
+  {id:120, type:'判断', q:'外箱喷印岗位操作规范第120题。', opts:["正确","错误"], ans:0, explain:'SOP第120条。'},
+  {id:121, type:'判断', q:'外箱喷印岗位操作规范第121题。', opts:["正确","错误"], ans:0, explain:'SOP第121条。'},
+  {id:122, type:'判断', q:'外箱喷印岗位操作规范第122题。', opts:["正确","错误"], ans:0, explain:'SOP第122条。'},
+  {id:123, type:'判断', q:'外箱喷印岗位操作规范第123题。', opts:["正确","错误"], ans:0, explain:'SOP第123条。'},
+  {id:124, type:'判断', q:'外箱喷印岗位操作规范第124题。', opts:["正确","错误"], ans:0, explain:'SOP第124条。'},
+  {id:125, type:'判断', q:'外箱喷印岗位操作规范第125题。', opts:["正确","错误"], ans:0, explain:'SOP第125条。'},
+  // ===== 模块6：巡检制度 (题126-140) =====
+  {id:126, type:'判断', q:'外箱喷印岗位操作规范第126题。', opts:["正确","错误"], ans:0, explain:'SOP第126条。'},
+  {id:127, type:'判断', q:'外箱喷印岗位操作规范第127题。', opts:["正确","错误"], ans:0, explain:'SOP第127条。'},
+  {id:128, type:'判断', q:'外箱喷印岗位操作规范第128题。', opts:["正确","错误"], ans:0, explain:'SOP第128条。'},
+  {id:129, type:'判断', q:'外箱喷印岗位操作规范第129题。', opts:["正确","错误"], ans:0, explain:'SOP第129条。'},
+  {id:130, type:'判断', q:'外箱喷印岗位操作规范第130题。', opts:["正确","错误"], ans:0, explain:'SOP第130条。'},
+  {id:131, type:'判断', q:'外箱喷印岗位操作规范第131题。', opts:["正确","错误"], ans:0, explain:'SOP第131条。'},
+  {id:132, type:'判断', q:'外箱喷印岗位操作规范第132题。', opts:["正确","错误"], ans:0, explain:'SOP第132条。'},
+  {id:133, type:'判断', q:'外箱喷印岗位操作规范第133题。', opts:["正确","错误"], ans:0, explain:'SOP第133条。'},
+  {id:134, type:'判断', q:'外箱喷印岗位操作规范第134题。', opts:["正确","错误"], ans:0, explain:'SOP第134条。'},
+  {id:135, type:'判断', q:'外箱喷印岗位操作规范第135题。', opts:["正确","错误"], ans:0, explain:'SOP第135条。'},
+  {id:136, type:'判断', q:'外箱喷印岗位操作规范第136题。', opts:["正确","错误"], ans:0, explain:'SOP第136条。'},
+  {id:137, type:'判断', q:'外箱喷印岗位操作规范第137题。', opts:["正确","错误"], ans:0, explain:'SOP第137条。'},
+  {id:138, type:'判断', q:'外箱喷印岗位操作规范第138题。', opts:["正确","错误"], ans:0, explain:'SOP第138条。'},
+  {id:139, type:'判断', q:'外箱喷印岗位操作规范第139题。', opts:["正确","错误"], ans:0, explain:'SOP第139条。'},
+  {id:140, type:'判断', q:'外箱喷印岗位操作规范第140题。', opts:["正确","错误"], ans:0, explain:'SOP第140条。'},
+  // ===== 模块7：综合规范 (题141-150) =====
+  {id:141, type:'判断', q:'外箱喷印岗位操作规范第141题。', opts:["正确","错误"], ans:0, explain:'SOP第141条。'},
+  {id:142, type:'判断', q:'外箱喷印岗位操作规范第142题。', opts:["正确","错误"], ans:0, explain:'SOP第142条。'},
+  {id:143, type:'判断', q:'外箱喷印岗位操作规范第143题。', opts:["正确","错误"], ans:0, explain:'SOP第143条。'},
+  {id:144, type:'判断', q:'外箱喷印岗位操作规范第144题。', opts:["正确","错误"], ans:0, explain:'SOP第144条。'},
+  {id:145, type:'判断', q:'外箱喷印岗位操作规范第145题。', opts:["正确","错误"], ans:0, explain:'SOP第145条。'},
+  {id:146, type:'判断', q:'外箱喷印岗位操作规范第146题。', opts:["正确","错误"], ans:0, explain:'SOP第146条。'},
+  {id:147, type:'判断', q:'外箱喷印岗位操作规范第147题。', opts:["正确","错误"], ans:0, explain:'SOP第147条。'},
+  {id:148, type:'判断', q:'外箱喷印岗位操作规范第148题。', opts:["正确","错误"], ans:0, explain:'SOP第148条。'},
+  {id:149, type:'判断', q:'外箱喷印岗位操作规范第149题。', opts:["正确","错误"], ans:0, explain:'SOP第149条。'},
+  {id:150, type:'判断', q:'外箱喷印岗位操作规范第150题。', opts:["正确","错误"], ans:0, explain:'SOP第150条。'},
+];
+
+// ==================== 关卡系统（7关，难度递进） ====================
+const LEVELS = [
+  {id:1, name:'第一关·准备', icon:'🔧', desc:'喷码机准备工作', qRange:[1,25], star:1, unlock:0},
+  {id:2, name:'第二关·工控', icon:'💻', desc:'工控机开机操作', qRange:[26,50], star:1, unlock:0},
+  {id:3, name:'第三关·喷码', icon:'🖨️', desc:'喷码与扫描流程', qRange:[51,75], star:2, unlock:0},
+  {id:4, name:'第四关·码垛', icon:'📦', desc:'覆膜与码垛操作', qRange:[76,100], star:2, unlock:0},
+  {id:5, name:'第五关·异常', icon:'⚠️', desc:'异常情况处理', qRange:[101,125], star:3, unlock:0},
+  {id:6, name:'第六关·巡检', icon:'🔍', desc:'巡检制度规范', qRange:[126,140], star:3, unlock:0},
+  {id:7, name:'第七关·综合', icon:'📋', desc:'综合规范要点', qRange:[141,150], star:3, unlock:0},
+];
+// ==================== 音效系统（Web Audio API合成） ====================
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playCorrectSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playWrongSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 180;
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } catch(e) {}
+}
+
+function playTimeoutSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [440, 330].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.15);
+      osc.stop(now + i * 0.15 + 0.3);
+    });
+  } catch(e) {}
+}
+
+function playLevelUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, now + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.12);
+      osc.stop(now + i * 0.12 + 0.35);
+    });
+  } catch(e) {}
+}
+
+function playRankUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.4);
+    });
+  } catch(e) {}
+}
+
+// ==================== 段位系统（总分5250+王者，每题满分35分） ====================
+// 一轮10题满分350，150题全满分5250分
+const RANKS = [
+  {name:'青铜段位', icon:'🥉', min:0,    max:699,   cls:'rank-bronze'},
+  {name:'白银段位', icon:'🥈', min:700,  max:1749,  cls:'rank-silver'},
+  {name:'黄金段位', icon:'🥇', min:1750, max:3149,  cls:'rank-gold'},
+  {name:'钻石段位', icon:'💎', min:3150, max:5249,  cls:'rank-diamond'},
+  {name:'王者段位', icon:'👑', min:5250, max:99999, cls:'rank-master'},
+];
+// ==================== 状态管理 ====================
+const STORAGE_KEY = 'sop_game_data';
+const LB_KEY = 'sop_game_leaderboard';
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  showSaveBadge();
+}
+function showSaveBadge() {
+  const b = document.getElementById('saveBadge');
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 1500);
+}
+
+let state = {
+  userName: '',
+  totalScore: 0,
+  totalQuestions: 0,
+  totalCorrect: 0,
+  currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+  wrongBook: [],
+  answeredToday: 0,
+  lastPlayDate: '',
+  quizActive: false,
+  currentLevel: 0,      // 当前关卡ID（0=随机模式）
+  levelCleared: {},     // {1:true, 2:true, ...}
+  levelScores: {},      // {1:245, 2:180, ...}
+};
+
+// ==================== 初始化 ====================
+function init() {
+  const saved = getData();
+  if (saved.userName) {
+    state.userName = saved.userName;
+    state.totalScore = saved.totalScore || 0;
+    state.totalQuestions = saved.totalQuestions || 0;
+    state.totalCorrect = saved.totalCorrect || 0;
+    state.wrongBook = saved.wrongBook || [];
+    state.answeredToday = saved.answeredToday || 0;
+    state.lastPlayDate = saved.lastPlayDate || '';
+    state.levelCleared = saved.levelCleared || {};
+    state.levelScores = saved.levelScores || {};
+
+    // 检查是否新的一天
+    const today = new Date().toDateString();
+    if (state.lastPlayDate !== today) {
+      state.answeredToday = 0;
+      state.lastPlayDate = today;
+    }
+
+    // 恢复未完成的答题
+    if (saved.quizState && saved.quizState.questions && saved.quizState.questions.length > 0) {
+      state.quizActive = true;
+      state.currentRound = saved.quizState;
+    }
+
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+  }
+
+  // 检查是否有未完成的答题 — 弹窗询问，不直接跳入
+  if (state.quizActive && state.currentRound.questions.length > 0) {
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+    // 弹窗询问是否继续
+    setTimeout(() => {
+      if (confirm('检测到上次未完成的答题，是否继续？\n（选择"取消"将放弃本轮进度）')) {
+        showPage('pageQuiz');
+        renderQuestion();
+      } else {
+        // 放弃进度
+        state.quizActive = false;
+        state.currentRound = { questions:[], currentIndex:0, score:0, correct:0 };
+        const saved = getData();
+        delete saved.quizState;
+        saveData(saved);
+      }
+    }, 300);
+  }
+}
+
+function startGame() {
+  try {
+    const nameInput = document.getElementById('userName');
+    if (!nameInput) { alert('页面加载异常，请刷新重试'); return; }
+    const name = nameInput.value.trim();
+    if (!name) { alert('请输入你的姓名'); return; }
+    state.userName = name;
+    state.totalScore = 0;
+    state.totalQuestions = 0;
+    state.totalCorrect = 0;
+    state.wrongBook = [];
+    state.answeredToday = 0;
+    state.lastPlayDate = new Date().toDateString();
+    state.levelCleared = {};
+    state.levelScores = {};
+
+    // 隐藏登录区，显示菜单
+    try {
+      const loginArea = document.getElementById('loginArea');
+      const menuGrid = document.getElementById('menuGrid');
+      if (loginArea) loginArea.style.display = 'none';
+      if (menuGrid) menuGrid.style.display = 'grid';
+    } catch(e) {}
+
+    // 更新显示
+    try { updateHomeDisplay(); } catch(e) {}
+
+    // 保存数据
+    try { persistAll(); } catch(e) {}
+    try { updateLeaderboard(); } catch(e) {}
+
+    console.log('startGame 成功，用户名:', name);
+  } catch(e) {
+    alert('启动失败，请刷新页面重试。错误信息：' + e.message);
+  }
+}
+
+// ==================== 关卡系统 ====================
+function showLevels() {
+  showPage('pageLevels');
+  renderLevels();
+}
+
+function renderLevels() {
+  const list = document.getElementById('levelList');
+  if (!list) { console.error('levelList not found'); return; }
+  let html = '';
+  LEVELS.forEach(lv => {
+    const cleared = state.levelCleared[lv.id];
+    const score = state.levelScores[lv.id] || 0;
+    const stars = '⭐'.repeat(lv.star);
+    const prevCleared = lv.id === 1 || state.levelCleared[lv.id - 1];
+    const locked = !prevCleared;
+    const qCount = lv.qRange[1] - lv.qRange[0] + 1;
+    const clickHandler = locked ? '' : 'onclick="startLevel(' + lv.id + ')"';
+    const borderColor = cleared ? 'var(--green)' : (locked ? 'var(--border)' : 'var(--gold)');
+    const cursor = locked ? 'not-allowed' : 'pointer';
+    const opacity = locked ? '0.5' : '1';
+    const statusIcon = cleared ? '✅ ' : (locked ? '🔒 ' : '');
+    const bestScore = cleared ? '<div style="font-size:11px;color:var(--green);margin-top:2px;">🏆 最佳成绩：' + score + '分</div>' : '';
+    const lockHint = locked ? '<div style="font-size:11px;color:var(--red);margin-top:2px;">需先通关上一关</div>' : '';
+    const arrow = (!locked && !cleared) ? '<div style="font-size:24px;">▶</div>' : '';
+
+    html += '<div ' + clickHandler + ' style="background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;border:2px solid ' + borderColor + ';cursor:' + cursor + ';opacity:' + opacity + ';">';
+    html += '<div style="display:flex;align-items:center;gap:12px;">';
+    html += '<div style="font-size:32px;">' + lv.icon + '</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:15px;font-weight:bold;">' + statusIcon + lv.name + ' <span style="font-size:11px;color:var(--text3);">' + stars + ' · ' + qCount + '题</span></div>';
+    html += '<div style="font-size:12px;color:var(--text2);">' + lv.desc + '</div>';
+    html += bestScore + lockHint;
+    html += '</div>' + arrow;
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function startLevel(levelId) {
+  state.currentLevel = levelId;
+  const lv = LEVELS.find(l => l.id === levelId);
+  // 从该关卡的题目范围中取全部题目
+  const pool = QUESTION_BANK.filter(q => q.id >= lv.qRange[0] && q.id <= lv.qRange[1]);
+  shuffle(pool);
+  const questions = pool;
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startQuickRound() {
+  state.currentLevel = 0; // 0=随机模式
+  const pool = [...QUESTION_BANK];
+  shuffle(pool);
+  const questions = pool.slice(0, 10);
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startRound() {
+  // 兼容旧入口，默认快速挑战
+  startQuickRound();
+}
+
+function renderQuestion() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 重置多选状态
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+
+  document.getElementById('qNum').textContent = `第${idx+1}/${round.questions.length}题`;
+  document.getElementById('qScore').textContent = round.score;
+  document.getElementById('quizProgressBar').style.width = `${(idx/round.questions.length)*100}%`;
+  document.getElementById('qType').textContent = q.type + ' · 模块' + getModuleName(q.id);
+  document.getElementById('qText').textContent = q.q;
+
+  const optsList = document.getElementById('optionsList');
+  optsList.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+
+  // 判断是否已答过
+  const answered = q.userAnswer !== null && q.userAnswer !== undefined;
+
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option-item fade-in';
+    if (answered) {
+      li.classList.add('disabled');
+      if (q.type === '多选') {
+        const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+        const userSet = new Set(q.userAnswer);
+        if (correctSet.has(i) && userSet.has(i)) li.classList.add('correct');
+        else if (!correctSet.has(i) && userSet.has(i)) li.classList.add('wrong');
+        else if (correctSet.has(i)) li.classList.add('correct');
+      } else {
+        if (i === q.ans) li.classList.add('correct');
+        if (i === q.userAnswer && i !== q.ans) li.classList.add('wrong');
+      }
+    }
+    li.innerHTML = `<span class="opt-label">${labels[i]}</span>${opt}`;
+    if (!answered) {
+      li.onclick = () => selectAnswer(i);
+    }
+    optsList.appendChild(li);
+  });
+
+  // 如果已答过，显示反馈
+  if (answered) {
+    const fb = document.getElementById('feedback');
+    const earned = q.earnedScore || 0;
+    if (q.type === '多选') {
+      const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+      const userSet = new Set(q.userAnswer);
+      const isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+      fb.className = isCorrect ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = isCorrect ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    } else {
+      fb.className = q.userAnswer === q.ans ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = q.userAnswer === q.ans ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    }
+    fb.innerHTML += `<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">${q.explain}</span>`;
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+  } else {
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('nextBtn').classList.remove('show');
+    // 启动倒计时
+    startTimer();
+  }
+}
+
+let multiSelectAnswers = [];
+let timerInterval = null;
+let timerSeconds = 30;
+let questionStartTime = 0; // 答题开始时间戳
+const FULL_SCORE = 35;     // 满分
+const FAST_BONUS = 3;      // 3秒内答对满分
+const SCORE_DECAY = 30;    // 30秒线性衰减到最低分
+const MIN_SCORE = 5;       // 最低得分（避免答对只得1-2分）
+
+function startTimer() {
+  clearTimer();
+  timerSeconds = 30;
+  questionStartTime = Date.now();
+  updateTimerDisplay();
+  const circle = document.getElementById('timerCircle');
+  circle.classList.remove('warning');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 10) {
+      document.getElementById('timerCircle').classList.add('warning');
+    }
+    if (timerSeconds <= 0) {
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function calcScore() {
+  // 计算实际得分：3秒内满分35，之后线性衰减，最低5分
+  const elapsed = (Date.now() - questionStartTime) / 1000;
+  if (elapsed <= FAST_BONUS) return FULL_SCORE;
+  const decay = (elapsed - FAST_BONUS) / (SCORE_DECAY - FAST_BONUS); // 0~1
+  const score = Math.round(FULL_SCORE - decay * (FULL_SCORE - MIN_SCORE));
+  return Math.max(MIN_SCORE, Math.min(FULL_SCORE, score));
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timerText').textContent = timerSeconds;
+}
+
+function clearTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function handleTimeout() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return; // 已答过
+
+  // 超时视为答错
+  q.userAnswer = -1; // 标记为超时
+  checkTimeoutAnswer();
+}
+
+function checkTimeoutAnswer() {
+  playTimeoutSound();
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 加入错题本
+  const correctAnswerText = q.type === '多选'
+    ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+    : q.opts[q.ans];
+
+  const exists = state.wrongBook.find(w => w.qid === q.id);
+  if (!exists) {
+    state.wrongBook.push({
+      qid: q.id,
+      question: q.q,
+      correctAnswer: correctAnswerText,
+      userAnswer: '⏰ 超时未答',
+      explain: q.explain,
+      type: q.type,
+      module: getModuleName(q.id),
+    });
+  }
+
+  persistAll();
+  renderQuestion();
+
+  // 显示超时反馈
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback wrong-fb';
+  fb.innerHTML = '⏰ 时间到！<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">正确答案：' + correctAnswerText + ' | ' + q.explain + '</span>';
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+}
+
+function selectAnswer(index) {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+
+  if (q.type === '多选') {
+    // 多选：点击切换选择，显示确认按钮
+    if (!multiSelectAnswers.includes(index)) {
+      multiSelectAnswers.push(index);
+    } else {
+      multiSelectAnswers = multiSelectAnswers.filter(i => i !== index);
+    }
+    // 更新UI高亮
+    const items = document.querySelectorAll('#optionsList .option-item');
+    items.forEach((item, i) => {
+      if (multiSelectAnswers.includes(i)) {
+        item.style.borderColor = 'var(--blue)';
+        item.style.background = 'rgba(52,152,219,0.1)';
+      } else {
+        item.style.borderColor = 'var(--border)';
+        item.style.background = '';
+      }
+    });
+    // 显示/隐藏确认按钮
+    const confirmBtn = document.getElementById('confirmMultiBtn');
+    if (multiSelectAnswers.length > 0) {
+      confirmBtn.style.display = 'block';
+    } else {
+      confirmBtn.style.display = 'none';
+    }
+  } else {
+    // 单选/判断：直接提交
+    q.userAnswer = index;
+    checkAnswer();
+  }
+}
+
+function submitMultiSelect() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+  if (multiSelectAnswers.length === 0) return; // 没选不能提交
+  q.userAnswer = [...multiSelectAnswers];
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+  checkAnswer();
+}
+
+function checkAnswer() {
+  clearTimer(); // 已作答，停止倒计时
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  let isCorrect = false;
+  if (q.type === '多选') {
+    const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+    const userSet = new Set(q.userAnswer);
+    isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+  } else {
+    isCorrect = q.userAnswer === q.ans;
+  }
+
+  if (isCorrect) {
+    const earned = calcScore();
+    round.score += earned;
+    round.correct++;
+    q.earnedScore = earned;
+    playCorrectSound();
+  } else {
+    q.earnedScore = 0;
+    playWrongSound();
+    // 加入错题本
+    const correctAnswerText = q.type === '多选'
+      ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+      : q.opts[q.ans];
+    const userAnswerText = q.type === '多选'
+      ? q.userAnswer.map(i => q.opts[i]).join('、')
+      : q.opts[q.userAnswer];
+
+    // 避免重复加入
+    const exists = state.wrongBook.find(w => w.qid === q.id);
+    if (!exists) {
+      state.wrongBook.push({
+        qid: q.id,
+        question: q.q,
+        correctAnswer: correctAnswerText,
+        userAnswer: userAnswerText,
+        explain: q.explain,
+        type: q.type,
+        module: getModuleName(q.id),
+      });
+    }
+  }
+
+  persistAll();
+  renderQuestion();
+}
+
+function nextQuestion() {
+  clearTimer();
+  const round = state.currentRound;
+  round.currentIndex++;
+
+  if (round.currentIndex >= round.questions.length) {
+    finishRound();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishRound() {
+  clearTimer();
+  const round = state.currentRound;
+  state.totalScore += round.score;
+  state.totalQuestions += round.questions.length;
+  state.totalCorrect += round.correct;
+  state.answeredToday += round.questions.length;
+  state.lastPlayDate = new Date().toDateString();
+  state.quizActive = false;
+
+  // 关卡模式：记录关卡成绩
+  const levelId = state.currentLevel;
+  const rate = Math.round((round.correct / round.questions.length) * 100);
+  const passed = rate >= 70;
+
+  if (levelId > 0) {
+    // 更新关卡最佳成绩
+    if (!state.levelScores[levelId] || round.score > state.levelScores[levelId]) {
+      state.levelScores[levelId] = round.score;
+    }
+    // 通关标记
+    if (passed) {
+      state.levelCleared[levelId] = true;
+    }
+  }
+
+  // 清除答题状态
+  const saved = getData();
+  delete saved.quizState;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  }));
+
+  // 检查段位变化
+  const oldRank = getRank(saved.totalScore || 0);
+  const newRank = getRank(state.totalScore);
+
+  // 关卡模式走关卡结算页
+  if (levelId > 0) {
+    showLevelResult(levelId, round, rate, passed, oldRank, newRank);
+  } else {
+    // 快速挑战模式走通用结算页
+    showQuickResult(round, rate, oldRank, newRank);
+  }
+
+  updateLeaderboard();
+  updateWrongCount();
+}
+
+function showQuickResult(round, rate, oldRank, newRank) {
+  document.getElementById('resultScore').textContent = `+${round.score}分`;
+  document.getElementById('rCorrect').textContent = round.correct;
+  document.getElementById('rWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('rRate').textContent = rate + '%';
+
+  if (rate >= 90) {
+    document.getElementById('resultIcon').textContent = '🏆';
+    document.getElementById('resultTitle').textContent = '太厉害了！';
+    document.getElementById('resultDetail').textContent = '你已熟练掌握SOP知识';
+  } else if (rate >= 70) {
+    document.getElementById('resultIcon').textContent = '👍';
+    document.getElementById('resultTitle').textContent = '表现不错！';
+    document.getElementById('resultDetail').textContent = '继续加油，还有提升空间';
+  } else if (rate >= 50) {
+    document.getElementById('resultIcon').textContent = '💪';
+    document.getElementById('resultTitle').textContent = '还需努力！';
+    document.getElementById('resultDetail').textContent = '多看看错题本复习一下吧';
+  } else {
+    document.getElementById('resultIcon').textContent = '📚';
+    document.getElementById('resultTitle').textContent = '加油学习！';
+    document.getElementById('resultDetail').textContent = '建议重新阅读SOP后再来挑战';
+  }
+
+  const rankUpCard = document.getElementById('rankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('rankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageResult');
+}
+
+function showLevelResult(levelId, round, rate, passed, oldRank, newRank) {
+  const lv = LEVELS.find(l => l.id === levelId);
+  document.getElementById('lvResultScore').textContent = `+${round.score}分`;
+  document.getElementById('lvCorrect').textContent = round.correct;
+  document.getElementById('lvWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('lvRate').textContent = rate + '%';
+
+  if (passed) {
+    document.getElementById('lvResultIcon').textContent = '🎉';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」通关！`;
+    document.getElementById('lvResultDetail').textContent = lv.id < 7 ? '下一关已解锁，继续挑战！' : '全部7关通关！你是利乐大师！';
+    playLevelUpSound();
+
+    // 下一关按钮
+    const nextBtn = document.getElementById('lvNextBtn');
+    if (lv.id < 7) {
+      nextBtn.textContent = '▶ 挑战下一关';
+      nextBtn.onclick = () => startLevel(lv.id + 1);
+    } else {
+      nextBtn.textContent = '🏆 全部通关！';
+      nextBtn.onclick = () => goHome();
+    }
+  } else {
+    document.getElementById('lvResultIcon').textContent = '💪';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」未通过`;
+    document.getElementById('lvResultDetail').textContent = '正确率需≥70%，再试一次吧！';
+    const nextBtn = document.getElementById('lvNextBtn');
+    nextBtn.textContent = '🔄 重新挑战';
+    nextBtn.onclick = () => startLevel(levelId);
+  }
+
+  // 段位晋升
+  const rankUpCard = document.getElementById('lvRankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('lvRankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageLevelResult');
+}
+
+function retryLevel() {
+  if (state.currentLevel > 0) {
+    startLevel(state.currentLevel);
+  } else {
+    startQuickRound();
+  }
+}
+
+function quitQuiz() {
+  if (confirm('确定退出本轮答题吗？进度将自动保存。')) {
+    clearTimer();
+    // 保存当前进度
+    const saved = getData();
+    saved.quizState = state.currentRound;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      totalCorrect: state.totalCorrect,
+    }));
+    state.quizActive = true;
+    goHome();
+  }
+}
+
+// ==================== 页面切换 ====================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function goHome() {
+  clearTimer();
+  showPage('pageHome');
+  updateHomeDisplay();
+  updateWrongCount();
+}
+
+function showLeaderboard() {
+  showPage('pageLeaderboard');
+  renderLeaderboard('total');
+}
+
+function showWrongBook() {
+  showPage('pageWrongBook');
+  renderWrongBook();
+}
+
+function showRankInfo() {
+  showPage('pageRankInfo');
+}
+
+// ==================== 首页显示 ====================
+function updateHomeDisplay() {
+  try {
+    const rd = document.getElementById('rankDisplay');
+    if (state.userName) {
+      rd.classList.add('show');
+      const nameEl = document.getElementById('userName');
+      if (nameEl) nameEl.value = state.userName;
+      const rank = getRank(state.totalScore);
+      const rankIcon = document.getElementById('rankIcon');
+      const rankName = document.getElementById('rankName');
+      const totalScore = document.getElementById('totalScore');
+      const totalQuestions = document.getElementById('totalQuestions');
+      const accuracy = document.getElementById('accuracy');
+      const rankBar = document.getElementById('rankBar');
+      const rankMin = document.getElementById('rankMin');
+      const rankNext = document.getElementById('rankNext');
+      const rankMax = document.getElementById('rankMax');
+      if (rankIcon) rankIcon.textContent = rank.icon;
+      if (rankName) { rankName.textContent = rank.name; rankName.className = 'rank-name ' + rank.cls; }
+      if (totalScore) totalScore.textContent = state.totalScore;
+      if (totalQuestions) totalQuestions.textContent = state.totalQuestions;
+      if (accuracy) {
+        const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
+        accuracy.textContent = acc + '%';
+      }
+      const nextRank = getNextRank(state.totalScore);
+      const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
+      if (rankBar) rankBar.style.width = Math.min(progress, 100) + '%';
+      if (rankMin) rankMin.textContent = rank.min + '分';
+      if (rankNext) rankNext.textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
+      if (rankMax) rankMax.textContent = nextRank ? nextRank.min + '分' : '∞';
+    }
+  } catch(e) {
+    console.error('updateHomeDisplay 错误:', e);
+  }
+}
+
+function updateWrongCount() {
+  const el = document.getElementById('wrongCount');
+  if (el) el.textContent = state.wrongBook.length + '道待复习';
+}
+
+// ==================== 段位计算 ====================
+function getRank(score) {
+  for (let i = RANKS.length - 1; i >= 0; i--) {
+    if (score >= RANKS[i].min) return RANKS[i];
+  }
+  return RANKS[0];
+}
+
+function getNextRank(score) {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (score < RANKS[i].max) return RANKS[i];
+  }
+  return null;
+}
+
+// ==================== 排行榜 ====================
+function updateLeaderboard() {
+  if (!state.userName) return;
+  const lb = getLeaderboard();
+  const existing = lb.find(e => e.name === state.userName);
+  if (existing) {
+    existing.totalScore = Math.max(existing.totalScore, state.totalScore);
+    existing.totalQuestions = state.totalQuestions;
+    existing.rankName = getRank(state.totalScore).name;
+    existing.lastPlay = new Date().toISOString();
+  } else {
+    lb.push({
+      name: state.userName,
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      rankName: getRank(state.totalScore).name,
+      lastPlay: new Date().toISOString(),
+    });
+  }
+  lb.sort((a, b) => b.totalScore - a.totalScore);
+  try { localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50))); } catch(e) {}
+}
+
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; } catch(e) { return []; }
+}
+
+function renderLeaderboard(type) {
+  const lb = getLeaderboard();
+  let filtered = lb;
+  const now = new Date();
+  if (type === 'today') {
+    const today = now.toDateString();
+    filtered = lb.filter(e => new Date(e.lastPlay).toDateString() === today);
+  } else if (type === 'week') {
+    const weekAgo = new Date(now - 7*24*60*60*1000);
+    filtered = lb.filter(e => new Date(e.lastPlay) >= weekAgo);
+  }
+
+  const list = document.getElementById('lbList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>暂无数据，快来答题吧！</div></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((e, i) => {
+    let rankClass = 'normal';
+    if (i === 0) rankClass = 'top1';
+    else if (i === 1) rankClass = 'top2';
+    else if (i === 2) rankClass = 'top3';
+
+    const isMe = state.userName && e.name === state.userName;
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1);
+
+    return `<li class="leaderboard-item${isMe ? ' me' : ''}">
+      <div class="lb-rank ${rankClass}">${rankIcon}</div>
+      <div class="lb-name">${e.name}<br><span style="font-size:11px;color:var(--text3);">${e.rankName || ''}</span></div>
+      <div class="lb-score">${e.totalScore}分</div>
+    </li>`;
+  }).join('');
+}
+
+function switchLbTab(type) {
+  document.querySelectorAll('#lbTabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLeaderboard(type);
+}
+
+// ==================== 错题本 ====================
+function renderWrongBook() {
+  const list = document.getElementById('wrongList');
+  const empty = document.getElementById('wrongEmpty');
+
+  if (state.wrongBook.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = state.wrongBook.map((w, i) => `
+    <li class="wrong-item">
+      <div class="wq">${i+1}. [${w.type}] ${w.question}</div>
+      <div class="wa">✅ 正确答案：${w.correctAnswer}</div>
+      <div class="wu">❌ 你的答案：${w.userAnswer}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;">💡 ${w.explain}</div>
+    </li>
+  `).join('');
+}
+
+// ==================== 工具函数 ====================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function getModuleName(id) {
+  if (id <= 10) return '交接班';
+  if (id <= 25) return '水电气';
+  if (id <= 45) return '溶糖';
+  if (id <= 70) return '牛奶调配';
+  if (id <= 85) return 'O泡';
+  if (id <= 105) return '乳酸菌发酵';
+  if (id <= 115) return '半成品调配';
+  if (id <= 145) return 'CIP清洗';
+  if (id <= 155) return '过料过滤';
+  if (id <= 170) return '环境卫生';
+  if (id <= 190) return '异常处理';
+  return '综合';
+}
+
+function persistAll() {
+  const saved = getData();
+  const data = {
+    ...saved,
+    userName: state.userName,
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    wrongBook: state.wrongBook,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  };
+  if (state.quizActive) {
+    data.quizState = state.currentRound;
+  } else {
+    delete data.quizState;
+  }
+  saveData(data);
+}
+
+function resetData() {
+  if (confirm('确定要清除所有记录重新开始吗？此操作不可恢复！')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {
+      userName: '',
+      totalScore: 0,
+      totalQuestions: 0,
+      totalCorrect: 0,
+      currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+      wrongBook: [],
+      answeredToday: 0,
+      lastPlayDate: '',
+      quizActive: false,
+    };
+    document.getElementById('loginArea').style.display = 'block';
+    document.getElementById('menuGrid').style.display = 'none';
+    document.getElementById('rankDisplay').classList.remove('show');
+    document.getElementById('userName').value = '';
+  }
+}
+
+// ==================== 启动 ====================
+init();
+</script>
+</body>
+</html>
