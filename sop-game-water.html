@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>SOP闯关游戏 - 石家庄明旺乳业（净水处理）</title>
+<title>SOP闯关游戏 - 石家庄明旺乳业（水处理岗）</title>
 <style>
 :root {
   --bg: #1a1a2e;
@@ -519,7 +519,7 @@ body {
   <div class="home-header">
     <div class="logo">🏆</div>
     <h1>SOP闯关游戏</h1>
-    <div class="sub">净水处理岗位 · 知识挑战</div>
+    <div class="sub">TBA19线水处理岗位 · 知识挑战</div>
     <div class="dept">石家庄明旺乳业有限公司</div>
   </div>
 
@@ -1050,6 +1050,7 @@ function playRankUpSound() {
     });
   } catch(e) {}
 }
+}
 
 // ==================== 段位系统（总分7000+王者，每题满分35分） ====================
 // 一轮10题满分350，200题全满分7000分
@@ -1070,7 +1071,7 @@ function getData() {
 }
 function saveData(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  showSaveBadge();
+  try { showSaveBadge(); } catch(e) {}
 }
 function showSaveBadge() {
   const b = document.getElementById('saveBadge');
@@ -1095,7 +1096,6 @@ let state = {
 
 // ==================== 初始化 ====================
 function init() {
-  try {
   const saved = getData();
   if (saved.userName) {
     state.userName = saved.userName;
@@ -1580,7 +1580,7 @@ function finishRound() {
   // 清除答题状态
   const saved = getData();
   delete saved.quizState;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
     totalScore: state.totalScore,
     totalQuestions: state.totalQuestions,
     totalCorrect: state.totalCorrect,
@@ -1588,7 +1588,7 @@ function finishRound() {
     lastPlayDate: state.lastPlayDate,
     levelCleared: state.levelCleared,
     levelScores: state.levelScores,
-  }));
+  })); } catch(e) {}
 
   // 检查段位变化
   const oldRank = getRank(saved.totalScore || 0);
@@ -1700,11 +1700,11 @@ function quitQuiz() {
     // 保存当前进度
     const saved = getData();
     saved.quizState = state.currentRound;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
       totalScore: state.totalScore,
       totalQuestions: state.totalQuestions,
       totalCorrect: state.totalCorrect,
-    }));
+    })); } catch(e) {}
     state.quizActive = true;
     goHome();
   }
