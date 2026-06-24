@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>SOP闯关游戏 - 石家庄明旺乳业（称量）</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --card: #0f3460;
+  --card2: #1a4a7a;
+  --gold: #f0b90b;
+  --gold2: #e6a800;
+  --red: #e74c3c;
+  --red2: #c0392b;
+  --green: #2ecc71;
+  --green2: #27ae60;
+  --blue: #3498db;
+  --blue2: #2980b9;
+  --text: #e8e8f0;
+  --text2: #b0b8d0;
+  --text3: #7a85a0;
+  --border: #1e5080;
+  --radius: 12px;
+  --accent: #e94560;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #0a1628 100%);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ===== 页面容器 ===== */
+.page { display:none; padding:16px; min-height:100vh; }
+.page.active { display:block; }
+
+/* ===== 首页 ===== */
+.home-header {
+  text-align:center;
+  padding: 30px 0 20px;
+}
+.home-header .logo {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+.home-header h1 {
+  font-size: 28px;
+  color: var(--gold);
+  margin-bottom: 4px;
+  text-shadow: 0 0 20px rgba(240,185,11,0.3);
+}
+.home-header .sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.home-header .dept {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* 宣传横幅 */
+.promo-banner {
+  background: linear-gradient(135deg, rgba(240,185,11,0.12), rgba(233,69,96,0.12));
+  border: 1px solid rgba(240,185,11,0.25);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+.promo-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.promo-sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.promo-ranks {
+  font-size: 28px;
+  margin-top: 10px;
+  letter-spacing: 6px;
+  animation: promoFloat 2s ease-in-out infinite;
+}
+@keyframes promoFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* 用户区 */
+.user-area {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.user-area input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card2);
+  color: var(--text);
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.user-area input::placeholder { color: var(--text3); }
+.user-area .btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #1a1a2e;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:active { opacity: 0.85; transform: scale(0.98); }
+
+/* 段位显示 */
+.rank-display {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  display: none;
+}
+.rank-display.show { display: block; }
+.rank-icon {
+  font-size: 56px;
+  margin-bottom: 4px;
+}
+.rank-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.rank-bar-outer {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 14px;
+  margin: 12px 0 6px;
+  overflow: hidden;
+}
+.rank-bar-inner {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.5s;
+}
+.rank-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text2);
+}
+.rank-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.rank-stats span { color: var(--gold); font-weight: bold; }
+
+/* 菜单按钮 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.menu-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.menu-item:active { background: var(--card2); transform: scale(0.97); }
+.menu-item .icon { font-size: 32px; margin-bottom: 6px; }
+.menu-item .title { font-size: 15px; font-weight: bold; }
+.menu-item .desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+/* ===== 答题页 ===== */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.quiz-header .q-num { color: var(--gold); font-weight: bold; }
+.quiz-header .score { color: var(--green); font-weight: bold; }
+
+.quiz-progress {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.quiz-progress-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.3s;
+}
+
+/* 倒计时 */
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.timer-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 4px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.timer-circle.warning {
+  border-color: var(--red);
+  animation: timerPulse 0.5s infinite;
+}
+.timer-circle .timer-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.timer-circle.warning .timer-text { color: var(--red); }
+@keyframes timerPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+}
+.question-type {
+  font-size: 11px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.question-text {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.options-list { list-style: none; }
+.option-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+.option-item:active { transform: scale(0.98); }
+.option-item .opt-label {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.option-item.correct {
+  border-color: var(--green);
+  background: rgba(46,204,113,0.1);
+}
+.option-item.correct .opt-label { background: var(--green); color: #fff; }
+.option-item.wrong {
+  border-color: var(--red);
+  background: rgba(231,76,60,0.1);
+}
+.option-item.wrong .opt-label { background: var(--red); color: #fff; }
+.option-item.disabled { pointer-events: none; }
+
+.feedback {
+  text-align: center;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  display: none;
+}
+.feedback.correct-fb { background: rgba(46,204,113,0.15); color: var(--green); display:block; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.15); color: var(--red); display:block; }
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--blue2));
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+.next-btn.show { display: block; }
+
+/* ===== 结算页 ===== */
+.result-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.result-card .big-icon { font-size: 64px; }
+.result-card .result-title { font-size: 20px; font-weight: bold; margin: 8px 0; }
+.result-card .result-score { font-size: 36px; color: var(--gold); font-weight: bold; }
+.result-card .result-detail { font-size: 13px; color: var(--text2); margin-top: 8px; }
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.stat-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.stat-item .val { font-size: 22px; font-weight: bold; }
+.stat-item .lbl { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.stat-item .val.green { color: var(--green); }
+.stat-item .val.red { color: var(--red); }
+.stat-item .val.blue { color: var(--blue); }
+
+.rank-up-card {
+  background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(255,107,53,0.1));
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  display: none;
+}
+.rank-up-card.show { display: block; }
+.rank-up-card .rankup-icon { font-size: 48px; }
+.rank-up-card .rankup-text { font-size: 18px; font-weight: bold; color: var(--gold); margin: 8px 0; }
+
+/* ===== 排行榜 ===== */
+.leaderboard-list { list-style: none; }
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.leaderboard-item .lb-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.lb-rank.top1 { background: var(--gold); color: #1a1a2e; }
+.lb-rank.top2 { background: #c0c0c0; color: #1a1a2e; }
+.lb-rank.top3 { background: #cd7f32; color: #fff; }
+.lb-rank.normal { background: var(--card2); color: var(--text2); }
+.leaderboard-item .lb-name { flex:1; font-size: 14px; }
+.leaderboard-item .lb-score { font-size: 14px; font-weight: bold; color: var(--gold); }
+.leaderboard-item .lb-rank-name { font-size: 11px; color: var(--text2); margin-right: 8px; }
+.leaderboard-item.me { background: rgba(240,185,11,0.1); border: 1px solid var(--gold); }
+
+/* ===== 错题本 ===== */
+.wrong-list { list-style: none; }
+.wrong-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--red);
+}
+.wrong-item .wq { font-size: 14px; margin-bottom: 8px; }
+.wrong-item .wa { font-size: 13px; color: var(--green); }
+.wrong-item .wu { font-size: 12px; color: var(--red); margin-top: 4px; }
+
+/* ===== 通用 ===== */
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: var(--gold);
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text3);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.back-btn {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+.back-btn:active { opacity: 0.7; }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--card2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.tab.active { background: var(--gold); color: #1a1a2e; border-color: var(--gold); }
+
+/* ===== 暂存提示 ===== */
+.save-badge {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.save-badge.show { opacity: 1; }
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes pulse {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.05); }
+}
+.pulse { animation: pulse 0.6s ease; }
+
+/* ===== 段位颜色 ===== */
+.rank-bronze { color: #cd7f32; }
+.rank-silver { color: #c0c0c0; }
+.rank-gold { color: #f0b90b; }
+.rank-diamond { color: #3498db; }
+.rank-master { color: #e74c3c; }
+</style>
+</head>
+<body>
+
+<div class="save-badge" id="saveBadge">✅ 已保存</div>
+
+<!-- ==================== 首页 ==================== -->
+<div class="page active" id="pageHome">
+  <div class="home-header">
+    <div class="logo">🏆</div>
+    <h1>SOP闯关游戏</h1>
+    <div class="sub">TBA19线称量岗位 · 知识挑战</div>
+    <div class="dept">石家庄明旺乳业有限公司</div>
+  </div>
+
+  <!-- 宣传横幅 -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <div class="promo-title">🥉 你是青铜还是王者？👑</div>
+      <div class="promo-sub">欢迎来挑战 · 还有奖可拿！</div>
+    </div>
+    <div class="promo-ranks">
+      <span>🥉</span><span>🥈</span><span>🥇</span><span>💎</span><span>👑</span>
+    </div>
+  </div>
+
+  <div class="user-area" id="loginArea">
+    <input type="text" id="userName" placeholder="请输入你的姓名" maxlength="10">
+    <button class="btn" onclick="startGame()">⚔️ 开始闯关</button>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;">扫一次码，随时继续 · 自动暂存进度</div>
+  </div>
+
+  <div class="rank-display" id="rankDisplay">
+    <div class="rank-icon" id="rankIcon">🥉</div>
+    <div class="rank-name" id="rankName">青铜段位</div>
+    <div class="rank-bar-outer">
+      <div class="rank-bar-inner" id="rankBar" style="width:0%"></div>
+    </div>
+    <div class="rank-info">
+      <span id="rankMin">0分</span>
+      <span id="rankNext">下一段位：1000分</span>
+      <span id="rankMax">1000分</span>
+    </div>
+    <div class="rank-stats">
+      <div>总得分<br><span id="totalScore">0</span></div>
+      <div>答题数<br><span id="totalQuestions">0</span></div>
+      <div>正确率<br><span id="accuracy">0%</span></div>
+    </div>
+  </div>
+
+  <div class="menu-grid" id="menuGrid" style="display:none;">
+    <div class="menu-item" onclick="showLevels()">
+      <div class="icon">🎮</div>
+      <div class="title">关卡挑战</div>
+      <div class="desc">7关递进，逐关突破</div>
+    </div>
+    <div class="menu-item" onclick="showLeaderboard()">
+      <div class="icon">🏆</div>
+      <div class="title">排行榜</div>
+      <div class="desc">车间英雄榜</div>
+    </div>
+    <div class="menu-item" onclick="showWrongBook()">
+      <div class="icon">📖</div>
+      <div class="title">错题本</div>
+      <div class="desc" id="wrongCount">0道待复习</div>
+    </div>
+    <div class="menu-item" onclick="showRankInfo()">
+      <div class="icon">📊</div>
+      <div class="title">段位说明</div>
+      <div class="desc">升级规则</div>
+    </div>
+    <div class="menu-item" onclick="startQuickRound()">
+      <div class="icon">⚡</div>
+      <div class="title">快速挑战</div>
+      <div class="desc">随机10题冲刺</div>
+    </div>
+    <div class="menu-item" onclick="resetData()">
+      <div class="icon">🔄</div>
+      <div class="title">重新开始</div>
+      <div class="desc">清除所有记录</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 答题页 ==================== -->
+<div class="page" id="pageQuiz">
+  <div class="quiz-header">
+    <span class="q-num" id="qNum">第1/10题</span>
+    <span>得分：<span class="score" id="qScore">0</span></span>
+    <span style="cursor:pointer;color:var(--red);" onclick="quitQuiz()">退出</span>
+  </div>
+  <div class="quiz-progress">
+    <div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-circle" id="timerCircle">
+      <span class="timer-text" id="timerText">30</span>
+    </div>
+  </div>
+  <div class="question-card fade-in" id="questionCard">
+    <div class="question-type" id="qType">单选题</div>
+    <div class="question-text" id="qText"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <button class="next-btn" id="confirmMultiBtn" onclick="submitMultiSelect()" style="display:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1a2e;margin-bottom:12px;">✅ 确认提交</button>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题 ▶</button>
+</div>
+
+<!-- ==================== 结算页 ==================== -->
+<div class="page" id="pageResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="resultIcon">🎉</div>
+    <div class="result-title" id="resultTitle">表现出色！</div>
+    <div class="result-score" id="resultScore">+50分</div>
+    <div class="result-detail" id="resultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="rankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="rankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="rCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="rWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="rRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" onclick="startRound()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一轮</button>
+</div>
+
+<!-- ==================== 排行榜 ==================== -->
+<div class="page" id="pageLeaderboard">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🏆 排行榜</div>
+  <div class="tabs" id="lbTabs">
+    <div class="tab active" onclick="switchLbTab('total')">总榜</div>
+    <div class="tab" onclick="switchLbTab('week')">本周</div>
+    <div class="tab" onclick="switchLbTab('today')">今日</div>
+  </div>
+  <ul class="leaderboard-list" id="lbList"></ul>
+</div>
+
+<!-- ==================== 错题本 ==================== -->
+<div class="page" id="pageWrongBook">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📖 错题本</div>
+  <ul class="wrong-list" id="wrongList"></ul>
+  <div class="empty-state" id="wrongEmpty">
+    <div class="icon">🎉</div>
+    <div>暂无错题，继续保持！</div>
+  </div>
+</div>
+
+<!-- ==================== 段位说明 ==================== -->
+<div class="page" id="pageRankInfo">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📊 段位说明</div>
+  <div style="background:var(--card);border-radius:var(--radius);padding:16px;">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥉 青铜段位</div>
+      <div style="font-size:13px;color:var(--text2);">0 - 999分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">初入江湖，SOP知识刚刚起步</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥈 白银段位</div>
+      <div style="font-size:13px;color:var(--text2);">1000 - 2499分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">略有小成，基础操作已掌握</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥇 黄金段位</div>
+      <div style="font-size:13px;color:var(--text2);">2500 - 4499分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">炉火纯青，调配流程烂熟于心</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">💎 钻石段位</div>
+      <div style="font-size:13px;color:var(--text2);">4500 - 6999分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">登峰造极，异常处理游刃有余</div>
+    </div>
+    <div>
+      <div style="font-size:28px;">👑 王者段位</div>
+      <div style="font-size:13px;color:var(--text2);">7000分以上</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">利乐大师，调配段无所不知</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--text3);text-align:center;">
+    每题满分35分 | 3秒内答对满分 | 答对越慢分越低(最低5分) | 答错+0分
+  </div>
+</div>
+
+<!-- ==================== 关卡选择页 ==================== -->
+<div class="page" id="pageLevels">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🎮 关卡挑战（共7关）</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">共7关200题 · 通关解锁下一关 · 正确率≥70%即为通关</div>
+  <div id="levelList"></div>
+</div>
+
+<!-- ==================== 关卡结算页 ==================== -->
+<div class="page" id="pageLevelResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="lvResultIcon">🎉</div>
+    <div class="result-title" id="lvResultTitle">关卡通过！</div>
+    <div class="result-score" id="lvResultScore">+245分</div>
+    <div class="result-detail" id="lvResultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="lvRankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="lvRankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="lvCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="lvWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="lvRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" id="lvNextBtn" onclick="retryLevel()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一次</button>
+</div>
+
+<script>
+// ==================== 题库（200道） ====================
+const QUESTION_BANK = [
+  // ===== 模块1：交接班与进入车间 (题1-10) =====
+  {id:1, type:'单选', q:'进入二次更衣室后，工作帽应将头发遮在哪里？', opts:['帽网里面','帽子外面','无所谓','露出刘海'], ans:0, explain:'更衣要求：戴工作帽，并将头发遮在帽网里面。'},
+  {id:2, type:'单选', q:'进入车间前必须经过什么程序？', opts:['直接进入','风淋+洗手消毒+泡靴','只需换鞋','只需洗手'], ans:1, explain:'经过风淋，再按照洗手消毒程序进行洗手和泡靴后方可进入车间。'},
+  {id:3, type:'判断', q:'未按着装规范着装的员工禁止进入车间。', opts:['正确','错误'], ans:0, explain:'未按着装规范着装的禁止进入车间。'},
+  {id:4, type:'多选', q:'交接班时需要了解哪些信息？', opts:['设备运行状况','清洗情况','生产时间','有无设备故障遗留'], ans:[0,1,2,3], explain:'交接班需了解设备运行状况、清洗情况、生产时间、调理情况、备料情况、异常及故障遗留。'},
+  {id:5, type:'单选', q:'上岗前宣导不包括以下哪项？', opts:['规章制度','安全知识','个人薪资','注意事项'], ans:2, explain:'参加上岗前宣导，认真听取主管宣导规章制度、安全知识、通知以及注意事项。'},
+  {id:6, type:'判断', q:'便鞋和便装可以随意放在更衣室任何位置。', opts:['正确','错误'], ans:1, explain:'在一次更衣室将便鞋放在指定鞋柜，便装摆放整齐。'},
+  {id:7, type:'判断', q:'交接班记录本只需查看，不需要填写。', opts:['正确','错误'], ans:1, explain:'需查看和填写交接班记录本。'},
+  {id:8, type:'单选', q:'一次更衣室的主要功能是什么？', opts:['更换工作服','存放便鞋和便装','洗手消毒','风淋'], ans:1, explain:'在一次更衣室将便鞋放在指定鞋柜，便装摆放整齐。'},
+  {id:9, type:'单选', q:'二次更衣室需要更换什么？', opts:['工作衣、工作帽、工作鞋','便装','安全帽','防护服'], ans:0, explain:'进入二次更衣室，更换干净的工作衣，戴工作帽，换穿工作鞋。'},
+  {id:10, type:'判断', q:'泡靴是进入车间的必须步骤。', opts:['正确','错误'], ans:0, explain:'按照洗手消毒程序进行洗手和泡靴后方可进入车间。'},
+
+  // ===== 模块2：水电气供应 (题11-25) =====
+  {id:11, type:'单选', q:'二次水用于溶解原料和清洗设备，其pH值要求是多少？', opts:['7.0±0.5','8.0±0.5','9.0±0.5','6.5±0.5'], ans:1, explain:'二次水要求pH=8.0±0.5。'},
+  {id:12, type:'多选', q:'调配段用水包括哪些？', opts:['二次水','自来水','冷却塔水','电解水'], ans:[0,1,2,3], explain:'调配段用水包括二次水、自来水、冷却塔水、电解水四种。'},
+  {id:13, type:'单选', q:'冷却塔水用于什么用途？', opts:['溶解原料','卫生清洁','糖浆杀菌后冷却降温','地面消毒'], ans:2, explain:'冷却塔水用于糖浆杀菌后冷却降温，温度35℃以下。'},
+  {id:14, type:'单选', q:'电解水主要用于什么？', opts:['溶解原料','清洗设备','地面墙壁消毒','冷却降温'], ans:2, explain:'电解水用于地面墙壁的消毒。'},
+  {id:15, type:'单选', q:'调配段正常工作电压范围是多少？', opts:['220V-240V','380V-400V','360V-380V','400V-420V'], ans:1, explain:'工作电压应在380V-400V范围内。'},
+  {id:16, type:'单选', q:'调配段有几个主蒸汽阀？', opts:['1个','2个','3个','4个'], ans:2, explain:'调配段共有三个主蒸汽阀：热水系统、溶糖杀菌系统、CIP加热系统。'},
+  {id:17, type:'判断', q:'外部蒸汽送达车间后可以直接打开使用。', opts:['正确','错误'], ans:1, explain:'必须缓慢打开蒸汽阀、同时打开排污阀慢慢排放掉管路中冷凝水，防止水锤撞击。'},
+  {id:18, type:'单选', q:'不排放蒸汽冷凝水可能导致什么后果？', opts:['水锤撞击损坏设备','蒸汽压力过高','管路堵塞','没有影响'], ans:0, explain:'管路中积蓄大量冷凝水，在高压蒸汽推动下会形成水锤撞击损坏用汽设备造成安全事故。'},
+  {id:19, type:'单选', q:'调配段共有几个分气箱（每线）？', opts:['1个','2个','3个','4个'], ans:1, explain:'调配段共有二个（每线）分气箱（调配区、CIP区）。'},
+  {id:20, type:'判断', q:'空气过滤器中的冷凝水需要每日排放。', opts:['正确','错误'], ans:0, explain:'必须每日排放空气过滤器中的冷凝水。'},
+  {id:21, type:'单选', q:'二次水的硬度要求是多少？', opts:['≤30ppm','≤50ppm','≤80ppm','≤100ppm'], ans:1, explain:'二次水硬度≤50ppm。'},
+  {id:22, type:'单选', q:'二次水的余氯要求是多少？', opts:['0.5ppm','1.0ppm','0','0.2ppm'], ans:2, explain:'二次水余氯为0。'},
+  {id:23, type:'判断', q:'冷却塔水温度应在35℃以下。', opts:['正确','错误'], ans:0, explain:'冷却塔水用于糖浆杀菌后冷却降温，温度35℃以下。'},
+  {id:24, type:'单选', q:'自来水在调配段的主要用途是什么？', opts:['溶解原料','卫生清洁','设备冷却','消毒'], ans:1, explain:'自来水用于卫生清洁。'},
+  {id:25, type:'判断', q:'发现气动阀用气点漏气应自行处理，无需记录。', opts:['正确','错误'], ans:1, explain:'应由技术员协助处理，并如实记录在交接班记录本中。'},
+
+  // ===== 模块3：溶糖流程 (题26-45) =====
+  {id:26, type:'单选', q:'溶糖入水温度要求是多少？', opts:['50±2℃','60±2℃','70±2℃','80±2℃'], ans:1, explain:'溶糖入水量，水温60±2℃。'},
+  {id:27, type:'单选', q:'溶糖搅拌时间是多少？', opts:['600s','900s','1200s','1500s'], ans:2, explain:'搅拌时间1200s。'},
+  {id:28, type:'判断', q:'可以用刀割白砂糖袋子来加快投料。', opts:['正确','错误'], ans:1, explain:'不允许用刀割袋子，以免杂物掉到溶糖桶，影响产品质量，堵塞过滤器，损坏阀体。'},
+  {id:29, type:'多选', q:'白砂糖投料前需要检查什么？', opts:['色泽是否正常','有无异物','袋内合格证取出','检查封口完整性'], ans:[0,1,2], explain:'检查白砂糖色泽是否正常和有无异物，如有合格证需取出放入垃圾袋内。'},
+  {id:30, type:'单选', q:'糖浆杀菌温度是多少？', opts:['121±1℃','125±1℃','130±1℃','115±1℃'], ans:1, explain:'杀菌温度125℃±1。'},
+  {id:31, type:'单选', q:'糖浆杀菌时间是多少？', opts:['15s','30s','45s','60s'], ans:1, explain:'杀菌时间30S。'},
+  {id:32, type:'单选', q:'糖浆杀菌后冷却至储糖温度是多少？', opts:['20±5℃','25±5℃','30±5℃','35±5℃'], ans:2, explain:'冷却至最后储糖30±5℃。'},
+  {id:33, type:'单选', q:'溶糖前需要检查蒸汽压力，要求是多少？', opts:['≥4bar','≥6bar','≥8bar','≥10bar'], ans:1, explain:'检查溶糖蒸汽阀门是否打开，蒸汽压力≥6bar。'},
+  {id:34, type:'判断', q:'调整溶糖设定参数只需要操作人员自行决定即可。', opts:['正确','错误'], ans:1, explain:'调整设定参数必须在厂长、品保主管确认同意后才能完成。'},
+  {id:35, type:'判断', q:'糖浆杀菌过程中温度低于124℃时，糖浆液会自动流回溶糖桶。', opts:['正确','错误'], ans:0, explain:'杀菌过程中如出现杀菌温度低于124℃，储糖桶上的十字阀将关闭，糖浆液流回溶糖桶。'},
+  {id:36, type:'单选', q:'溶糖前需要检查什么设备状态？', opts:['糖浆过滤器网','蒸汽阀门','手动阀状态','以上都是'], ans:3, explain:'溶糖前需检查手动阀状态、过滤器网、蒸汽阀门等。'},
+  {id:37, type:'单选', q:'糖浆杀菌完成后，需要通知谁检测？', opts:['厂长','当班品管','技术员','主管'], ans:1, explain:'待杀菌完成，通知当班品管检测。'},
+  {id:38, type:'判断', q:'如发现白砂糖混有杂质，继续使用但通知品管。', opts:['正确','错误'], ans:1, explain:'如发现混有杂质，立即通知品管并隔离异常品。'},
+  {id:39, type:'单选', q:'溶糖完毕后应如何处理冷却塔水循环？', opts:['继续保持','关闭水泵','调大流量','不做处理'], ans:1, explain:'溶糖完毕后关闭冷却塔水循环水泵。'},
+  {id:40, type:'多选', q:'溶糖杀菌完成需要记录哪些内容？', opts:['溶糖数量','溶解时间','杀菌温度','杀菌时间'], ans:[0,1,2,3], explain:'将溶糖数量、溶解时间、溶糖温度、杀菌时间、杀菌温度及搅拌后糖液终温记录。'},
+  {id:41, type:'单选', q:'冷却水压力表应大于多少bar？', opts:['0.15bar','0.25bar','0.35bar','0.50bar'], ans:1, explain:'察看冷却水压力表大于0.25bar。'},
+  {id:42, type:'单选', q:'储糖前需要对储糖桶做什么检查？', opts:['检查桶底阀是否关闭','检查温度','检查液位','检查搅拌'], ans:0, explain:'进行储糖前对储糖桶桶底阀要进行检查是否在关闭状态。'},
+  {id:43, type:'判断', q:'糖浆过滤器的滤网如有破损，只需记录不需更换。', opts:['正确','错误'], ans:1, explain:'如滤网和接口处出现裂伤可能影响过滤效果必须更换过滤器。'},
+  {id:44, type:'单选', q:'125线每桶调理液添加糖液量的计算公式中，固定系数是多少？', opts:['100','161','200','275'], ans:1, explain:'125线公式：161*100/(Brix×比重)。'},
+  {id:45, type:'单选', q:'250线每桶调理液添加糖液量的计算公式中，固定系数是多少？', opts:['100','161','200','275'], ans:3, explain:'250线公式：275*100/(Brix×比重)。'},
+
+  // ===== 模块4：牛奶调配流程 (题46-70) =====
+  {id:46, type:'单选', q:'125牛奶调配一次入水温度要求是多少？', opts:['60℃','73℃','80℃','90℃'], ans:1, explain:'当水温达到73℃时，一次入水开始进入调配桶。'},
+  {id:47, type:'单选', q:'高速混料机投入奶粉后搅拌多长时间？', opts:['2min','3min','5min','10min'], ans:2, explain:'向高速混料机内投入奶粉200kg，搅拌5min。'},
+  {id:48, type:'单选', q:'乳化剂与奶粉的预混合比例是多少？', opts:['1:1','1:2或3','1:5','2:1'], ans:1, explain:'乳化剂与奶粉按1:2或3预先混合均匀。'},
+  {id:49, type:'判断', q:'小料（乳化剂混合料）倒入高速混料机的时间应≥2分钟。', opts:['正确','错误'], ans:0, explain:'将乳化剂混合料缓慢均匀加入高速混料机（小料倒入时间≥2分钟）。'},
+  {id:50, type:'多选', q:'调配使用的刀具有哪些要求？', opts:['不锈钢材质','刀刃长度不超过10cm','不易折断','手柄拴细绳防脱手'], ans:[0,1,2,3], explain:'刀具要求不锈钢材质、刀刃≤10cm、不易折断、手柄拴细绳。'},
+  {id:51, type:'单选', q:'炼乳桶封口铝箔纸应如何处理？', opts:['直接撕开','用刀沿桶口内侧旋割一周','用剪刀剪','用手抠开'], ans:1, explain:'炼乳桶封口铝箔纸要用刀沿桶口内侧旋割一周，使割口整齐无毛边、无碎屑。'},
+  {id:52, type:'单选', q:'调理液最终温度要求是多少？', opts:['45-55℃','55-65℃','65-75℃','35-45℃'], ans:1, explain:'调理液最终温度55-65℃。'},
+  {id:53, type:'单选', q:'总调理时间应小于多少？', opts:['30min','40min','50min','60min'], ans:2, explain:'总调理时间小于50min。'},
+  {id:54, type:'单选', q:'调理液水合时间是多少？', opts:['15分钟','20分钟','30分钟','45分钟'], ans:2, explain:'水合30分钟后，待品管人员检测。'},
+  {id:55, type:'单选', q:'125调理液Brix标准是多少？', opts:['13.6±0.2','14.6±0.2','15.6±0.2','12.6±0.2'], ans:1, explain:'调理液Brix 14.6±0.2。'},
+  {id:56, type:'单选', q:'调理液pH值标准是多少？', opts:['6.45±0.15','6.55±0.15','6.65±0.15','6.85±0.15'], ans:2, explain:'pH值6.65±0.15。'},
+  {id:57, type:'单选', q:'调理液比重标准是多少？', opts:['1.035±0.002','1.045±0.002','1.055±0.002','1.025±0.002'], ans:1, explain:'比重1.045±0.002。'},
+  {id:58, type:'判断', q:'调配好的调理液未按"完成"键就可以调下一桶。', opts:['正确','错误'], ans:1, explain:'对调配好的调理液一定要打完成后才可以按调配启动调下一桶。'},
+  {id:59, type:'单选', q:'250牛奶调配一次入水量是多少？', opts:['6300L','7300L','8300L','5300L'], ans:1, explain:'在调理桶中打入7300L 73±2℃的调理水。'},
+  {id:60, type:'单选', q:'250牛奶调配终温要求是多少？', opts:['55±5℃','60±5℃','65±5℃','50±5℃'], ans:1, explain:'终温60±5℃。'},
+  {id:61, type:'判断', q:'炼乳桶倒完后需要用生产调理用水清洗1-2次。', opts:['正确','错误'], ans:0, explain:'向桶内加入1/3的生产调理用水进行清洗，清洗需进行1-2次。'},
+  {id:62, type:'单选', q:'香精加入高速混料机时，加入时间应不小于多少？', opts:['1分钟','2分钟','3分钟','5分钟'], ans:1, explain:'缓缓地加入香精，加入时间不小于2min。'},
+  {id:63, type:'单选', q:'投料操作员在TK4.2内投入炼乳前需要做什么？', opts:['直接倒入','对炼乳桶表面清洗干净','加热炼乳','稀释炼乳'], ans:1, explain:'在倒炼乳时要对炼乳桶表面清洗干净。'},
+  {id:64, type:'判断', q:'高速混料机出料至调配桶后应立即停止搅拌。', opts:['正确','错误'], ans:1, explain:'高速混料机出料至调配桶后高速搅拌机停止搅拌，然后启动粉碎泵循环搅拌。'},
+  {id:65, type:'单选', q:'调配桶入水量到多少时开始高速混料进水？', opts:['500L','700L','1000L','1500L'], ans:2, explain:'当调配桶入水量到1000L时，投料操作员按【TK4.2入水】键打入700L热水。'},
+  {id:66, type:'判断', q:'250牛奶调配时Brix标准与125牛奶相同。', opts:['正确','错误'], ans:0, explain:'250牛奶调配Brix=14.60±0.20，与125相同。'},
+  {id:67, type:'单选', q:'250牛奶调配时糖浆补入后多久品管取样测定？', opts:['5min','10min','15min','20min'], ans:1, explain:'糖浆补入后10min，品管取样测定Brix确定二次补水量。'},
+  {id:68, type:'判断', q:'调配桶搅拌应在水合期间持续运行。', opts:['正确','错误'], ans:1, explain:'水合30分钟是静止水合，不需要搅拌。'},
+  {id:69, type:'多选', q:'品管检测调理液合格的指标包括哪些？', opts:['Brix','比重','pH值','风味'], ans:[0,1,2,3], explain:'品管检测Brix、比重、pH值、风味，确认合格后方可过料。'},
+  {id:70, type:'判断', q:'品管确认调理液合格后，调配人员直接通知UHT过料。', opts:['正确','错误'], ans:1, explain:'确认合格后按下完成键，通知杀菌作业员，准备过料。'},
+
+  // ===== 模块5：O泡调配 (题71-85) =====
+  {id:71, type:'单选', q:'O泡溶糖桶打入热水温度是多少？', opts:['60-65℃','70-75℃','80-85℃','50-55℃'], ans:1, explain:'将相应量70-75℃的热水打入溶糖桶中。'},
+  {id:72, type:'单选', q:'安定剂E与白砂糖的混合比例是多少？', opts:['1:3','1:5','1:8','1:10'], ans:1, explain:'安定剂E:白砂糖=1:5的比例混合。'},
+  {id:73, type:'判断', q:'安定剂E与白砂糖的最小混合比例不低于1:2。', opts:['正确','错误'], ans:0, explain:'混合的最小比例不低于安定剂E:白砂糖=1:2。'},
+  {id:74, type:'单选', q:'O泡料液经过过滤器后通过什么设备冷却？', opts:['冷却塔','板式冰水交换器','自然冷却','风冷'], ans:1, explain:'料液经过过滤器，板式冰水交换器冷却。'},
+  {id:75, type:'单选', q:'O泡料液冷却至多少度以下打入储糖桶？', opts:['8℃','10℃','12℃','15℃'], ans:2, explain:'料液温度降至12℃以下，打入储糖桶。'},
+  {id:76, type:'单选', q:'O泡酸液冷却至多少度以下？', opts:['8℃','10℃','12℃','15℃'], ans:1, explain:'酸液冷却至≤10℃。'},
+  {id:77, type:'单选', q:'6T O泡喷酸时间控制在多少？', opts:['5-6min','7-8min','10-12min','3-5min'], ans:1, explain:'喷酸时间控制在7-8min（6T）。'},
+  {id:78, type:'单选', q:'9T O泡喷酸时间控制在多少？', opts:['7-8min','10-14min','15-18min','5-7min'], ans:1, explain:'喷酸时间控制在10-14min（9T）。'},
+  {id:79, type:'判断', q:'喷酸完成后用≥200kg常温水将管路中酸液赶至调理桶。', opts:['正确','错误'], ans:0, explain:'喷酸完成后用≥200kg的常温水，将管路中的酸液全部赶至调理桶中。'},
+  {id:80, type:'单选', q:'O泡调料总时间应≤多少分钟？', opts:['30分钟','40分钟','50分钟','60分钟'], ans:2, explain:'调料总时间应≤50分钟。'},
+  {id:81, type:'单选', q:'原味O泡果奶糖度标准是多少？', opts:['11.7±0.2','12.7±0.2','13.7±0.2','14.7±0.2'], ans:1, explain:'原味O泡果奶糖度brix：12.7±0.2。'},
+  {id:82, type:'单选', q:'草莓味O泡果奶糖度标准是多少？', opts:['12.3±0.2','13.3±0.2','14.3±0.2','11.3±0.2'], ans:1, explain:'草莓味O泡果奶糖度brix：13.3±0.2。'},
+  {id:83, type:'单选', q:'O泡果奶pH值标准是多少？', opts:['3.70±0.1','3.80±0.1','3.90±0.1','4.00±0.1'], ans:2, explain:'O泡果奶pH值：3.90±0.1。'},
+  {id:84, type:'多选', q:'O泡调配中使用的辅料包括哪些？', opts:['柠檬酸','苹果酸','乳酸(80%)','柠檬酸钠'], ans:[0,1,2], explain:'向不锈钢桶内加入柠檬酸、苹果酸、乳酸（80%）等辅料。'},
+  {id:85, type:'判断', q:'色素用20-30kg常温水预溶解后加入调理桶。', opts:['正确','错误'], ans:0, explain:'色素用20-30kg常温水预溶解，溶解后，加入调理桶中。'},
+
+  // ===== 模块6：乳酸菌调配 (题86-105) =====
+  {id:86, type:'单选', q:'发酵罐空杀温度是多少？', opts:['83±2℃','93±2℃','103±2℃','73±2℃'], ans:1, explain:'对发酵罐进行蒸汽空杀，空杀温度93±2℃。'},
+  {id:87, type:'单选', q:'发酵罐空杀时间不小于多少分钟？', opts:['15分钟','20分钟','30分钟','45分钟'], ans:2, explain:'空杀时间不小于30分钟。'},
+  {id:88, type:'单选', q:'发酵调配桶打入调理水温度是多少？', opts:['45-50℃','55-60℃','65-70℃','75-80℃'], ans:1, explain:'从热水桶向发酵调配桶打入55-60℃的调理水。'},
+  {id:89, type:'单选', q:'发酵调配液Brix标准是多少？', opts:['20.5±0.50','21.5±0.50','22.5±0.50','19.5±0.50'], ans:1, explain:'Brix=21.5±0.50。'},
+  {id:90, type:'单选', q:'发酵调配液pH标准是多少？', opts:['6.35±0.15','6.45±0.15','6.55±0.15','6.25±0.15'], ans:1, explain:'PH=6.45±0.15。'},
+  {id:91, type:'单选', q:'发酵液水合时间≥多少分钟？', opts:['20分钟','30分钟','40分钟','60分钟'], ans:1, explain:'料液在发酵调配桶内静止水合，水合时间≥30分钟。'},
+  {id:92, type:'单选', q:'发酵液杀菌温度是多少？', opts:['115±1℃','121±1℃','125±1℃','130±1℃'], ans:1, explain:'杀菌温度121±1℃、时间15S。'},
+  {id:93, type:'单选', q:'发酵液杀菌时间是多少？', opts:['10S','15S','30S','45S'], ans:1, explain:'杀菌时间15S。'},
+  {id:94, type:'单选', q:'发酵液出料温度要求是多少？', opts:['≥65℃','≥75℃','≥85℃','≥55℃'], ans:1, explain:'出料温度≥75℃。'},
+  {id:95, type:'单选', q:'发酵桶保温层循环热水温度是多少？', opts:['88±1℃','93±1℃','98±1℃','103±1℃'], ans:2, explain:'发酵桶保温层开始通入98±1℃循环热水。'},
+  {id:96, type:'单选', q:'保温褐变总时间是多少？', opts:['60±2分钟','90±2分钟','120±2分钟','45±2分钟'], ans:1, explain:'保温总时间：90±2分钟。'},
+  {id:97, type:'单选', q:'保温计时30分钟后奶液温度控制在多少？', opts:['90±1℃','95±1℃','98±1℃','85±1℃'], ans:1, explain:'保温计时30分钟以后保持奶液温度控制在95±1℃。'},
+  {id:98, type:'单选', q:'褐变结束后通入多少度冰水降温？', opts:['3-8℃','5-12℃','8-15℃','0-5℃'], ans:1, explain:'系统通入5-12℃的冰水降温。'},
+  {id:99, type:'单选', q:'接种温度是多少？', opts:['35±1℃','37±1℃','40±1℃','33±1℃'], ans:1, explain:'接种温度37±1℃。'},
+  {id:100, type:'单选', q:'发酵循环水回流温度控制在多少？', opts:['35±1℃','37±1℃','39±1℃','33±1℃'], ans:1, explain:'发酵循环水回流温度必须控制在37±1℃。'},
+  {id:101, type:'单选', q:'目标发酵酸度是多少？', opts:['2.35-2.45%','2.55-2.65%','2.75-2.85%','2.15-2.25%'], ans:1, explain:'检测是否达到目标酸度2.55-2.65%。'},
+  {id:102, type:'单选', q:'发酵时间约为多少？', opts:['20±3h','27±3h','35±3h','15±3h'], ans:1, explain:'发酵时间27±3h。'},
+  {id:103, type:'单选', q:'发酵液冷却至多少度？', opts:['8±2℃','10±2℃','12±2℃','15±2℃'], ans:2, explain:'将发酵液温度降至12±2℃。'},
+  {id:104, type:'单选', q:'均质机二级压力是多少？', opts:['30bar','40bar','50bar','20bar'], ans:1, explain:'均质机加压二级压力40bar、总压180bar。'},
+  {id:105, type:'单选', q:'均质机总压是多少？', opts:['150bar','180bar','200bar','160bar'], ans:1, explain:'总压180bar。'},
+
+  // ===== 模块7：乳酸菌半成品调配 (题106-115) =====
+  {id:106, type:'单选', q:'半成品调配前设备管路热水循环冲洗温度是多少？', opts:['75±1℃','85±1℃','95±1℃','65±1℃'], ans:1, explain:'对调理段所有设备管路及调理桶做85±1℃热水循环冲洗。'},
+  {id:107, type:'单选', q:'半成品调配热水冲洗时间是多少？', opts:['10分钟','15分钟','20分钟','30分钟'], ans:1, explain:'85±1℃热水循环冲洗15分钟后排放。'},
+  {id:108, type:'单选', q:'添加发酵液前糖胶液温度要求是多少？', opts:['≤10℃','≤12℃','≤15℃','≤8℃'], ans:1, explain:'添加发酵液前确认，糖胶液温度≤12℃。'},
+  {id:109, type:'单选', q:'添加发酵液前糖胶液液位要求是多少？', opts:['≥2吨','≥3吨','≥4吨','≥5吨'], ans:1, explain:'糖胶液液位≥3吨。'},
+  {id:110, type:'单选', q:'乳酸菌半成品糖度标准是多少？', opts:['17.5±0.2','18.5±0.2','19.5±0.2','16.5±0.2'], ans:1, explain:'糖度:18.5±0.2。'},
+  {id:111, type:'单选', q:'乳酸菌半成品pH标准是多少？', opts:['3.55±0.15','3.65±0.15','3.75±0.15','3.85±0.15'], ans:2, explain:'PH:3.75±0.15。'},
+  {id:112, type:'单选', q:'乳酸菌半成品总酸标准是多少？', opts:['0.40±0.02%','0.50±0.02%','0.60±0.02%','0.30±0.02%'], ans:1, explain:'总酸：0.50±0.02%。'},
+  {id:113, type:'单选', q:'乳酸菌调理液终温要求是多少？', opts:['≤15℃','≤20℃','≤25℃','≤10℃'], ans:1, explain:'调理液终温: ≤20℃。'},
+  {id:114, type:'单选', q:'乳酸菌调理液比重标准是多少？', opts:['1.063±0.002','1.073±0.002','1.083±0.002','1.053±0.002'], ans:1, explain:'调理液比重：1.073±0.002。'},
+  {id:115, type:'判断', q:'发酵液冷却均质完毕后应在8h内用完。', opts:['正确','错误'], ans:0, explain:'冷却均质完毕的发酵液应在8h内用完。'},
+
+  // ===== 模块8：CIP清洗 (题116-145) =====
+  {id:116, type:'单选', q:'中间清洗一般选用什么方式？', opts:['酸碱洗','碱洗','酸洗','热水洗'], ans:1, explain:'中间清洗一般为碱洗。'},
+  {id:117, type:'单选', q:'最终清洗一般选用什么方式？', opts:['碱洗','酸洗','酸碱洗','热水洗'], ans:2, explain:'最终清洗一般为酸碱洗。'},
+  {id:118, type:'单选', q:'CIP酸液浓度标准是多少？', opts:['0.5-1.0%','1.0-1.5%','1.5-2.0%','2.0-2.5%'], ans:1, explain:'酸（Horolith FL）浓度：1.0-1.5%。'},
+  {id:119, type:'单选', q:'CIP碱液浓度标准是多少？', opts:['1.0-1.5%','1.5-2.0%','2.0-2.5%','0.5-1.0%'], ans:1, explain:'碱（AC-101）浓度：1.5-2.0%。'},
+  {id:120, type:'单选', q:'CIP热水温度要求是多少？', opts:['80℃','85℃','90℃','95℃'], ans:2, explain:'热水（二次水）：90℃。'},
+  {id:121, type:'单选', q:'调配段每班清洗频率是怎样的？', opts:['每班两次','每班一次','两班一次','每天一次'], ans:1, explain:'调配段每班清洗一次。'},
+  {id:122, type:'单选', q:'第一班通常选用什么清洗方式？', opts:['酸碱洗','碱洗（中间清洗）','酸洗','热水洗'], ans:1, explain:'第一班做中间清洗,通常选用碱洗方式。'},
+  {id:123, type:'单选', q:'第二班通常选用什么清洗方式？', opts:['碱洗','酸洗','酸碱洗（最终清洗）','热水洗'], ans:2, explain:'第二班做最终清洗通常选用酸碱洗方式。'},
+  {id:124, type:'判断', q:'调配至UHT供料管每班清洗一次。', opts:['正确','错误'], ans:0, explain:'调配至UHT供料管每班一次。'},
+  {id:125, type:'多选', q:'更换酸碱时应注意哪些防护？', opts:['戴好防护头盔','戴好手套','无需防护','调配技术员做好监督'], ans:[0,1,3], explain:'更换酸、碱时应注意做好防护（戴好防护头盔、手套），调配技术员做好监督。'},
+  {id:126, type:'单选', q:'CIP清洗液浓度偏差超过多少需上报主管？', opts:['0.1%','0.2%','0.3%','0.5%'], ans:1, explain:'如浓度偏差超过0.2%必须上报给主管调试。'},
+  {id:127, type:'单选', q:'CIP清洗流量不得小于多少？', opts:['5吨/小时','8吨/小时','10吨/小时','6吨/小时'], ans:1, explain:'流量不得小于8吨/小时。'},
+  {id:128, type:'单选', q:'CIP碱洗温度要求是多少？', opts:['65℃','70℃','75℃','80℃'], ans:2, explain:'清洗温度碱75℃。'},
+  {id:129, type:'单选', q:'CIP酸洗温度要求是多少？', opts:['60℃','65℃','70℃','75℃'], ans:2, explain:'清洗温度酸70℃。'},
+  {id:130, type:'单选', q:'CIP清洗结束时水样pH合格标准是多少？', opts:['6.5-7.5','7.0-8.0','7.5-8.5','8.0-9.0'], ans:2, explain:'从返回线处取水样检测pH值，合格标准7.5-8.5。'},
+  {id:131, type:'判断', q:'生产结束后应保持设备管路内存水。', opts:['正确','错误'], ans:1, explain:'如生产结束，要排除设备管路内的存水,保持设备干燥状态。'},
+  {id:132, type:'判断', q:'CIP清洗时取样阀不需要拆下。', opts:['正确','错误'], ans:1, explain:'取样阀要在CIP前拆下清洗。'},
+  {id:133, type:'单选', q:'取样阀清洗后放入多少ppm的事百得溶液中浸泡？', opts:['200ppm','300ppm','400ppm','500ppm'], ans:2, explain:'清洗后放入400ppm的事百得溶液中浸泡。'},
+  {id:134, type:'单选', q:'取样阀安装前用什么消毒？', opts:['清水冲洗','50%酒精','70%酒精','90%酒精'], ans:2, explain:'安装时先用二次水洗净，再用70%酒精喷洒消毒。'},
+  {id:135, type:'单选', q:'CIP清洗步骤转换由什么控制？', opts:['手动操作','程序设定','品管指令','主管指令'], ans:1, explain:'清洗时各步骤转换由程序设定。'},
+  {id:136, type:'多选', q:'CIP清洗出现异常应检查哪些方面？', opts:['CIP泵运转情况','蒸汽和空压气压力','电导仪浓度偏差','流量开关'], ans:[0,1,2,3], explain:'清洗异常需检查CIP泵、比例阀、蒸汽空压气、电导仪、流量开关、过滤网。'},
+  {id:137, type:'单选', q:'手工清洗过滤器可用什么材质的刷子？', opts:['钢丝刷','塑料材质长毛刷','铜丝刷','铁刷'], ans:1, explain:'刷洗过滤器可用塑料材质长毛刷。'},
+  {id:138, type:'单选', q:'过滤器清洗用什么做清洗液？', opts:['清水','餐洗净','碱液','酸液'], ans:1, explain:'用餐洗净做清洗液。'},
+  {id:139, type:'判断', q:'过滤器中发现橡胶或金属异物应立即通知技术人员。', opts:['正确','错误'], ans:0, explain:'如有橡胶或金属立即通知技术人员，保管好异物便于查寻。'},
+  {id:140, type:'单选', q:'双座阀腔清洗用什么工具？', opts:['长毛刷','牙刷','抹布','铲刀'], ans:1, explain:'双座阀腔在生产结束后要用牙刷从底部刷洗。'},
+  {id:141, type:'单选', q:'双座阀腔清洗标准是什么？', opts:['无污垢','无奶渍','无异味','以上都是'], ans:3, explain:'标准无污垢、奶渍和异味。'},
+  {id:142, type:'判断', q:'CIP清洗时桶盖垫圈应安装好以便一起清洗。', opts:['正确','错误'], ans:1, explain:'桶盖垫圈要拆下手工清洗，CIP时不要装垫圈。'},
+  {id:143, type:'单选', q:'排气阀CIP时应处于什么状态？', opts:['关闭','打开','半开','无所谓'], ans:1, explain:'排气阀清洗要在CIP时打开，让清洗液能够流出达到清洗效果。'},
+  {id:144, type:'判断', q:'工器具清洗后在400ppm事百得中浸泡，使用前用二次水清洗。', opts:['正确','错误'], ans:0, explain:'将使用中的刀子、开口器等工器具清洗后在400ppm事百得中浸泡，使用前再用二次水清洗。'},
+  {id:145, type:'单选', q:'地面、地沟每天用什么消毒？', opts:['清水','氯水(300-400ppm)','碱液','酸液'], ans:1, explain:'地面、地沟每天用氯水（300-400ppm）消毒。'},
+
+  // ===== 模块9：过料与过滤器 (题146-155) =====
+  {id:146, type:'单选', q:'使用新西兰奶粉时过滤器清洗频率是多少？', opts:['每桶一次','每班一次','每天一次','每两班一次'], ans:1, explain:'使用新西兰奶粉时每班对过滤器清洗一次。'},
+  {id:147, type:'单选', q:'使用雀巢奶粉时过滤器清洗频率是多少？', opts:['每班一次','每桶一次','每天一次','每两班一次'], ans:1, explain:'使用雀巢奶粉每桶清洗一次。'},
+  {id:148, type:'判断', q:'过滤器清洗由现场品管监督操作过程。', opts:['正确','错误'], ans:0, explain:'由现场的品管监督操作过程。'},
+  {id:149, type:'多选', q:'过滤器清洗需检查哪些方面？', opts:['完整性','通透性','过滤物','密封性'], ans:[0,1,2], explain:'对其完整性、通透性及过滤网上的过滤物进行检查。'},
+  {id:150, type:'判断', q:'过滤器清洗事项记录在利乐包调配CIP系统点检表中。', opts:['正确','错误'], ans:0, explain:'检查及清洗事项记录在[利乐包调配CIP系统点检表]中。'},
+  {id:151, type:'单选', q:'过料管路上的过滤器是什么的主要屏障？', opts:['温度控制','阻拦异物','流量控制','压力控制'], ans:1, explain:'调理桶向UHT过料管路上的过滤器是阻拦异物的主要屏障。'},
+  {id:152, type:'判断', q:'过滤器的完整性对成品品质和设备安全影响不大。', opts:['正确','错误'], ans:1, explain:'其完整性及清洁程度对成品品质和设备安全有很大影响。'},
+  {id:153, type:'单选', q:'溶糖桶下过滤器在溶糖前应处于什么状态？', opts:['打开','关闭','半开','无所谓'], ans:1, explain:'确认过滤器前后手动阀是否全部打开，溶糖桶下排放阀全部关闭。'},
+  {id:154, type:'单选', q:'桶式过滤器上的放气阀在什么时机操作？', opts:['进料前打开排尽气体后关闭','始终打开','始终关闭','进料后打开'], ans:0, explain:'打开桶式过滤器上放气阀，排尽桶式过滤器中的气体后关闭。'},
+  {id:155, type:'判断', q:'过滤器的滤网出现裂伤不影响使用。', opts:['正确','错误'], ans:1, explain:'如滤网和接口处出现裂伤可能影响过滤效果必须更换过滤器。'},
+
+  // ===== 模块10：环境与卫生 (题156-170) =====
+  {id:156, type:'判断', q:'地面有积水时用吸水性强的拖把吸走。', opts:['正确','错误'], ans:0, explain:'地面不允许有积水，如有用吸水性强的拖把吸走。'},
+  {id:157, type:'判断', q:'可以用水管直接冲洗设备电器部分。', opts:['正确','错误'], ans:1, explain:'禁止用水管直接冲设备（特别是电器部分）。'},
+  {id:158, type:'单选', q:'卫生工具应放置在哪里？', opts:['任意位置','卫生清洁工具柜','设备旁','墙角'], ans:1, explain:'卫生工具拖把、扫帚、簸箕定点放置在卫生清洁工具柜中。'},
+  {id:159, type:'判断', q:'调配段作业人员可以化妆进入车间。', opts:['正确','错误'], ans:1, explain:'根据GMP着装规范要求禁止化妆。'},
+  {id:160, type:'判断', q:'作业人员可以佩戴饰物进入车间。', opts:['正确','错误'], ans:1, explain:'禁止佩戴饰物。'},
+  {id:161, type:'单选', q:'接触不洁净工作后必须做什么？', opts:['继续工作','彻底洗手消毒','换手套','报告主管'], ans:1, explain:'每次接触不洁净的工作后必须彻底对手部进行洗手消毒。'},
+  {id:162, type:'单选', q:'地面有油渍时应如何处理？', opts:['用水冲','用洗洁精清理至干净','用拖把拖','不管'], ans:1, explain:'如有油渍时立即用洗洁精清理直至干净为止。'},
+  {id:163, type:'判断', q:'下水道口接班后应清理并保持畅通有滤网。', opts:['正确','错误'], ans:0, explain:'下水道口的卫生在接班后进行清理，并保持无异物、干净、畅通并有滤网。'},
+  {id:164, type:'判断', q:'现场工具和原料不需要按5S要求定位摆放。', opts:['正确','错误'], ans:1, explain:'现场工具和原料要按照5S要求定位摆放。'},
+  {id:165, type:'判断', q:'奶粉袋、炼乳桶、塑料膜需按管理课要求叠放分类。', opts:['正确','错误'], ans:0, explain:'奶粉袋、炼乳桶、塑料膜要按管理课要求叠放且做好分类工作。'},
+  {id:166, type:'单选', q:'清洗用水管出现裂口破损应如何处理？', opts:['继续使用','及时更换','用胶带缠上','不管'], ans:1, explain:'清洗用水管要保持完好，如出现裂口、破损要及时更换。'},
+  {id:167, type:'判断', q:'调配段环境清洁是为了防止霉变、异味和滋生蚊虫。', opts:['正确','错误'], ans:0, explain:'每天生产结束后要对设备和周围环境进行清洁，去除粉尘污垢，防止霉变、异味和滋生蚊虫。'},
+  {id:168, type:'单选', q:'抹布、刷子、铲刀随时使用时应放在哪里？', opts:['地上','工具盒内','设备上','口袋里'], ans:1, explain:'随时使用的抹布、刷子、铲刀放置在工具盒内。'},
+  {id:169, type:'判断', q:'保持地面环境干燥清洁是调配段的要求。', opts:['正确','错误'], ans:0, explain:'保持地面环境干燥清洁。'},
+  {id:170, type:'判断', q:'可以携带与生产维修无关的物品进入车间。', opts:['正确','错误'], ans:1, explain:'禁止携带与生产、维修无关的物品进入车间。'},
+
+  // ===== 模块11：异常处理 (题171-190) =====
+  {id:171, type:'单选', q:'调理中突然停电，已投入调配桶的料液应如何处理？', opts:['继续等待','外部喷淋自来水降温','加热保温','直接排放'], ans:1, explain:'对已投入到调配桶中的料液采用外部喷淋自来水降温处理。'},
+  {id:172, type:'多选', q:'停电时品管对调理液监控内容包括哪些？', opts:['口味','感官','pH检测','酸度检测'], ans:[0,1,2,3], explain:'每15分钟口味、感官、pH检测，每30分钟一次酸度检测。'},
+  {id:173, type:'单选', q:'确认料液变败的牛奶滴定酸度标准是多少？', opts:['≥10','≥13','≥15','≥8'], ans:1, explain:'牛奶滴定酸度≥13。'},
+  {id:174, type:'单选', q:'确认料液变败的pH标准是多少？', opts:['≤6.6','≤6.5','≤6.4','≤6.7'], ans:2, explain:'pH≤6.4。'},
+  {id:175, type:'判断', q:'确认变败后应通知厂长和品保主管。', opts:['正确','错误'], ans:0, explain:'若确认出现变败，通知厂长和品保主管。'},
+  {id:176, type:'单选', q:'停水时间小于多少分钟不影响正常生产？', opts:['15分钟','30分钟','45分钟','60分钟'], ans:1, explain:'调理岗位停水时间＜30分钟不影响正常生产。'},
+  {id:177, type:'判断', q:'停水时间超过30分钟且无法排除故障，通知杀菌岗位做无菌水循环。', opts:['正确','错误'], ans:0, explain:'如在30min内不能排除要通知杀菌岗位做无菌水循环。'},
+  {id:178, type:'单选', q:'调配生产中停汽或气压过低会导致什么问题？', opts:['补水温度达不到设定','设备损坏','产品质量下降','以上都是'], ans:0, explain:'调配生产中停汽或气压过低会使调理补水时水温达不到设定温度。'},
+  {id:179, type:'判断', q:'CIP清洗中停汽应继续清洗等待恢复。', opts:['正确','错误'], ans:1, explain:'若CIP清洗中停汽或压力过低，清洗液温度达不到设定，则应停止CIP。'},
+  {id:180, type:'单选', q:'品管停电监控调理液的频率是？', opts:['每10分钟','每15分钟','每30分钟','每60分钟'], ans:1, explain:'每15分钟口味、感官、pH检测。'},
+  {id:181, type:'判断', q:'出现异常状况只需自行处理，不需要通知上级。', opts:['正确','错误'], ans:1, explain:'出现异常状况要第一时间通知上级主管。'},
+  {id:182, type:'单选', q:'停电时品管对调理液酸度检测频率是多少？', opts:['每15分钟','每30分钟','每45分钟','每60分钟'], ans:1, explain:'每30分钟一次酸度检测。'},
+  {id:183, type:'判断', q:'清洗时遇停电应排尽清洗物中残留清洗液。', opts:['正确','错误'], ans:0, explain:'清洗时遇停电要排尽清洗物中残留清洗液。'},
+  {id:184, type:'单选', q:'确认变败后的处理方式是什么？', opts:['继续使用','微生物取样后排放并CIP清洗','稀释后使用','加热后使用'], ans:1, explain:'在微生物取样后做排放处理，并对该调理桶CIP清洗。'},
+  {id:185, type:'判断', q:'UHT无菌环境破坏后需协助回收平衡桶料液。', opts:['正确','错误'], ans:0, explain:'如UHT无菌环境破坏要协助UHT人员回收平衡桶料液。'},
+  {id:186, type:'单选', q:'异常事故发生时间、原因、处理结果记录在哪个表单中？', opts:['利乐包调配记录表','利乐包调配CIP系统点检表','交接班记录本','以上都可能'], ans:1, explain:'记录在[利乐包调配CIP系统点检表]中。'},
+  {id:187, type:'判断', q:'CIP清洗完毕测水样不合格可再做一次热水洗。', opts:['正确','错误'], ans:0, explain:'清洗完毕测水样，如不合格可再做一次热水洗。'},
+  {id:188, type:'单选', q:'变败料液排放前需要做什么？', opts:['直接排放','微生物取样','通知品管','加水稀释'], ans:1, explain:'在微生物取样后做排放处理。'},
+  {id:189, type:'判断', q:'热水桶补水阀故障须在30分钟内排除。', opts:['正确','错误'], ans:0, explain:'故障须在30分钟内排除，以免料液不足。'},
+  {id:190, type:'判断', q:'出现异常应积极处理确保把损失降到最小。', opts:['正确','错误'], ans:0, explain:'积极处理却保把损失降到最小。'},
+
+  // ===== 模块12：综合与安全 (题191-200) =====
+  {id:191, type:'多选', q:'调配段主蒸汽阀包括哪些系统？', opts:['热水系统','溶糖杀菌系统','CIP加热系统','空调系统'], ans:[0,1,2], explain:'调配段共有三个主蒸汽阀：热水系统、溶糖杀菌系统、CIP加热系统。'},
+  {id:192, type:'单选', q:'溶糖排空时间是多少？', opts:['30秒','45秒','60秒','90秒'], ans:1, explain:'排空时间45秒。'},
+  {id:193, type:'单选', q:'溶糖赶料时间是多少？', opts:['20秒','30秒','45秒','60秒'], ans:1, explain:'赶料时间30s。'},
+  {id:194, type:'判断', q:'发酵液总冷却时间不得超过1.5小时。', opts:['正确','错误'], ans:0, explain:'发酵液总冷却时间不得超过1.5h。'},
+  {id:195, type:'单选', q:'发酵液均质后pH范围是多少？', opts:['3.2-3.7','3.4-3.9','3.6-4.1','3.0-3.5'], ans:1, explain:'均质后测发酵液的PH在：3.4-3.9。'},
+  {id:196, type:'判断', q:'糖浆杀菌时如果温度不稳定要检查蒸汽压力和比例阀开度。', opts:['正确','错误'], ans:0, explain:'糖浆杀菌时如果温度没有达到设定值或不稳定就要检查蒸汽的压力和比例阀的开度。'},
+  {id:197, type:'单选', q:'乳酸菌半成品调理液感官标准是什么？', opts:['甜味正常','酸味正常','发酵液风味正常','无要求'], ans:2, explain:'感官：发酵液风味正常。'},
+  {id:198, type:'单选', q:'250牛奶调配高速混料机中需预留多少料液？', opts:['30L','50L','70L','100L'], ans:1, explain:'高速混料机中预留50L料液。'},
+  {id:199, type:'判断', q:'O泡调配中香精加完后需用常温水冲洗香精桶内壁。', opts:['正确','错误'], ans:0, explain:'香精加完后，在盛放香精的桶里加1/3的常温水，将桶内残留香精溶解，倒入调理桶中。'},
+  {id:200, type:'判断', q:'CIP清洗结束需取清洗水样做微生物检测。', opts:['正确','错误'], ans:0, explain:'取清洗水样做微生物检测。'},
+];
+
+// ==================== 关卡系统（7关，难度递进） ====================
+const LEVELS = [
+  {id:1, name:'第一关·入门', icon:'🚪', desc:'交接班与进入车间', qRange:[1,10], star:1, unlock:0},
+  {id:2, name:'第二关·动力', icon:'⚡', desc:'水电气供应检查', qRange:[11,25], star:1, unlock:0},
+  {id:3, name:'第三关·溶糖', icon:'🍬', desc:'溶糖与糖浆杀菌', qRange:[26,45], star:2, unlock:0},
+  {id:4, name:'第四关·调配', icon:'🥛', desc:'牛奶与O泡调配', qRange:[46,85], star:2, unlock:0},
+  {id:5, name:'第五关·发酵', icon:'🧫', desc:'乳酸菌发酵与半成品', qRange:[86,115], star:3, unlock:0},
+  {id:6, name:'第六关·清洗', icon:'🧹', desc:'CIP清洗与卫生规范', qRange:[116,170], star:3, unlock:0},
+  {id:7, name:'第七关·应急', icon:'🚨', desc:'异常处理与综合安全', qRange:[171,200], star:3, unlock:0},
+];
+
+// ==================== 音效系统（Web Audio API合成） ====================
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playCorrectSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playWrongSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 180;
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } catch(e) {}
+}
+
+function playTimeoutSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [440, 330].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.15);
+      osc.stop(now + i * 0.15 + 0.3);
+    });
+  } catch(e) {}
+}
+
+function playLevelUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, now + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.12);
+      osc.stop(now + i * 0.12 + 0.35);
+    });
+  } catch(e) {}
+}
+
+function playRankUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.4);
+    });
+  } catch(e) {}
+}
+
+// ==================== 段位系统（总分7000+王者，每题满分35分） ====================
+// 一轮10题满分350，200题全满分7000分
+const RANKS = [
+  {name:'青铜段位', icon:'🥉', min:0,    max:999,   cls:'rank-bronze'},
+  {name:'白银段位', icon:'🥈', min:1000, max:2499,  cls:'rank-silver'},
+  {name:'黄金段位', icon:'🥇', min:2500, max:4499,  cls:'rank-gold'},
+  {name:'钻石段位', icon:'💎', min:4500, max:6999,  cls:'rank-diamond'},
+  {name:'王者段位', icon:'👑', min:7000, max:99999, cls:'rank-master'},
+];
+
+// ==================== 状态管理 ====================
+const STORAGE_KEY = 'sop_game_data';
+const LB_KEY = 'sop_game_leaderboard';
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  showSaveBadge();
+}
+function showSaveBadge() {
+  const b = document.getElementById('saveBadge');
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 1500);
+}
+
+let state = {
+  userName: '',
+  totalScore: 0,
+  totalQuestions: 0,
+  totalCorrect: 0,
+  currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+  wrongBook: [],
+  answeredToday: 0,
+  lastPlayDate: '',
+  quizActive: false,
+  currentLevel: 0,      // 当前关卡ID（0=随机模式）
+  levelCleared: {},     // {1:true, 2:true, ...}
+  levelScores: {},      // {1:245, 2:180, ...}
+};
+
+// ==================== 初始化 ====================
+function init() {
+  const saved = getData();
+  if (saved.userName) {
+    state.userName = saved.userName;
+    state.totalScore = saved.totalScore || 0;
+    state.totalQuestions = saved.totalQuestions || 0;
+    state.totalCorrect = saved.totalCorrect || 0;
+    state.wrongBook = saved.wrongBook || [];
+    state.answeredToday = saved.answeredToday || 0;
+    state.lastPlayDate = saved.lastPlayDate || '';
+    state.levelCleared = saved.levelCleared || {};
+    state.levelScores = saved.levelScores || {};
+
+    // 检查是否新的一天
+    const today = new Date().toDateString();
+    if (state.lastPlayDate !== today) {
+      state.answeredToday = 0;
+      state.lastPlayDate = today;
+    }
+
+    // 恢复未完成的答题
+    if (saved.quizState && saved.quizState.questions && saved.quizState.questions.length > 0) {
+      state.quizActive = true;
+      state.currentRound = saved.quizState;
+    }
+
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+  }
+
+  // 检查是否有未完成的答题 — 弹窗询问，不直接跳入
+  if (state.quizActive && state.currentRound.questions.length > 0) {
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+    // 弹窗询问是否继续
+    setTimeout(() => {
+      if (confirm('检测到上次未完成的答题，是否继续？\n（选择"取消"将放弃本轮进度）')) {
+        showPage('pageQuiz');
+        renderQuestion();
+      } else {
+        // 放弃进度
+        state.quizActive = false;
+        state.currentRound = { questions:[], currentIndex:0, score:0, correct:0 };
+        const saved = getData();
+        delete saved.quizState;
+        saveData(saved);
+      }
+    }, 300);
+  }
+}
+
+function startGame() {
+  try {
+    const nameInput = document.getElementById('userName');
+    if (!nameInput) { alert('页面加载异常，请刷新重试'); return; }
+    const name = nameInput.value.trim();
+    if (!name) { alert('请输入你的姓名'); return; }
+    state.userName = name;
+    state.totalScore = 0;
+    state.totalQuestions = 0;
+    state.totalCorrect = 0;
+    state.wrongBook = [];
+    state.answeredToday = 0;
+    state.lastPlayDate = new Date().toDateString();
+    state.levelCleared = {};
+    state.levelScores = {};
+
+    // 隐藏登录区，显示菜单
+    try {
+      const loginArea = document.getElementById('loginArea');
+      const menuGrid = document.getElementById('menuGrid');
+      if (loginArea) loginArea.style.display = 'none';
+      if (menuGrid) menuGrid.style.display = 'grid';
+    } catch(e) {}
+
+    // 更新显示
+    try { updateHomeDisplay(); } catch(e) {}
+
+    // 保存数据
+    try { persistAll(); } catch(e) {}
+    try { updateLeaderboard(); } catch(e) {}
+
+    console.log('startGame 成功，用户名:', name);
+  } catch(e) {
+    alert('启动失败，请刷新页面重试。错误信息：' + e.message);
+  }
+}
+
+// ==================== 关卡系统 ====================
+function showLevels() {
+  showPage('pageLevels');
+  renderLevels();
+}
+
+function renderLevels() {
+  const list = document.getElementById('levelList');
+  if (!list) { console.error('levelList not found'); return; }
+  let html = '';
+  LEVELS.forEach(lv => {
+    const cleared = state.levelCleared[lv.id];
+    const score = state.levelScores[lv.id] || 0;
+    const stars = '⭐'.repeat(lv.star);
+    const prevCleared = lv.id === 1 || state.levelCleared[lv.id - 1];
+    const locked = !prevCleared;
+    const qCount = lv.qRange[1] - lv.qRange[0] + 1;
+    const clickHandler = locked ? '' : 'onclick="startLevel(' + lv.id + ')"';
+    const borderColor = cleared ? 'var(--green)' : (locked ? 'var(--border)' : 'var(--gold)');
+    const cursor = locked ? 'not-allowed' : 'pointer';
+    const opacity = locked ? '0.5' : '1';
+    const statusIcon = cleared ? '✅ ' : (locked ? '🔒 ' : '');
+    const bestScore = cleared ? '<div style="font-size:11px;color:var(--green);margin-top:2px;">🏆 最佳成绩：' + score + '分</div>' : '';
+    const lockHint = locked ? '<div style="font-size:11px;color:var(--red);margin-top:2px;">需先通关上一关</div>' : '';
+    const arrow = (!locked && !cleared) ? '<div style="font-size:24px;">▶</div>' : '';
+
+    html += '<div ' + clickHandler + ' style="background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;border:2px solid ' + borderColor + ';cursor:' + cursor + ';opacity:' + opacity + ';">';
+    html += '<div style="display:flex;align-items:center;gap:12px;">';
+    html += '<div style="font-size:32px;">' + lv.icon + '</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:15px;font-weight:bold;">' + statusIcon + lv.name + ' <span style="font-size:11px;color:var(--text3);">' + stars + ' · ' + qCount + '题</span></div>';
+    html += '<div style="font-size:12px;color:var(--text2);">' + lv.desc + '</div>';
+    html += bestScore + lockHint;
+    html += '</div>' + arrow;
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function startLevel(levelId) {
+  state.currentLevel = levelId;
+  const lv = LEVELS.find(l => l.id === levelId);
+  // 从该关卡的题目范围中取全部题目
+  const pool = QUESTION_BANK.filter(q => q.id >= lv.qRange[0] && q.id <= lv.qRange[1]);
+  shuffle(pool);
+  const questions = pool;
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startQuickRound() {
+  state.currentLevel = 0; // 0=随机模式
+  const pool = [...QUESTION_BANK];
+  shuffle(pool);
+  const questions = pool.slice(0, 10);
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startRound() {
+  // 兼容旧入口，默认快速挑战
+  startQuickRound();
+}
+
+function renderQuestion() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 重置多选状态
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+
+  document.getElementById('qNum').textContent = `第${idx+1}/${round.questions.length}题`;
+  document.getElementById('qScore').textContent = round.score;
+  document.getElementById('quizProgressBar').style.width = `${(idx/round.questions.length)*100}%`;
+  document.getElementById('qType').textContent = q.type + ' · 模块' + getModuleName(q.id);
+  document.getElementById('qText').textContent = q.q;
+
+  const optsList = document.getElementById('optionsList');
+  optsList.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+
+  // 判断是否已答过
+  const answered = q.userAnswer !== null && q.userAnswer !== undefined;
+
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option-item fade-in';
+    if (answered) {
+      li.classList.add('disabled');
+      if (q.type === '多选') {
+        const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+        const userSet = new Set(q.userAnswer);
+        if (correctSet.has(i) && userSet.has(i)) li.classList.add('correct');
+        else if (!correctSet.has(i) && userSet.has(i)) li.classList.add('wrong');
+        else if (correctSet.has(i)) li.classList.add('correct');
+      } else {
+        if (i === q.ans) li.classList.add('correct');
+        if (i === q.userAnswer && i !== q.ans) li.classList.add('wrong');
+      }
+    }
+    li.innerHTML = `<span class="opt-label">${labels[i]}</span>${opt}`;
+    if (!answered) {
+      li.onclick = () => selectAnswer(i);
+    }
+    optsList.appendChild(li);
+  });
+
+  // 如果已答过，显示反馈
+  if (answered) {
+    const fb = document.getElementById('feedback');
+    const earned = q.earnedScore || 0;
+    if (q.type === '多选') {
+      const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+      const userSet = new Set(q.userAnswer);
+      const isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+      fb.className = isCorrect ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = isCorrect ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    } else {
+      fb.className = q.userAnswer === q.ans ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = q.userAnswer === q.ans ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    }
+    fb.innerHTML += `<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">${q.explain}</span>`;
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+  } else {
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('nextBtn').classList.remove('show');
+    // 启动倒计时
+    startTimer();
+  }
+}
+
+let multiSelectAnswers = [];
+let timerInterval = null;
+let timerSeconds = 30;
+let questionStartTime = 0; // 答题开始时间戳
+const FULL_SCORE = 35;     // 满分
+const FAST_BONUS = 3;      // 3秒内答对满分
+const SCORE_DECAY = 30;    // 30秒线性衰减到最低分
+const MIN_SCORE = 5;       // 最低得分（避免答对只得1-2分）
+
+function startTimer() {
+  clearTimer();
+  timerSeconds = 30;
+  questionStartTime = Date.now();
+  updateTimerDisplay();
+  const circle = document.getElementById('timerCircle');
+  circle.classList.remove('warning');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 10) {
+      document.getElementById('timerCircle').classList.add('warning');
+    }
+    if (timerSeconds <= 0) {
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function calcScore() {
+  // 计算实际得分：3秒内满分35，之后线性衰减，最低5分
+  const elapsed = (Date.now() - questionStartTime) / 1000;
+  if (elapsed <= FAST_BONUS) return FULL_SCORE;
+  const decay = (elapsed - FAST_BONUS) / (SCORE_DECAY - FAST_BONUS); // 0~1
+  const score = Math.round(FULL_SCORE - decay * (FULL_SCORE - MIN_SCORE));
+  return Math.max(MIN_SCORE, Math.min(FULL_SCORE, score));
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timerText').textContent = timerSeconds;
+}
+
+function clearTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function handleTimeout() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return; // 已答过
+
+  // 超时视为答错
+  q.userAnswer = -1; // 标记为超时
+  checkTimeoutAnswer();
+}
+
+function checkTimeoutAnswer() {
+  playTimeoutSound();
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 加入错题本
+  const correctAnswerText = q.type === '多选'
+    ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+    : q.opts[q.ans];
+
+  const exists = state.wrongBook.find(w => w.qid === q.id);
+  if (!exists) {
+    state.wrongBook.push({
+      qid: q.id,
+      question: q.q,
+      correctAnswer: correctAnswerText,
+      userAnswer: '⏰ 超时未答',
+      explain: q.explain,
+      type: q.type,
+      module: getModuleName(q.id),
+    });
+  }
+
+  persistAll();
+  renderQuestion();
+
+  // 显示超时反馈
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback wrong-fb';
+  fb.innerHTML = '⏰ 时间到！<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">正确答案：' + correctAnswerText + ' | ' + q.explain + '</span>';
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+}
+
+function selectAnswer(index) {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+
+  if (q.type === '多选') {
+    // 多选：点击切换选择，显示确认按钮
+    if (!multiSelectAnswers.includes(index)) {
+      multiSelectAnswers.push(index);
+    } else {
+      multiSelectAnswers = multiSelectAnswers.filter(i => i !== index);
+    }
+    // 更新UI高亮
+    const items = document.querySelectorAll('#optionsList .option-item');
+    items.forEach((item, i) => {
+      if (multiSelectAnswers.includes(i)) {
+        item.style.borderColor = 'var(--blue)';
+        item.style.background = 'rgba(52,152,219,0.1)';
+      } else {
+        item.style.borderColor = 'var(--border)';
+        item.style.background = '';
+      }
+    });
+    // 显示/隐藏确认按钮
+    const confirmBtn = document.getElementById('confirmMultiBtn');
+    if (multiSelectAnswers.length > 0) {
+      confirmBtn.style.display = 'block';
+    } else {
+      confirmBtn.style.display = 'none';
+    }
+  } else {
+    // 单选/判断：直接提交
+    q.userAnswer = index;
+    checkAnswer();
+  }
+}
+
+function submitMultiSelect() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+  if (multiSelectAnswers.length === 0) return; // 没选不能提交
+  q.userAnswer = [...multiSelectAnswers];
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+  checkAnswer();
+}
+
+function checkAnswer() {
+  clearTimer(); // 已作答，停止倒计时
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  let isCorrect = false;
+  if (q.type === '多选') {
+    const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+    const userSet = new Set(q.userAnswer);
+    isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+  } else {
+    isCorrect = q.userAnswer === q.ans;
+  }
+
+  if (isCorrect) {
+    const earned = calcScore();
+    round.score += earned;
+    round.correct++;
+    q.earnedScore = earned;
+    playCorrectSound();
+  } else {
+    q.earnedScore = 0;
+    playWrongSound();
+    // 加入错题本
+    const correctAnswerText = q.type === '多选'
+      ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+      : q.opts[q.ans];
+    const userAnswerText = q.type === '多选'
+      ? q.userAnswer.map(i => q.opts[i]).join('、')
+      : q.opts[q.userAnswer];
+
+    // 避免重复加入
+    const exists = state.wrongBook.find(w => w.qid === q.id);
+    if (!exists) {
+      state.wrongBook.push({
+        qid: q.id,
+        question: q.q,
+        correctAnswer: correctAnswerText,
+        userAnswer: userAnswerText,
+        explain: q.explain,
+        type: q.type,
+        module: getModuleName(q.id),
+      });
+    }
+  }
+
+  persistAll();
+  renderQuestion();
+}
+
+function nextQuestion() {
+  clearTimer();
+  const round = state.currentRound;
+  round.currentIndex++;
+
+  if (round.currentIndex >= round.questions.length) {
+    finishRound();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishRound() {
+  clearTimer();
+  const round = state.currentRound;
+  state.totalScore += round.score;
+  state.totalQuestions += round.questions.length;
+  state.totalCorrect += round.correct;
+  state.answeredToday += round.questions.length;
+  state.lastPlayDate = new Date().toDateString();
+  state.quizActive = false;
+
+  // 关卡模式：记录关卡成绩
+  const levelId = state.currentLevel;
+  const rate = Math.round((round.correct / round.questions.length) * 100);
+  const passed = rate >= 70;
+
+  if (levelId > 0) {
+    // 更新关卡最佳成绩
+    if (!state.levelScores[levelId] || round.score > state.levelScores[levelId]) {
+      state.levelScores[levelId] = round.score;
+    }
+    // 通关标记
+    if (passed) {
+      state.levelCleared[levelId] = true;
+    }
+  }
+
+  // 清除答题状态
+  const saved = getData();
+  delete saved.quizState;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  }));
+
+  // 检查段位变化
+  const oldRank = getRank(saved.totalScore || 0);
+  const newRank = getRank(state.totalScore);
+
+  // 关卡模式走关卡结算页
+  if (levelId > 0) {
+    showLevelResult(levelId, round, rate, passed, oldRank, newRank);
+  } else {
+    // 快速挑战模式走通用结算页
+    showQuickResult(round, rate, oldRank, newRank);
+  }
+
+  updateLeaderboard();
+  updateWrongCount();
+}
+
+function showQuickResult(round, rate, oldRank, newRank) {
+  document.getElementById('resultScore').textContent = `+${round.score}分`;
+  document.getElementById('rCorrect').textContent = round.correct;
+  document.getElementById('rWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('rRate').textContent = rate + '%';
+
+  if (rate >= 90) {
+    document.getElementById('resultIcon').textContent = '🏆';
+    document.getElementById('resultTitle').textContent = '太厉害了！';
+    document.getElementById('resultDetail').textContent = '你已熟练掌握SOP知识';
+  } else if (rate >= 70) {
+    document.getElementById('resultIcon').textContent = '👍';
+    document.getElementById('resultTitle').textContent = '表现不错！';
+    document.getElementById('resultDetail').textContent = '继续加油，还有提升空间';
+  } else if (rate >= 50) {
+    document.getElementById('resultIcon').textContent = '💪';
+    document.getElementById('resultTitle').textContent = '还需努力！';
+    document.getElementById('resultDetail').textContent = '多看看错题本复习一下吧';
+  } else {
+    document.getElementById('resultIcon').textContent = '📚';
+    document.getElementById('resultTitle').textContent = '加油学习！';
+    document.getElementById('resultDetail').textContent = '建议重新阅读SOP后再来挑战';
+  }
+
+  const rankUpCard = document.getElementById('rankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('rankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageResult');
+}
+
+function showLevelResult(levelId, round, rate, passed, oldRank, newRank) {
+  const lv = LEVELS.find(l => l.id === levelId);
+  document.getElementById('lvResultScore').textContent = `+${round.score}分`;
+  document.getElementById('lvCorrect').textContent = round.correct;
+  document.getElementById('lvWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('lvRate').textContent = rate + '%';
+
+  if (passed) {
+    document.getElementById('lvResultIcon').textContent = '🎉';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」通关！`;
+    document.getElementById('lvResultDetail').textContent = lv.id < 7 ? '下一关已解锁，继续挑战！' : '全部7关通关！你是利乐大师！';
+    playLevelUpSound();
+
+    // 下一关按钮
+    const nextBtn = document.getElementById('lvNextBtn');
+    if (lv.id < 7) {
+      nextBtn.textContent = '▶ 挑战下一关';
+      nextBtn.onclick = () => startLevel(lv.id + 1);
+    } else {
+      nextBtn.textContent = '🏆 全部通关！';
+      nextBtn.onclick = () => goHome();
+    }
+  } else {
+    document.getElementById('lvResultIcon').textContent = '💪';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」未通过`;
+    document.getElementById('lvResultDetail').textContent = '正确率需≥70%，再试一次吧！';
+    const nextBtn = document.getElementById('lvNextBtn');
+    nextBtn.textContent = '🔄 重新挑战';
+    nextBtn.onclick = () => startLevel(levelId);
+  }
+
+  // 段位晋升
+  const rankUpCard = document.getElementById('lvRankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('lvRankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageLevelResult');
+}
+
+function retryLevel() {
+  if (state.currentLevel > 0) {
+    startLevel(state.currentLevel);
+  } else {
+    startQuickRound();
+  }
+}
+
+function quitQuiz() {
+  if (confirm('确定退出本轮答题吗？进度将自动保存。')) {
+    clearTimer();
+    // 保存当前进度
+    const saved = getData();
+    saved.quizState = state.currentRound;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      totalCorrect: state.totalCorrect,
+    }));
+    state.quizActive = true;
+    goHome();
+  }
+}
+
+// ==================== 页面切换 ====================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function goHome() {
+  clearTimer();
+  showPage('pageHome');
+  updateHomeDisplay();
+  updateWrongCount();
+}
+
+function showLeaderboard() {
+  showPage('pageLeaderboard');
+  renderLeaderboard('total');
+}
+
+function showWrongBook() {
+  showPage('pageWrongBook');
+  renderWrongBook();
+}
+
+function showRankInfo() {
+  showPage('pageRankInfo');
+}
+
+// ==================== 首页显示 ====================
+function updateHomeDisplay() {
+  try {
+    const rd = document.getElementById('rankDisplay');
+    if (state.userName) {
+      rd.classList.add('show');
+      const nameEl = document.getElementById('userName');
+      if (nameEl) nameEl.value = state.userName;
+      const rank = getRank(state.totalScore);
+      const rankIcon = document.getElementById('rankIcon');
+      const rankName = document.getElementById('rankName');
+      const totalScore = document.getElementById('totalScore');
+      const totalQuestions = document.getElementById('totalQuestions');
+      const accuracy = document.getElementById('accuracy');
+      const rankBar = document.getElementById('rankBar');
+      const rankMin = document.getElementById('rankMin');
+      const rankNext = document.getElementById('rankNext');
+      const rankMax = document.getElementById('rankMax');
+      if (rankIcon) rankIcon.textContent = rank.icon;
+      if (rankName) { rankName.textContent = rank.name; rankName.className = 'rank-name ' + rank.cls; }
+      if (totalScore) totalScore.textContent = state.totalScore;
+      if (totalQuestions) totalQuestions.textContent = state.totalQuestions;
+      if (accuracy) {
+        const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
+        accuracy.textContent = acc + '%';
+      }
+      const nextRank = getNextRank(state.totalScore);
+      const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
+      if (rankBar) rankBar.style.width = Math.min(progress, 100) + '%';
+      if (rankMin) rankMin.textContent = rank.min + '分';
+      if (rankNext) rankNext.textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
+      if (rankMax) rankMax.textContent = nextRank ? nextRank.min + '分' : '∞';
+    }
+  } catch(e) {
+    console.error('updateHomeDisplay 错误:', e);
+  }
+}
+
+function updateWrongCount() {
+  const el = document.getElementById('wrongCount');
+  if (el) el.textContent = state.wrongBook.length + '道待复习';
+}
+
+// ==================== 段位计算 ====================
+function getRank(score) {
+  for (let i = RANKS.length - 1; i >= 0; i--) {
+    if (score >= RANKS[i].min) return RANKS[i];
+  }
+  return RANKS[0];
+}
+
+function getNextRank(score) {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (score < RANKS[i].max) return RANKS[i];
+  }
+  return null;
+}
+
+// ==================== 排行榜 ====================
+function updateLeaderboard() {
+  if (!state.userName) return;
+  const lb = getLeaderboard();
+  const existing = lb.find(e => e.name === state.userName);
+  if (existing) {
+    existing.totalScore = Math.max(existing.totalScore, state.totalScore);
+    existing.totalQuestions = state.totalQuestions;
+    existing.rankName = getRank(state.totalScore).name;
+    existing.lastPlay = new Date().toISOString();
+  } else {
+    lb.push({
+      name: state.userName,
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      rankName: getRank(state.totalScore).name,
+      lastPlay: new Date().toISOString(),
+    });
+  }
+  lb.sort((a, b) => b.totalScore - a.totalScore);
+  try { localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50))); } catch(e) {}
+}
+
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; } catch(e) { return []; }
+}
+
+function renderLeaderboard(type) {
+  const lb = getLeaderboard();
+  let filtered = lb;
+  const now = new Date();
+  if (type === 'today') {
+    const today = now.toDateString();
+    filtered = lb.filter(e => new Date(e.lastPlay).toDateString() === today);
+  } else if (type === 'week') {
+    const weekAgo = new Date(now - 7*24*60*60*1000);
+    filtered = lb.filter(e => new Date(e.lastPlay) >= weekAgo);
+  }
+
+  const list = document.getElementById('lbList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>暂无数据，快来答题吧！</div></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((e, i) => {
+    let rankClass = 'normal';
+    if (i === 0) rankClass = 'top1';
+    else if (i === 1) rankClass = 'top2';
+    else if (i === 2) rankClass = 'top3';
+
+    const isMe = state.userName && e.name === state.userName;
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1);
+
+    return `<li class="leaderboard-item${isMe ? ' me' : ''}">
+      <div class="lb-rank ${rankClass}">${rankIcon}</div>
+      <div class="lb-name">${e.name}<br><span style="font-size:11px;color:var(--text3);">${e.rankName || ''}</span></div>
+      <div class="lb-score">${e.totalScore}分</div>
+    </li>`;
+  }).join('');
+}
+
+function switchLbTab(type) {
+  document.querySelectorAll('#lbTabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLeaderboard(type);
+}
+
+// ==================== 错题本 ====================
+function renderWrongBook() {
+  const list = document.getElementById('wrongList');
+  const empty = document.getElementById('wrongEmpty');
+
+  if (state.wrongBook.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = state.wrongBook.map((w, i) => `
+    <li class="wrong-item">
+      <div class="wq">${i+1}. [${w.type}] ${w.question}</div>
+      <div class="wa">✅ 正确答案：${w.correctAnswer}</div>
+      <div class="wu">❌ 你的答案：${w.userAnswer}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;">💡 ${w.explain}</div>
+    </li>
+  `).join('');
+}
+
+// ==================== 工具函数 ====================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function getModuleName(id) {
+  if (id <= 10) return '交接班';
+  if (id <= 25) return '水电气';
+  if (id <= 45) return '溶糖';
+  if (id <= 70) return '牛奶调配';
+  if (id <= 85) return 'O泡';
+  if (id <= 105) return '乳酸菌发酵';
+  if (id <= 115) return '半成品调配';
+  if (id <= 145) return 'CIP清洗';
+  if (id <= 155) return '过料过滤';
+  if (id <= 170) return '环境卫生';
+  if (id <= 190) return '异常处理';
+  return '综合';
+}
+
+function persistAll() {
+  const saved = getData();
+  const data = {
+    ...saved,
+    userName: state.userName,
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    wrongBook: state.wrongBook,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  };
+  if (state.quizActive) {
+    data.quizState = state.currentRound;
+  } else {
+    delete data.quizState;
+  }
+  saveData(data);
+}
+
+function resetData() {
+  if (confirm('确定要清除所有记录重新开始吗？此操作不可恢复！')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {
+      userName: '',
+      totalScore: 0,
+      totalQuestions: 0,
+      totalCorrect: 0,
+      currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+      wrongBook: [],
+      answeredToday: 0,
+      lastPlayDate: '',
+      quizActive: false,
+    };
+    document.getElementById('loginArea').style.display = 'block';
+    document.getElementById('menuGrid').style.display = 'none';
+    document.getElementById('rankDisplay').classList.remove('show');
+    document.getElementById('userName').value = '';
+  }
+}
+
+// ==================== 启动 ====================
+init();
+</script>
+</body>
+</html>
