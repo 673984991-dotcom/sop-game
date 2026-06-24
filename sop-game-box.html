@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>SOP闯关游戏 - 石家庄明旺乳业（装箱）</title>
+<title>SOP闯关游戏 - 石家庄明旺乳业（装箱岗）</title>
 <style>
 :root {
   --bg: #1a1a2e;
@@ -548,8 +548,8 @@ body {
     </div>
     <div class="rank-info">
       <span id="rankMin">0分</span>
-      <span id="rankNext">下一段位：700分</span>
-      <span id="rankMax">700分</span>
+      <span id="rankNext">下一段位：1000分</span>
+      <span id="rankMax">1000分</span>
     </div>
     <div class="rank-stats">
       <div>总得分<br><span id="totalScore">0</span></div>
@@ -668,27 +668,27 @@ body {
   <div style="background:var(--card);border-radius:var(--radius);padding:16px;">
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥉 青铜段位</div>
-      <div style="font-size:13px;color:var(--text2);">0 - 699分</div>
+      <div style="font-size:13px;color:var(--text2);">0 - 999分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">初入江湖，SOP知识刚刚起步</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥈 白银段位</div>
-      <div style="font-size:13px;color:var(--text2);">700 - 1749分</div>
+      <div style="font-size:13px;color:var(--text2);">1000 - 2499分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">略有小成，基础操作已掌握</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">🥇 黄金段位</div>
-      <div style="font-size:13px;color:var(--text2);">1750 - 3149分</div>
+      <div style="font-size:13px;color:var(--text2);">2500 - 4499分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">炉火纯青，调配流程烂熟于心</div>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:28px;">💎 钻石段位</div>
-      <div style="font-size:13px;color:var(--text2);">3150 - 5249分</div>
+      <div style="font-size:13px;color:var(--text2);">4500 - 6999分</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">登峰造极，异常处理游刃有余</div>
     </div>
     <div>
       <div style="font-size:28px;">👑 王者段位</div>
-      <div style="font-size:13px;color:var(--text2);">5250分以上</div>
+      <div style="font-size:13px;color:var(--text2);">7000分以上</div>
       <div style="font-size:12px;color:var(--text3);margin-top:4px;">利乐大师，调配段无所不知</div>
     </div>
   </div>
@@ -1000,16 +1000,18 @@ function playRankUpSound() {
     });
   } catch(e) {}
 }
+}
 
-// ==================== 段位系统（总分5250+王者，每题满分35分） ====================
-// 一轮10题满分350，150题全满分5250分
+// ==================== 段位系统（总分7000+王者，每题满分35分） ====================
+// 一轮10题满分350，200题全满分7000分
 const RANKS = [
-  {name:'青铜段位', icon:'🥉', min:0,    max:699,   cls:'rank-bronze'},
-  {name:'白银段位', icon:'🥈', min:700,  max:1749,  cls:'rank-silver'},
-  {name:'黄金段位', icon:'🥇', min:1750, max:3149,  cls:'rank-gold'},
-  {name:'钻石段位', icon:'💎', min:3150, max:5249,  cls:'rank-diamond'},
-  {name:'王者段位', icon:'👑', min:5250, max:99999, cls:'rank-master'},
+  {name:'青铜段位', icon:'🥉', min:0,    max:999,   cls:'rank-bronze'},
+  {name:'白银段位', icon:'🥈', min:1000, max:2499,  cls:'rank-silver'},
+  {name:'黄金段位', icon:'🥇', min:2500, max:4499,  cls:'rank-gold'},
+  {name:'钻石段位', icon:'💎', min:4500, max:6999,  cls:'rank-diamond'},
+  {name:'王者段位', icon:'👑', min:7000, max:99999, cls:'rank-master'},
 ];
+
 // ==================== 状态管理 ====================
 const STORAGE_KEY = 'sop_game_data';
 const LB_KEY = 'sop_game_leaderboard';
@@ -1019,7 +1021,7 @@ function getData() {
 }
 function saveData(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  showSaveBadge();
+  try { showSaveBadge(); } catch(e) {}
 }
 function showSaveBadge() {
   const b = document.getElementById('saveBadge');
@@ -1044,7 +1046,6 @@ let state = {
 
 // ==================== 初始化 ====================
 function init() {
-  try {
   const saved = getData();
   if (saved.userName) {
     state.userName = saved.userName;
@@ -1529,7 +1530,7 @@ function finishRound() {
   // 清除答题状态
   const saved = getData();
   delete saved.quizState;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
     totalScore: state.totalScore,
     totalQuestions: state.totalQuestions,
     totalCorrect: state.totalCorrect,
@@ -1537,7 +1538,7 @@ function finishRound() {
     lastPlayDate: state.lastPlayDate,
     levelCleared: state.levelCleared,
     levelScores: state.levelScores,
-  }));
+  })); } catch(e) {}
 
   // 检查段位变化
   const oldRank = getRank(saved.totalScore || 0);
@@ -1649,11 +1650,11 @@ function quitQuiz() {
     // 保存当前进度
     const saved = getData();
     saved.quizState = state.currentRound;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,; } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
       totalScore: state.totalScore,
       totalQuestions: state.totalQuestions,
       totalCorrect: state.totalCorrect,
-    }));
+    })); } catch(e) {}
     state.quizActive = true;
     goHome();
   }
