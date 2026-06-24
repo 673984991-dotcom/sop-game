@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>测试页面</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h1>按钮测试</h1>
+  <input type="text" id="userName" placeholder="输入名字">
+  <button onclick="testClick()">点我测试</button>
+  <div id="result"></div>
+  
+  <script>
+    function testClick() {
+      alert('按钮能点！');
+      document.getElementById('result').innerText = '成功！用户名：' + document.getElementById('userName').value;
+    }
+  </script>
+</body>
+</html>
