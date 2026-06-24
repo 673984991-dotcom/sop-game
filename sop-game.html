@@ -1112,6 +1112,7 @@ let state = {
 
 // ==================== 初始化 ====================
 function init() {
+  try {
   const saved = getData();
   if (saved.userName) {
     state.userName = saved.userName;
