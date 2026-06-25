@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>品保SOP段位挑战赛</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --card: #0f3460;
+  --card2: #1a4a7a;
+  --gold: #f0b90b;
+  --gold2: #e6a800;
+  --red: #e74c3c;
+  --red2: #c0392b;
+  --green: #2ecc71;
+  --green2: #27ae60;
+  --blue: #3498db;
+  --blue2: #2980b9;
+  --text: #e8e8f0;
+  --text2: #b0b8d0;
+  --text3: #7a85a0;
+  --border: #1e5080;
+  --radius: 12px;
+  --accent: #e94560;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #0a1628 100%);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ===== 页面容器 ===== */
+.page { display:none; padding:16px; min-height:100vh; }
+.page.active { display:block; }
+
+/* ===== 首页 ===== */
+.home-header {
+  text-align:center;
+  padding: 30px 0 20px;
+}
+.home-header .logo {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+.home-header h1 {
+  font-size: 28px;
+  color: var(--gold);
+  margin-bottom: 4px;
+  text-shadow: 0 0 20px rgba(240,185,11,0.3);
+}
+.home-header .sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.home-header .dept {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* 宣传横幅 */
+.promo-banner {
+  background: linear-gradient(135deg, rgba(240,185,11,0.12), rgba(233,69,96,0.12));
+  border: 1px solid rgba(240,185,11,0.25);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+.promo-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.promo-sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+.promo-ranks {
+  font-size: 28px;
+  margin-top: 10px;
+  letter-spacing: 6px;
+  animation: promoFloat 2s ease-in-out infinite;
+}
+@keyframes promoFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* 用户区 */
+.user-area {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.user-area input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card2);
+  color: var(--text);
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.user-area input::placeholder { color: var(--text3); }
+.user-area .btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #1a1a2e;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:active { opacity: 0.85; transform: scale(0.98); }
+
+/* 段位显示 */
+.rank-display {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  display: none;
+}
+.rank-display.show { display: block; }
+.rank-icon {
+  font-size: 56px;
+  margin-bottom: 4px;
+}
+.rank-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.rank-bar-outer {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 14px;
+  margin: 12px 0 6px;
+  overflow: hidden;
+}
+.rank-bar-inner {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.5s;
+}
+.rank-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text2);
+}
+.rank-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.rank-stats span { color: var(--gold); font-weight: bold; }
+
+/* 菜单按钮 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.menu-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.menu-item:active { background: var(--card2); transform: scale(0.97); }
+.menu-item .icon { font-size: 32px; margin-bottom: 6px; }
+.menu-item .title { font-size: 15px; font-weight: bold; }
+.menu-item .desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+/* ===== 答题页 ===== */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.quiz-header .q-num { color: var(--gold); font-weight: bold; }
+.quiz-header .score { color: var(--green); font-weight: bold; }
+
+.quiz-progress {
+  background: var(--card2);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.quiz-progress-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--gold), #ff6b35);
+  transition: width 0.3s;
+}
+
+/* 倒计时 */
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.timer-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 4px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.timer-circle.warning {
+  border-color: var(--red);
+  animation: timerPulse 0.5s infinite;
+}
+.timer-circle .timer-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--gold);
+}
+.timer-circle.warning .timer-text { color: var(--red); }
+@keyframes timerPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+}
+.question-type {
+  font-size: 11px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.question-text {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.options-list { list-style: none; }
+.option-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+.option-item:active { transform: scale(0.98); }
+.option-item .opt-label {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-weight: bold;
+  font-size: 13px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.option-item.correct {
+  border-color: var(--green);
+  background: rgba(46,204,113,0.1);
+}
+.option-item.correct .opt-label { background: var(--green); color: #fff; }
+.option-item.wrong {
+  border-color: var(--red);
+  background: rgba(231,76,60,0.1);
+}
+.option-item.wrong .opt-label { background: var(--red); color: #fff; }
+.option-item.disabled { pointer-events: none; }
+
+.feedback {
+  text-align: center;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  display: none;
+}
+.feedback.correct-fb { background: rgba(46,204,113,0.15); color: var(--green); display:block; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.15); color: var(--red); display:block; }
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--blue2));
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+.next-btn.show { display: block; }
+
+/* ===== 结算页 ===== */
+.result-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.result-card .big-icon { font-size: 64px; }
+.result-card .result-title { font-size: 20px; font-weight: bold; margin: 8px 0; }
+.result-card .result-score { font-size: 36px; color: var(--gold); font-weight: bold; }
+.result-card .result-detail { font-size: 13px; color: var(--text2); margin-top: 8px; }
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.stat-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.stat-item .val { font-size: 22px; font-weight: bold; }
+.stat-item .lbl { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.stat-item .val.green { color: var(--green); }
+.stat-item .val.red { color: var(--red); }
+.stat-item .val.blue { color: var(--blue); }
+
+.rank-up-card {
+  background: linear-gradient(135deg, rgba(240,185,11,0.1), rgba(255,107,53,0.1));
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  display: none;
+}
+.rank-up-card.show { display: block; }
+.rank-up-card .rankup-icon { font-size: 48px; }
+.rank-up-card .rankup-text { font-size: 18px; font-weight: bold; color: var(--gold); margin: 8px 0; }
+
+/* ===== 排行榜 ===== */
+.leaderboard-list { list-style: none; }
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.leaderboard-item .lb-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.lb-rank.top1 { background: var(--gold); color: #1a1a2e; }
+.lb-rank.top2 { background: #c0c0c0; color: #1a1a2e; }
+.lb-rank.top3 { background: #cd7f32; color: #fff; }
+.lb-rank.normal { background: var(--card2); color: var(--text2); }
+.leaderboard-item .lb-name { flex:1; font-size: 14px; }
+.leaderboard-item .lb-score { font-size: 14px; font-weight: bold; color: var(--gold); }
+.leaderboard-item .lb-rank-name { font-size: 11px; color: var(--text2); margin-right: 8px; }
+.leaderboard-item.me { background: rgba(240,185,11,0.1); border: 1px solid var(--gold); }
+
+/* ===== 错题本 ===== */
+.wrong-list { list-style: none; }
+.wrong-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--red);
+}
+.wrong-item .wq { font-size: 14px; margin-bottom: 8px; }
+.wrong-item .wa { font-size: 13px; color: var(--green); }
+.wrong-item .wu { font-size: 12px; color: var(--red); margin-top: 4px; }
+
+/* ===== 通用 ===== */
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: var(--gold);
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text3);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.back-btn {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+.back-btn:active { opacity: 0.7; }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--card2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.tab.active { background: var(--gold); color: #1a1a2e; border-color: var(--gold); }
+
+/* ===== 暂存提示 ===== */
+.save-badge {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.save-badge.show { opacity: 1; }
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes pulse {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.05); }
+}
+.pulse { animation: pulse 0.6s ease; }
+
+/* ===== 段位颜色 ===== */
+.rank-bronze { color: #cd7f32; }
+.rank-silver { color: #c0c0c0; }
+.rank-gold { color: #f0b90b; }
+.rank-diamond { color: #3498db; }
+.rank-master { color: #e74c3c; }
+</style>
+</head>
+<body>
+
+<div class="save-badge" id="saveBadge">✅ 已保存</div>
+
+<!-- ==================== 首页 ==================== -->
+<div class="page active" id="pageHome">
+  <div class="home-header">
+    <div class="logo">🛡️</div>
+    <h1>品保SOP段位挑战赛</h1>
+    <div class="sub">TBA19线调配岗位 · 知识挑战</div>
+    <div class="dept">石家庄明旺乳业有限公司 · 品保处</div>
+  </div>
+
+  <!-- 宣传横幅 -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <div class="promo-title">🥉 你是青铜还是王者？👑</div>
+      <div class="promo-sub">欢迎来挑战 · 还有奖可拿！</div>
+    </div>
+    <div class="promo-ranks">
+      <span>🥉</span><span>🥈</span><span>🥇</span><span>💎</span><span>👑</span>
+    </div>
+  </div>
+
+  <div class="user-area" id="loginArea">
+    <input type="text" id="userName" placeholder="请输入你的姓名" maxlength="10">
+    <button class="btn" onclick="startGame()">⚔️ 开始闯关</button>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;">扫一次码，随时继续 · 自动暂存进度</div>
+  </div>
+
+  <div class="rank-display" id="rankDisplay">
+    <div class="rank-icon" id="rankIcon">🥉</div>
+    <div class="rank-name" id="rankName">青铜段位</div>
+    <div class="rank-bar-outer">
+      <div class="rank-bar-inner" id="rankBar" style="width:0%"></div>
+    </div>
+    <div class="rank-info">
+      <span id="rankMin">0分</span>
+      <span id="rankNext">下一段位：1000分</span>
+      <span id="rankMax">1000分</span>
+    </div>
+    <div class="rank-stats">
+      <div>总得分<br><span id="totalScore">0</span></div>
+      <div>答题数<br><span id="totalQuestions">0</span></div>
+      <div>正确率<br><span id="accuracy">0%</span></div>
+    </div>
+  </div>
+
+  <div class="menu-grid" id="menuGrid" style="display:none;">
+    <div class="menu-item" onclick="showLevels()">
+      <div class="icon">🎮</div>
+      <div class="title">关卡挑战</div>
+      <div class="desc">7关递进，逐关突破</div>
+    </div>
+    <div class="menu-item" onclick="showLeaderboard()">
+      <div class="icon">🛡️</div>
+      <div class="title">排行榜</div>
+      <div class="desc">车间英雄榜</div>
+    </div>
+    <div class="menu-item" onclick="showWrongBook()">
+      <div class="icon">📖</div>
+      <div class="title">错题本</div>
+      <div class="desc" id="wrongCount">0道待复习</div>
+    </div>
+    <div class="menu-item" onclick="showRankInfo()">
+      <div class="icon">📊</div>
+      <div class="title">段位说明</div>
+      <div class="desc">升级规则</div>
+    </div>
+    <div class="menu-item" onclick="startQuickRound()">
+      <div class="icon">⚡</div>
+      <div class="title">快速挑战</div>
+      <div class="desc">随机10题冲刺</div>
+    </div>
+    <div class="menu-item" onclick="resetData()">
+      <div class="icon">🔄</div>
+      <div class="title">重新开始</div>
+      <div class="desc">清除所有记录</div>
+    </div>
+  </div>
+      <div class="desc">清除所有记录</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 答题页 ==================== -->
+<div class="page" id="pageQuiz">
+  <div class="quiz-header">
+    <span class="q-num" id="qNum">第1/10题</span>
+    <span>得分：<span class="score" id="qScore">0</span></span>
+    <span style="cursor:pointer;color:var(--red);" onclick="quitQuiz()">退出</span>
+  </div>
+  <div class="quiz-progress">
+    <div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-circle" id="timerCircle">
+      <span class="timer-text" id="timerText">30</span>
+    </div>
+  </div>
+  <div class="question-card fade-in" id="questionCard">
+    <div class="question-type" id="qType">单选题</div>
+    <div class="question-text" id="qText"></div>
+  </div>
+  <ul class="options-list" id="optionsList"></ul>
+  <button class="next-btn" id="confirmMultiBtn" onclick="submitMultiSelect()" style="display:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1a2e;margin-bottom:12px;">✅ 确认提交</button>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题 ▶</button>
+</div>
+
+<!-- ==================== 结算页 ==================== -->
+<div class="page" id="pageResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="resultIcon">🎉</div>
+    <div class="result-title" id="resultTitle">表现出色！</div>
+    <div class="result-score" id="resultScore">+50分</div>
+    <div class="result-detail" id="resultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="rankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="rankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="rCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="rWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="rRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" onclick="startRound()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一轮</button>
+</div>
+
+<!-- ==================== 排行榜 ==================== -->
+<div class="page" id="pageLeaderboard">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🏆 排行榜</div>
+  <div class="tabs" id="lbTabs">
+    <div class="tab active" onclick="switchLbTab('total')">总榜</div>
+    <div class="tab" onclick="switchLbTab('week')">本周</div>
+    <div class="tab" onclick="switchLbTab('today')">今日</div>
+  </div>
+  <ul class="leaderboard-list" id="lbList"></ul>
+</div>
+
+<!-- ==================== 错题本 ==================== -->
+<div class="page" id="pageWrongBook">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📖 错题本</div>
+  <ul class="wrong-list" id="wrongList"></ul>
+  <div class="empty-state" id="wrongEmpty">
+    <div class="icon">🎉</div>
+    <div>暂无错题，继续保持！</div>
+  </div>
+</div>
+
+<!-- ==================== 段位说明 ==================== -->
+<div class="page" id="pageRankInfo">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">📊 段位说明</div>
+  <div style="background:var(--card);border-radius:var(--radius);padding:16px;">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥉 青铜段位</div>
+      <div style="font-size:13px;color:var(--text2);">0 - 999分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">初入江湖，SOP知识刚刚起步</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥈 白银段位</div>
+      <div style="font-size:13px;color:var(--text2);">1000 - 2499分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">略有小成，基础操作已掌握</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">🥇 黄金段位</div>
+      <div style="font-size:13px;color:var(--text2);">2500 - 4499分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">炉火纯青，调配流程烂熟于心</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:28px;">💎 钻石段位</div>
+      <div style="font-size:13px;color:var(--text2);">4500 - 6999分</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">登峰造极，异常处理游刃有余</div>
+    </div>
+    <div>
+      <div style="font-size:28px;">👑 王者段位</div>
+      <div style="font-size:13px;color:var(--text2);">7000分以上</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">利乐大师，调配段无所不知</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--text3);text-align:center;">
+    每题满分35分 | 3秒内答对满分 | 答对越慢分越低(最低5分) | 答错+0分
+  </div>
+</div>
+
+<!-- ==================== 关卡选择页 ==================== -->
+<div class="page" id="pageLevels">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <div class="section-title">🎮 关卡挑战（共7关）</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">共7关200题 · 通关解锁下一关 · 正确率≥70%即为通关</div>
+  <div id="levelList"></div>
+</div>
+
+<!-- ==================== 关卡结算页 ==================== -->
+<div class="page" id="pageLevelResult">
+  <div class="result-card fade-in">
+    <div class="big-icon" id="lvResultIcon">🎉</div>
+    <div class="result-title" id="lvResultTitle">关卡通过！</div>
+    <div class="result-score" id="lvResultScore">+245分</div>
+    <div class="result-detail" id="lvResultDetail"></div>
+  </div>
+  <div class="rank-up-card" id="lvRankUpCard">
+    <div class="rankup-icon">⬆️</div>
+    <div class="rankup-text" id="lvRankUpText">恭喜晋升！</div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="val green" id="lvCorrect">0</div><div class="lbl">✅ 正确</div></div>
+    <div class="stat-item"><div class="val red" id="lvWrong">0</div><div class="lbl">❌ 错误</div></div>
+    <div class="stat-item"><div class="val blue" id="lvRate">0%</div><div class="lbl">📊 正确率</div></div>
+  </div>
+  <button class="btn" onclick="goHome()" style="width:100%;margin-bottom:8px;">🏠 返回首页</button>
+  <button class="btn" id="lvNextBtn" onclick="retryLevel()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;">🔄 再来一次</button>
+</div>
+
+<script>
+// ==================== 题库（200道） ====================
+const QUESTION_BANK = [
+  {"id": 1, "q": "产品抽检作业办法的文件编号是什么？", "opts": ["产品服务-3-WQ-034", "产品服务-3-WQ-035", "产品服务-3-WQ-045", "产品服务-3-WQ-071"], "ans": 0, "type": "单选", "explain": "产品抽检作业办法编号为产品服务-3-WQ-034", "module": "产品抽检"},
+  {"id": 2, "q": "产品抽检作业办法的制定单位是？", "opts": ["品保处", "产品服务处", "生产运营处", "风险评估处"], "ans": 1, "type": "单选", "explain": "产品抽检作业办法由产品服务处制定", "module": "产品抽检"},
+  {"id": 3, "q": "产品抽检作业办法的文件版本是？", "opts": ["1.0", "1.1", "1.2", "1.3"], "ans": 2, "type": "单选", "explain": "产品抽检作业办法当前版本为1.2", "module": "产品抽检"},
+  {"id": 4, "q": "抽检信息受理渠道包括以下哪些？", "opts": ["总部抽检通知、分公司/经销商抽检、政府抽检、媒体抽检", "仅总部抽检通知", "仅政府抽检", "仅经销商抽检"], "ans": 0, "type": "多选", "explain": "抽检信息受理渠道包括总部通知、分公司/经销商、政府、媒体等多种渠道", "module": "产品抽检"},
+  {"id": 5, "q": "接到抽检通知后，处理人应在多长时间内响应？", "opts": ["立即响应，24小时内到达", "48小时内到达", "3天内到达", "1周内到达"], "ans": 0, "type": "单选", "explain": "抽检处理人应在接到通知后立即响应，24小时内到达抽检单位", "module": "产品抽检"},
+  {"id": 6, "q": "抽检单位拜访准备事项中，以下哪些是必须携带的？", "opts": ["公司资质文件、产品检验报告、生产许可证复印件", "仅产品样品", "仅公司名片", "仅抽检通知函"], "ans": 0, "type": "多选", "explain": "拜访抽检单位需携带公司资质、产品检验报告、生产许可证等文件", "module": "产品抽检"},
+  {"id": 7, "q": "抽检费用报销需要哪些审批流程？", "opts": ["部门主管审批→财务审核→总经理核准", "仅部门主管审批", "仅财务审核", "无需审批直接报销"], "ans": 0, "type": "单选", "explain": "抽检费用需经部门主管、财务、总经理多级审批", "module": "产品抽检"},
+  {"id": 8, "q": "产品抽检处理人行程变更时应如何处理？", "opts": ["立即向主管报备并获得批准", "可自行调整无需报备", "事后补报即可", "行程变更不影响工作"], "ans": 0, "type": "单选", "explain": "处理人行程变更需立即向主管报备并获得批准", "module": "产品抽检"},
+  {"id": 9, "q": "抽检过程中，遇到抽检单位提出不合理要求时应？", "opts": ["礼貌沟通协商，必要时上报总部", "直接拒绝", "全部答应", "置之不理"], "ans": 0, "type": "单选", "explain": "应礼貌沟通协商，无法解决的合理上报总部处理", "module": "产品抽检"},
+  {"id": 10, "q": "产品抽检的相关岗位主要包括？", "opts": ["产品服务处人员、品保处人员", "仅品保处人员", "仅产品服务处人员", "仅生产处人员"], "ans": 0, "type": "多选", "explain": "产品抽检涉及产品服务处和品保处相关人员配合", "module": "产品抽检"},
+  {"id": 11, "q": "质量客诉作业办法的文件编号是？", "opts": ["产品服务-3-WQ-034", "产品服务-3-WQ-035", "产品服务-3-WQ-045", "风险评估-2-WQ-021"], "ans": 1, "type": "单选", "explain": "质量客诉作业办法编号为产品服务-3-WQ-035", "module": "质量客诉"},
+  {"id": 12, "q": "质量客诉作业办法当前版本是？", "opts": ["1.0", "1.2", "1.3", "1.4"], "ans": 3, "type": "单选", "explain": "质量客诉作业办法当前版本为1.4", "module": "质量客诉"},
+  {"id": 13, "q": "客诉受理后应在多长时间内回复客户？", "opts": ["24小时内", "48小时内", "3个工作日内", "1周内"], "ans": 0, "type": "单选", "explain": "客诉受理后应在24小时内回复客户", "module": "质量客诉"},
+  {"id": 14, "q": "客诉处理中，以下哪些属于重大客诉？", "opts": ["食品安全问题客诉、大规模质量投诉、媒体曝光事件", "仅口感投诉", "仅包装投诉", "仅物流投诉"], "ans": 0, "type": "多选", "explain": "涉及食品安全、大规模投诉、媒体曝光的都属于重大客诉", "module": "质量客诉"},
+  {"id": 15, "q": "客诉处理的责任部门是？", "opts": ["产品服务处主导，相关责任部门配合", "仅品保处", "仅生产处", "仅产品服务处"], "ans": 0, "type": "单选", "explain": "客诉由产品服务处主导处理，相关责任部门配合改善", "module": "质量客诉"},
+  {"id": 16, "q": "客诉处理流程中，产品服务处的主要职责是？", "opts": ["受理客诉、协调处理、跟踪反馈", "仅受理客诉", "仅协调处理", "仅跟踪反馈"], "ans": 0, "type": "多选", "explain": "产品服务处负责受理、协调、跟踪客诉全流程", "module": "质量客诉"},
+  {"id": 17, "q": "客诉信息记录应包含哪些内容？", "opts": ["投诉人信息、产品信息、投诉内容、投诉时间", "仅投诉人姓名", "仅产品批号", "仅投诉内容"], "ans": 0, "type": "多选", "explain": "客诉记录需完整记录投诉人、产品、内容、时间等信息", "module": "质量客诉"},
+  {"id": 18, "q": "重大客诉应在多长时间内上报总部？", "opts": ["立即上报", "24小时内", "3个工作日内", "1周内"], "ans": 0, "type": "单选", "explain": "重大客诉必须立即上报总部处理", "module": "质量客诉"},
+  {"id": 19, "q": "客诉处理中，品质判定由哪个部门负责？", "opts": ["品保处", "产品服务处", "生产处", "采购处"], "ans": 0, "type": "单选", "explain": "品质判定由品保处负责", "module": "质量客诉"},
+  {"id": 20, "q": "客诉处理完成后应编制什么报告？", "opts": ["客诉处理报告", "仅口头汇报", "仅微信通知", "无需报告"], "ans": 0, "type": "单选", "explain": "客诉处理完成后应编制客诉处理报告", "module": "质量客诉"},
+  {"id": 21, "q": "客诉涉及的产品样品应如何处理？", "opts": ["保留样品用于分析，必要时送检", "直接丢弃", "随意存放", "退回客户"], "ans": 0, "type": "单选", "explain": "应保留客诉产品样品用于品质分析，必要时送检", "module": "质量客诉"},
+  {"id": 22, "q": "客诉改善措施应遵循什么原则？", "opts": ["5W2H原则", "4M1E原则", "PDCA原则", "仅纠正原则"], "ans": 0, "type": "单选", "explain": "客诉改善措施拟定应遵循5W2H原则", "module": "质量客诉"},
+  {"id": 23, "q": "客诉处理中，如果确认是产品品质问题，应参照哪个程序？", "opts": ["不合格控制程序", "仅内部流程", "仅退货流程", "仅赔偿流程"], "ans": 0, "type": "单选", "explain": "确认品质问题应参照不合格控制程序处理", "module": "质量客诉"},
+  {"id": 24, "q": "以下哪些属于客诉的分类？", "opts": ["重大客诉、一般客诉、轻微客诉", "仅重大客诉", "仅一般客诉", "仅轻微客诉"], "ans": 0, "type": "多选", "explain": "客诉按严重程度分为重大、一般、轻微三类", "module": "质量客诉"},
+  {"id": 25, "q": "客诉数据的分析应由谁负责汇总？", "opts": ["产品服务处", "品保处", "生产处", "经营内控处"], "ans": 0, "type": "单选", "explain": "客诉数据由产品服务处负责汇总分析", "module": "质量客诉"},
+  {"id": 26, "q": "客诉改善效果验证应在多长时间内完成？", "opts": ["1个月内", "3个月内", "半年内", "1年内"], "ans": 0, "type": "单选", "explain": "客诉改善效果验证应在1个月内完成", "module": "质量客诉"},
+  {"id": 27, "q": "如果客诉改善效果验证未通过，应如何处理？", "opts": ["重新立案分析改善", "直接结案", "忽略继续", "提高赔偿金额"], "ans": 0, "type": "单选", "explain": "验证未通过应重新立案进行原因分析和改善", "module": "质量客诉"},
+  {"id": 28, "q": "外销产品的客诉处理还需通知哪个部门？", "opts": ["国际事务部", "仅品保处", "仅采购处", "仅研发处"], "ans": 0, "type": "单选", "explain": "外销产品客诉需通知国际事务部", "module": "质量客诉"},
+  {"id": 29, "q": "客诉处理过程中，对客户应保持什么态度？", "opts": ["真诚沟通、及时反馈、积极解决", "敷衍应付", "推诿拖延", "强硬拒绝"], "ans": 0, "type": "多选", "explain": "应真诚沟通、及时反馈、积极解决问题", "module": "质量客诉"},
+  {"id": 30, "q": "客诉记录资料的归档管理由谁负责？", "opts": ["产品服务处", "品保处", "行政处", "档案室"], "ans": 0, "type": "单选", "explain": "客诉记录资料由产品服务处负责归档管理", "module": "质量客诉"},
+  {"id": 31, "q": "市场品质退货作业办法的文件编号是？", "opts": ["产品服务-3-WQ-045", "产品服务-3-WQ-035", "产品服务-3-WQ-034", "产品服务-3-WQ-071"], "ans": 0, "type": "单选", "explain": "市场品质退货作业办法编号为产品服务-3-WQ-045", "module": "市场退货"},
+  {"id": 32, "q": "市场品质退货的制定单位是？", "opts": ["产品服务处", "品保处", "生产运营处", "采购处"], "ans": 0, "type": "单选", "explain": "市场品质退货作业办法由产品服务处制定", "module": "市场退货"},
+  {"id": 33, "q": "市场退货受理后应在多长时间内处理？", "opts": ["24小时内响应", "48小时内响应", "3个工作日内", "1周内"], "ans": 0, "type": "单选", "explain": "市场退货受理后应在24小时内响应处理", "module": "市场退货"},
+  {"id": 34, "q": "市场退货的原因分类包括以下哪些？", "opts": ["品质问题、包装破损、变质腐败、临期退货", "仅品质问题", "仅包装破损", "仅临期退货"], "ans": 0, "type": "多选", "explain": "退货原因包括品质、包装、变质、临期等多种", "module": "市场退货"},
+  {"id": 35, "q": "退货产品到厂后应首先做什么？", "opts": ["隔离存放、标识清楚、品质判定", "直接入库", "直接销毁", "随意堆放"], "ans": 0, "type": "多选", "explain": "退货产品到厂后应先隔离、标识、判定品质", "module": "市场退货"},
+  {"id": 36, "q": "退货产品经品质判定后，可重新销售的条件是？", "opts": ["品质合格且包装完好、仅品质合格、仅包装完好、任何情况都可以"], "ans": 0, "type": "单选", "explain": "退货产品只有品质合格且包装完好方可重新销售", "module": "市场退货"},
+  {"id": 37, "q": "厂外品质判定作业办法的文件编号是？", "opts": ["产品服务-3-WQ-071", "产品服务-3-WQ-045", "产品服务-3-WQ-034", "风险评估-2-WQ-021"], "ans": 0, "type": "单选", "explain": "厂外品质判定作业办法编号为产品服务-3-WQ-071", "module": "厂外品质判定"},
+  {"id": 38, "q": "厂外品质判定作业办法的制定单位是？", "opts": ["产品服务处", "品保处", "生产运营处", "技术工程处"], "ans": 0, "type": "单选", "explain": "厂外品质判定作业办法由产品服务处制定", "module": "厂外品质判定"},
+  {"id": 39, "q": "厂外品质判定的适用范围是？", "opts": ["厂外（市场/分公司）的品质判定", "仅工厂内部品质判定", "仅原料品质判定", "仅成品品质判定"], "ans": 0, "type": "单选", "explain": "厂外品质判定适用于厂外的品质判定工作", "module": "厂外品质判定"},
+  {"id": 40, "q": "厂外品质判定中，品保处的职责是？", "opts": ["提供品质判定标准和依据", "仅收集信息", "仅通知工厂", "仅做记录"], "ans": 0, "type": "单选", "explain": "品保处负责提供品质判定标准和依据", "module": "厂外品质判定"},
+  {"id": 41, "q": "厂外品质判定需要收集哪些信息？", "opts": ["产品批号、生产日期、异常现象描述、存放条件", "仅产品批号", "仅生产日期", "仅异常现象"], "ans": 0, "type": "多选", "explain": "厂外品质判定需收集批号、日期、异常、存放条件等信息", "module": "厂外品质判定"},
+  {"id": 42, "q": "市场退货处理中，以下哪些产品必须报废？", "opts": ["变质产品、食品安全风险产品、严重品质缺陷产品", "仅过期产品", "仅包装破损产品", "仅临期产品"], "ans": 0, "type": "多选", "explain": "变质、食品安全风险、严重品质缺陷产品必须报废", "module": "市场退货"},
+  {"id": 43, "q": "退货产品的品质判定应在多长时间内完成？", "opts": ["到厂后3天内", "到厂后1周内", "到厂后2周内", "到厂后1个月内"], "ans": 0, "type": "单选", "explain": "退货产品品质判定应在到厂后3天内完成", "module": "市场退货"},
+  {"id": 44, "q": "退货处理过程中，以下哪些是必须记录的？", "opts": ["退货原因、退货数量、处理方式、责任部门", "仅退货数量", "仅退货原因", "仅处理方式"], "ans": 0, "type": "多选", "explain": "退货处理需完整记录原因、数量、方式、责任部门", "module": "市场退货"},
+  {"id": 45, "q": "厂外品质判定中，如果判定为品质合格但外观轻微损伤，应？", "opts": ["可换箱后重新销售", "直接报废", "退回工厂", "直接丢弃"], "ans": 0, "type": "单选", "explain": "品质合格但外观轻微损伤可换箱后重新销售", "module": "厂外品质判定"},
+  {"id": 46, "q": "厂外品质判定中，判定为不合格品时应参照什么程序？", "opts": ["不合格控制程序", "仅内部通知", "仅退货流程", "仅销毁流程"], "ans": 0, "type": "单选", "explain": "判定为不合格品应参照不合格控制程序处理", "module": "厂外品质判定"},
+  {"id": 47, "q": "市场退货中，对于食品安全问题的退货产品应？", "opts": ["立即隔离、禁止销售、启动应急响应", "继续销售", "随意处理", "仅记录即可"], "ans": 0, "type": "多选", "explain": "食品安全问题退货需立即隔离、禁售、启动应急", "module": "市场退货"},
+  {"id": 48, "q": "退货产品的运费由谁承担？", "opts": ["责任方承担（品质问题由工厂承担，非品质问题由经销商承担）", "全部由工厂承担", "全部由经销商承担", "各承担一半"], "ans": 0, "type": "单选", "explain": "运费由责任方承担，品质问题工厂承担，非品质问题经销商承担", "module": "市场退货"},
+  {"id": 49, "q": "厂外品质判定的最终裁决由谁负责？", "opts": ["品保处主管或产品服务处主管", "仅品保员", "仅业务员", "仅厂长"], "ans": 0, "type": "单选", "explain": "厂外品质判定由品保处或产品服务处主管最终裁决", "module": "厂外品质判定"},
+  {"id": 50, "q": "退货统计分析应包含哪些内容？", "opts": ["退货率、退货原因分布、趋势分析、改善对策", "仅退货率", "仅退货数量", "仅退货金额"], "ans": 0, "type": "多选", "explain": "退货统计需分析退货率、原因分布、趋势、改善对策", "module": "市场退货"},
+  {"id": 51, "q": "厂外品质判定中，样品应如何保存？", "opts": ["按品质判定要求妥善保存、必要时冷藏", "随意存放", "不需保存", "直接销毁"], "ans": 0, "type": "单选", "explain": "样品应按品质判定要求妥善保存，必要时冷藏", "module": "厂外品质判定"},
+  {"id": 52, "q": "市场退货作业办法的相关文件包括？", "opts": ["质量客诉作业办法、厂外品质判定作业办法", "仅产品抽检办法", "仅不合格控制程序", "仅产品召回程序"], "ans": 0, "type": "多选", "explain": "退货办法与客诉办法、厂外品质判定办法相关", "module": "市场退货"},
+  {"id": 53, "q": "厂外品质判定需要现场拍照记录，以下哪些是必须拍摄的？", "opts": ["产品外观、包装状态、异常部位、存放环境", "仅产品外观", "仅包装状态", "仅存放环境"], "ans": 0, "type": "多选", "explain": "需拍摄产品外观、包装状态、异常部位、存放环境", "module": "厂外品质判定"},
+  {"id": 54, "q": "退货产品中，临期产品应如何处理？", "opts": ["根据距离到期时间判定是否可促销处理", "直接报废", "全部退货", "忽略处理"], "ans": 0, "type": "单选", "explain": "临期产品根据距到期时间判定是否可促销处理", "module": "市场退货"},
+  {"id": 55, "q": "厂外品质判定时，以下哪些人员需参与？", "opts": ["产品服务处人员、品保人员、当地经销商", "仅产品服务处人员", "仅品保人员", "仅当地经销商"], "ans": 0, "type": "多选", "explain": "厂外品质判定需多方人员配合参与", "module": "厂外品质判定"},
+  {"id": 56, "q": "退货处理中，对于可返工的产品应参照什么规范？", "opts": ["喷码返工操作规范或换箱作业办法", "直接重新包装", "无需参照任何规范", "随意处理即可"], "ans": 0, "type": "单选", "explain": "可返工产品应参照喷码返工规范或换箱作业办法", "module": "市场退货"},
+  {"id": 57, "q": "厂外品质判定结论有几种？", "opts": ["合格、轻微不合格（可换箱/促销）、不合格（报废/退货）", "仅合格和不合格", "仅合格", "仅不合格"], "ans": 0, "type": "单选", "explain": "判定结论分为合格、轻微不合格、不合格三类", "module": "厂外品质判定"},
+  {"id": 58, "q": "市场退货中，品保处对退货产品的判定结果有几种？", "opts": ["合格可销售、可换箱返工、报废", "仅合格", "仅报废", "仅返工"], "ans": 0, "type": "多选", "explain": "品保判定结果分合格可销售、可换箱返工、报废", "module": "市场退货"},
+  {"id": 59, "q": "退货产品品质判定过程中，应保持什么原则？", "opts": ["公平公正、科学严谨、及时高效", "仅公平公正", "仅科学严谨", "仅及时高效"], "ans": 0, "type": "多选", "explain": "品质判定应遵循公平公正、科学严谨、及时高效原则", "module": "市场退货"},
+  {"id": 60, "q": "厂外品质判定完成后，判定报告应发给哪些部门？", "opts": ["产品服务处、品保处、生产处、总部品保", "仅产品服务处", "仅品保处", "仅总部品保"], "ans": 0, "type": "多选", "explain": "判定报告需分发给多个相关部门", "module": "厂外品质判定"},
+  {"id": 61, "q": "质量紧急突发事件应急响应控制程序的文件编号是？", "opts": ["风险评估-2-WQ-001", "风险评估-2-WQ-021", "经营-2-P-001", "风险评估-2-WQ-018"], "ans": 0, "type": "单选", "explain": "质量紧急突发事件应急响应控制程序编号为风险评估-2-WQ-001", "module": "突发事件"},
+  {"id": 62, "q": "质量紧急突发事件应急响应程序的制定单位是？", "opts": ["品保处", "风险评估处", "生产运营处", "产品服务处"], "ans": 0, "type": "单选", "explain": "由品保处/风险评估处制定", "module": "突发事件"},
+  {"id": 63, "q": "以下哪些属于质量紧急突发事件？", "opts": ["食品安全事故、重大客诉、政府抽检不合格、媒体曝光", "仅食品安全事故", "仅重大客诉", "仅设备故障"], "ans": 0, "type": "多选", "explain": "食品安全事故、重大客诉、政府抽检不合格、媒体曝光都属于质量紧急突发事件", "module": "突发事件"},
+  {"id": 64, "q": "质量紧急突发事件发生后，应在多长时间内启动应急响应？", "opts": ["立即启动", "2小时内", "24小时内", "3天内"], "ans": 0, "type": "单选", "explain": "质量紧急突发事件必须立即启动应急响应", "module": "突发事件"},
+  {"id": 65, "q": "应急响应中，最高指挥者是谁？", "opts": ["最高主管或生产主管", "仅品保主管", "仅车间主任", "仅值班人员"], "ans": 0, "type": "单选", "explain": "应急响应最高指挥者为最高主管或生产主管", "module": "突发事件"},
+  {"id": 66, "q": "重大异常事项管理办法的文件编号是？", "opts": ["经营-2-P-001", "风险评估-2-WQ-001", "产品服务-3-WQ-034", "风险评估-2-WQ-021"], "ans": 0, "type": "单选", "explain": "重大异常事项管理办法编号为经营-2-P-001", "module": "重大异常"},
+  {"id": 67, "q": "重大异常事项管理办法的制定单位是？", "opts": ["经营内控处", "品保处", "生产运营处", "产品服务处"], "ans": 0, "type": "单选", "explain": "重大异常事项管理办法由经营内控处制定", "module": "重大异常"},
+  {"id": 68, "q": "以下哪些属于重大异常事项？", "opts": ["食品安全重大事故、重大设备故障导致停产、重大品质异常、重大环保事件", "仅食品安全事故", "仅设备故障", "仅品质异常"], "ans": 0, "type": "多选", "explain": "重大异常涵盖食品安全、设备、品质、环保等多个领域", "module": "重大异常"},
+  {"id": 69, "q": "重大异常发生后，应在多长时间内上报总部？", "opts": ["立即上报", "24小时内", "3个工作日内", "1周内"], "ans": 0, "type": "单选", "explain": "重大异常必须立即上报总部", "module": "重大异常"},
+  {"id": 70, "q": "应急响应中，产品控制措施包括以下哪些？", "opts": ["暂停生产、隔离存疑产品、通知经销商暂停销售、启动召回评估", "仅暂停生产", "仅隔离产品", "仅通知经销商"], "ans": 0, "type": "多选", "explain": "应急响应需采取暂停生产、隔离产品、通知经销商、评估召回等措施", "module": "突发事件"},
+  {"id": 71, "q": "质量紧急突发事件应急响应结束后应做什么？", "opts": ["编制应急响应总结报告、分析原因、制定预防措施", "仅编制报告", "仅分析原因", "仅恢复生产"], "ans": 0, "type": "多选", "explain": "应急结束后需编制报告、分析原因、制定预防措施", "module": "突发事件"},
+  {"id": 72, "q": "重大异常处理应成立什么？", "opts": ["专案改善小组", "仅责任部门自行处理", "仅品保处处理", "仅行政处处理"], "ans": 0, "type": "单选", "explain": "重大异常需成立专案改善小组处理", "module": "重大异常"},
+  {"id": 73, "q": "专案改善小组应包含哪些人员？", "opts": ["相关部门主管、技术人员、品保人员、生产人员", "仅品保人员", "仅生产人员", "仅管理人员"], "ans": 0, "type": "多选", "explain": "专案改善小组需包含多部门多职能人员", "module": "重大异常"},
+  {"id": 74, "q": "应急响应中，对外沟通由谁负责？", "opts": ["指定专人统一对外沟通", "所有人都可以对外沟通", "仅最高主管", "仅品保主管"], "ans": 0, "type": "单选", "explain": "对外沟通应由指定专人统一负责，避免信息混乱", "module": "突发事件"},
+  {"id": 75, "q": "重大异常改善措施应遵循什么原则？", "opts": ["5W2H原则", "仅纠正原则", "仅预防原则", "仅报告原则"], "ans": 0, "type": "单选", "explain": "重大异常改善措施应遵循5W2H原则", "module": "重大异常"},
+  {"id": 76, "q": "应急响应中，对疑似不安全产品的处理应参照什么程序？", "opts": ["异常品及潜在不安全产品控制程序", "仅内部流程", "仅报废流程", "仅退货流程"], "ans": 0, "type": "单选", "explain": "疑似不安全产品应参照异常品及潜在不安全产品控制程序", "module": "突发事件"},
+  {"id": 77, "q": "重大异常处理的时限要求是？", "opts": ["1-5项5个工作日内完成，6-8项1个月内完成", "全部1周内完成", "全部1个月内完成", "无时限要求"], "ans": 0, "type": "单选", "explain": "纠正措施报告1-5项5个工作日内，6-8项1个月内", "module": "重大异常"},
+  {"id": 78, "q": "应急响应启动后，首要任务是什么？", "opts": ["确认事件性质和影响范围、控制事态发展", "仅记录事件", "仅通知上级", "仅恢复生产"], "ans": 0, "type": "多选", "explain": "应急启动后首先确认事件性质和控制事态", "module": "突发事件"},
+  {"id": 79, "q": "重大异常改善效果验证不通过时应？", "opts": ["重新立案、重新分析原因、重新制定改善措施", "直接结案", "忽略继续", "更换人员"], "ans": 0, "type": "多选", "explain": "验证不通过需重新立案分析改善", "module": "重大异常"},
+  {"id": 80, "q": "质量紧急突发事件应急响应相关文件包括？", "opts": ["不合格控制程序、产品召回控制程序、异常品控制程序", "仅不合格控制程序", "仅产品召回程序", "仅异常品控制程序"], "ans": 0, "type": "多选", "explain": "应急响应与不合格控制、产品召回、异常品控制程序相关", "module": "突发事件"},
+  {"id": 81, "q": "重大异常报告编号原则是什么？", "opts": ["厂别-部门-年份-流水号", "仅年份-流水号", "仅部门-流水号", "仅厂别-流水号"], "ans": 0, "type": "单选", "explain": "编号原则为厂别-部门-年份(四位)-流水号(三位)", "module": "重大异常"},
+  {"id": 82, "q": "应急响应中，以下哪些部门必须参与？", "opts": ["品保处、生产处、产品服务处、经营内控处", "仅品保处", "仅生产处", "仅产品服务处"], "ans": 0, "type": "多选", "explain": "应急响应需要多部门协同参与", "module": "突发事件"},
+  {"id": 83, "q": "重大异常事项管理办法中，追踪主导部门是？", "opts": ["根据异常类型确定（品保/生产/采购/环安等）", "仅品保处", "仅生产处", "仅经营内控处"], "ans": 0, "type": "单选", "explain": "追踪主导部门根据异常类型由对应部门主导", "module": "重大异常"},
+  {"id": 84, "q": "应急响应中，信息传递应遵循什么原则？", "opts": ["准确、及时、完整", "仅准确", "仅及时", "仅快速"], "ans": 0, "type": "多选", "explain": "应急信息传递应准确、及时、完整", "module": "突发事件"},
+  {"id": 85, "q": "重大异常处理完成后，相关资料应如何归档？", "opts": ["按文件控制程序归档保存", "随意存放", "不需保存", "仅电子存档"], "ans": 0, "type": "单选", "explain": "重大异常资料应按文件控制程序归档保存", "module": "重大异常"},
+  {"id": 86, "q": "质量紧急突发事件影响产品安全时，应考虑启动什么？", "opts": ["产品召回程序", "仅退货程序", "仅报废程序", "仅赔偿程序"], "ans": 0, "type": "单选", "explain": "影响产品安全时应考虑启动产品召回程序", "module": "突发事件"},
+  {"id": 87, "q": "重大异常事项中，以下哪些需要专案小组处理？", "opts": ["原因不明、非执行不力重复发生、重大异常现象", "仅首次发生", "仅执行不力", "仅小问题"], "ans": 0, "type": "多选", "explain": "原因不明、重复发生、重大异常需成立专案小组", "module": "重大异常"},
+  {"id": 88, "q": "应急响应中，必要时应向哪些外部机构报告？", "opts": ["政府监管部门、行业协会、客户", "仅政府监管部门", "仅行业协会", "仅客户"], "ans": 0, "type": "多选", "explain": "必要时需向政府监管部门、行业协会、客户报告", "module": "突发事件"},
+  {"id": 89, "q": "重大异常的纠正措施经主管确认不符合时应？", "opts": ["驳回重新分析和制定改善措施", "继续执行", "忽略主管意见", "直接结案"], "ans": 0, "type": "单选", "explain": "纠正措施不符合时应驳回重新分析和制定", "module": "重大异常"},
+  {"id": 90, "q": "应急响应记录和追踪表单由谁负责归档？", "opts": ["追踪主导部门", "仅品保处", "仅行政处", "仅档案室"], "ans": 0, "type": "单选", "explain": "应急响应记录由追踪主导部门负责归档", "module": "突发事件"},
+  {"id": 91, "q": "产品标示与追溯管理程序的文件编号是？", "opts": ["风险评估-2-WQ-015", "风险评估-2-WQ-017", "风险评估-2-WQ-021", "产品服务-3-WQ-045"], "ans": 0, "type": "单选", "explain": "产品标示与追溯管理程序编号为风险评估-2-WQ-015", "module": "产品标示与追溯"},
+  {"id": 92, "q": "产品召回和撤回控制程序的文件编号是？", "opts": ["风险评估-2-WQ-017", "风险评估-2-WQ-015", "风险评估-2-WQ-018", "风险评估-2-WQ-021"], "ans": 0, "type": "单选", "explain": "产品召回和撤回控制程序编号为风险评估-2-WQ-017", "module": "产品召回"},
+  {"id": 93, "q": "产品标示与追溯管理的目的是什么？", "opts": ["确保产品从原料到成品到消费者全程可追溯", "仅确保包装美观", "仅确保生产效率", "仅确保库存管理"], "ans": 0, "type": "单选", "explain": "产品标示与追溯旨在确保全程可追溯", "module": "产品标示与追溯"},
+  {"id": 94, "q": "产品标示应包含哪些信息？", "opts": ["产品名称、生产日期、批号、保质期、生产厂家", "仅产品名称", "仅生产日期", "仅批号"], "ans": 0, "type": "多选", "explain": "产品标示需包含名称、日期、批号、保质期、厂家等信息", "module": "产品标示与追溯"},
+  {"id": 95, "q": "产品追溯的层级应达到什么程度？", "opts": ["从成品到半成品到原料到供应商全程追溯", "仅成品追溯", "仅原料追溯", "仅半成品追溯"], "ans": 0, "type": "单选", "explain": "追溯应覆盖成品-半成品-原料-供应商全程", "module": "产品标示与追溯"},
+  {"id": 96, "q": "产品召回分为哪些等级？", "opts": ["一级召回（严重食品安全风险）、二级召回（一般食品安全风险）、三级召回（无食品安全风险但品质不合规）", "仅一级和二级", "仅一级", "仅二级和三级"], "ans": 0, "type": "多选", "explain": "召回分一级、二级、三级三个等级", "module": "产品召回"},
+  {"id": 97, "q": "一级召回应在多长时间内通知所有经销商？", "opts": ["24小时内", "48小时内", "3天内", "1周内"], "ans": 0, "type": "单选", "explain": "一级召回必须在24小时内通知所有经销商暂停销售", "module": "产品召回"},
+  {"id": 98, "q": "产品召回启动后，由谁担任召回组长？", "opts": ["最高主管或其授权人", "仅品保主管", "仅生产主管", "仅产品服务主管"], "ans": 0, "type": "单选", "explain": "召回组长由最高主管或其授权人担任", "module": "产品召回"},
+  {"id": 99, "q": "产品标示中，批号的编码规则应包含什么信息？", "opts": ["生产日期、生产线、班次、产品品种", "仅生产日期", "仅生产线", "仅品种"], "ans": 0, "type": "多选", "explain": "批号应编码日期、线号、班次、品种等信息", "module": "产品标示与追溯"},
+  {"id": 100, "q": "产品撤回与召回的区别是什么？", "opts": ["召回涉及食品安全风险，撤回不涉及食品安全风险但品质不合规", "两者完全相同", "撤回比召回更严重", "召回仅指退货"], "ans": 0, "type": "单选", "explain": "召回涉及食品安全风险，撤回涉及品质不合规但无安全风险", "module": "产品召回"},
+  {"id": 101, "q": "追溯体系中，以下哪些记录是必须保存的？", "opts": ["原料验收记录、生产过程记录、检验记录、出厂记录", "仅原料验收记录", "仅生产过程记录", "仅检验记录"], "ans": 0, "type": "多选", "explain": "追溯体系需保存原料验收、生产、检验、出厂等全链条记录", "module": "产品标示与追溯"},
+  {"id": 102, "q": "产品召回中，以下哪些措施是必须执行的？", "opts": ["通知经销商暂停销售、回收已售产品、公开声明、向监管部门报告", "仅通知经销商", "仅回收产品", "仅公开声明"], "ans": 0, "type": "多选", "explain": "召回需通知经销商、回收产品、公开声明、向监管部门报告", "module": "产品召回"},
+  {"id": 103, "q": "产品标示与追溯中，标示不清或错误时应？", "opts": ["立即纠正，必要时暂停相关产品销售", "忽略继续", "事后修改即可", "仅通知品保处"], "ans": 0, "type": "单选", "explain": "标示不清或错误需立即纠正，必要时暂停销售", "module": "产品标示与追溯"},
+  {"id": 104, "q": "产品召回效果评估应包含哪些内容？", "opts": ["召回完成率、受影响产品回收比例、风险评估结论", "仅召回完成率", "仅回收比例", "仅风险评估"], "ans": 0, "type": "多选", "explain": "召回效果评估需包含完成率、回收比例、风险评估", "module": "产品召回"},
+  {"id": 105, "q": "追溯演练应多长时间进行一次？", "opts": ["至少每年一次", "每月一次", "每季度一次", "每半年一次"], "ans": 0, "type": "单选", "explain": "追溯演练至少每年进行一次", "module": "产品标示与追溯"},
+  {"id": 106, "q": "二级召回应在多长时间内通知经销商？", "opts": ["48小时内", "24小时内", "3天内", "1周内"], "ans": 0, "type": "单选", "explain": "二级召回在48小时内通知经销商", "module": "产品召回"},
+  {"id": 107, "q": "产品标示中，保质期的标示格式应符合什么要求？", "opts": ["符合GB 7718食品安全国家标准", "仅公司内部标准", "仅行业惯例", "无特定要求"], "ans": 0, "type": "单选", "explain": "保质期标示应符合GB 7718国家标准", "module": "产品标示与追溯"},
+  {"id": 108, "q": "召回完成后，应编制什么报告？", "opts": ["召回总结报告", "仅口头汇报", "仅内部通知", "无需报告"], "ans": 0, "type": "单选", "explain": "召回完成后应编制召回总结报告", "module": "产品召回"},
+  {"id": 109, "q": "追溯体系中，电子记录与纸质记录的关系是？", "opts": ["两者需保持一致且均可追溯", "仅电子记录有效", "仅纸质记录有效", "两者互不相关"], "ans": 0, "type": "单选", "explain": "电子和纸质记录需保持一致，均可追溯", "module": "产品标示与追溯"},
+  {"id": 110, "q": "三级召回应在多长时间内通知经销商？", "opts": ["3个工作日内", "24小时内", "48小时内", "1周内"], "ans": 0, "type": "单选", "explain": "三级召回在3个工作日内通知经销商", "module": "产品召回"},
+  {"id": 111, "q": "产品标示追溯中，供应商追溯应至少覆盖几级？", "opts": ["至少追溯到直接供应商和其原料来源", "仅追溯到直接供应商", "无需追溯", "仅追溯到工厂"], "ans": 0, "type": "单选", "explain": "追溯应至少到直接供应商及原料来源", "module": "产品标示与追溯"},
+  {"id": 112, "q": "召回过程中，对召回产品的处理方式有哪些？", "opts": ["销毁、返工（安全前提下）、退回供应商", "仅销毁", "仅返工", "仅退回"], "ans": 0, "type": "多选", "explain": "召回产品可根据情况销毁、返工或退回供应商", "module": "产品召回"},
+  {"id": 113, "q": "产品标示追溯中，不合格品的标示应？", "opts": ["明显标识为不合格、隔离存放、记录追溯信息", "仅标识不合格", "仅隔离存放", "仅记录信息"], "ans": 0, "type": "多选", "explain": "不合格品需标识、隔离、记录追溯信息", "module": "产品标示与追溯"},
+  {"id": 114, "q": "召回中，向政府监管部门报告时应包含什么信息？", "opts": ["召回原因、涉及产品范围、召回等级、已采取措施", "仅召回原因", "仅涉及产品", "仅采取措施"], "ans": 0, "type": "多选", "explain": "向监管部门需报告原因、范围、等级、措施", "module": "产品召回"},
+  {"id": 115, "q": "产品标示与追溯管理中，记录保存期限应至少多久？", "opts": ["产品保质期后至少2年", "仅1年", "仅保质期长度", "永久保存"], "ans": 0, "type": "单选", "explain": "记录保存期限为产品保质期后至少2年", "module": "产品标示与追溯"},
+  {"id": 116, "q": "召回小组应包含哪些成员？", "opts": ["品保、产品服务、生产、采购、法务等相关部门", "仅品保", "仅产品服务", "仅生产"], "ans": 0, "type": "多选", "explain": "召回小组需包含品保、产品服务、生产等多部门", "module": "产品召回"},
+  {"id": 117, "q": "追溯体系中，内部追溯时限应在多长时间内完成？", "opts": ["2小时内完成从成品到原料的追溯", "4小时内", "24小时内", "3天内"], "ans": 0, "type": "单选", "explain": "内部追溯应在2小时内完成", "module": "产品标示与追溯"},
+  {"id": 118, "q": "产品召回和撤回控制程序的相关文件包括？", "opts": ["不合格控制程序、异常品控制程序、质量紧急突发事件应急响应程序", "仅不合格控制程序", "仅异常品控制程序", "仅应急响应程序"], "ans": 0, "type": "多选", "explain": "召回程序与不合格控制、异常品控制、应急响应相关", "module": "产品召回"},
+  {"id": 119, "q": "产品标示中，生产日期的标示位置应在？", "opts": ["包装主展示面的明显位置", "仅包装侧面", "仅包装底部", "随意位置"], "ans": 0, "type": "单选", "explain": "生产日期应在包装主展示面明显位置标示", "module": "产品标示与追溯"},
+  {"id": 120, "q": "召回过程中，对外信息发布由谁负责？", "opts": ["指定发言人统一对外发布", "任何人都可以发布", "仅最高主管", "仅品保主管"], "ans": 0, "type": "单选", "explain": "对外信息发布应由指定发言人统一负责", "module": "产品召回"},
+  {"id": 121, "q": "不合格控制程序的文件编号是？", "opts": ["风险评估-2-WQ-021", "风险评估-2-WQ-018", "风险评估-2-WQ-001", "风险评估-2-WQ-015"], "ans": 0, "type": "单选", "explain": "不合格控制程序编号为风险评估-2-WQ-021", "module": "不合格控制"},
+  {"id": 122, "q": "不合格的定义是什么？", "opts": ["不符合标准或要求", "仅指产品不合格", "仅指过程不合格", "仅指体系不合格"], "ans": 0, "type": "单选", "explain": "不合格指所有不符合标准或要求的情况", "module": "不合格控制"},
+  {"id": 123, "q": "不合格包括哪些类别？", "opts": ["不合格品和不合格项", "仅不合格品", "仅不合格项", "仅品质异常"], "ans": 0, "type": "单选", "explain": "不合格包括不合格品和不合格项", "module": "不合格控制"},
+  {"id": 124, "q": "纠正的定义是什么？", "opts": ["为消除已发现的不合格所采取的措施", "仅指返工", "仅指报废", "仅指标识"], "ans": 0, "type": "单选", "explain": "纠正是为消除已发现的不合格所采取的措施", "module": "不合格控制"},
+  {"id": 125, "q": "纠正措施的定义是什么？", "opts": ["为消除潜在不合格或趋势原因而采取的措施", "仅指纠正行为", "仅指预防行为", "仅指记录行为"], "ans": 0, "type": "单选", "explain": "纠正措施是为消除潜在不合格原因而采取的预防性措施", "module": "不合格控制"},
+  {"id": 126, "q": "潜在不安全产品的定义是什么？", "opts": ["超出关键限值条件下生产的产品或不符合操作性前提方案的产品", "仅指过期产品", "仅指变质产品", "仅指投诉产品"], "ans": 0, "type": "单选", "explain": "超出关键限值或不符合操作性前提方案的产品为潜在不安全产品", "module": "不合格控制"},
+  {"id": 127, "q": "不合格的识别应由谁负责？", "opts": ["各相关部门接到异常信息时及时判定识别", "仅品保处", "仅生产处", "仅采购处"], "ans": 0, "type": "单选", "explain": "各相关部门接到异常信息都应及时识别判定", "module": "不合格控制"},
+  {"id": 128, "q": "不合格类别包括以下哪些？", "opts": ["厂内外成品/半成品/原物料指标异常、微生物涂抹异常、客诉反馈、内审不符合等", "仅成品异常", "仅原物料异常", "仅客诉反馈"], "ans": 0, "type": "多选", "explain": "不合格类别涵盖产品指标、微生物、客诉、内审等多种", "module": "不合格控制"},
+  {"id": 129, "q": "异常品及潜在不安全产品控制程序的文件编号是？", "opts": ["风险评估-2-WQ-018", "风险评估-2-WQ-021", "风险评估-2-WQ-001", "风险评估-3-WQ-031"], "ans": 0, "type": "单选", "explain": "异常品控制程序编号为风险评估-2-WQ-018", "module": "异常品控制"},
+  {"id": 130, "q": "原物料异常处理作业办法的文件编号是？", "opts": ["风险评估-3-WQ-031", "风险评估-2-WQ-018", "风险评估-2-WQ-021", "产品服务-3-WQ-034"], "ans": 0, "type": "单选", "explain": "原物料异常处理作业办法编号为风险评估-3-WQ-031", "module": "原物料异常"},
+  {"id": 131, "q": "不合格品判定为不安全食品且已流向市场时应？", "opts": ["参照产品召回控制程序处理", "仅内部处理", "仅退货处理", "仅报废处理"], "ans": 0, "type": "单选", "explain": "不安全食品已流向市场应参照召回控制程序处理", "module": "不合格控制"},
+  {"id": 132, "q": "不合格品未达到召回等级时应参照什么程序？", "opts": ["异常品及潜在不安全产品控制程序", "仅内部处理", "仅报废程序", "仅退货程序"], "ans": 0, "type": "单选", "explain": "未达召回等级应参照异常品控制程序处理", "module": "不合格控制"},
+  {"id": 133, "q": "原因分析应采用什么手法？", "opts": ["QC手法，从人、机、料、法、环、测全面分析", "仅从人分析", "仅从设备分析", "仅从方法分析"], "ans": 0, "type": "多选", "explain": "原因分析应采用QC手法从人机料法环测全面分析", "module": "不合格控制"},
+  {"id": 134, "q": "纠正措施拟定应遵循什么原则？", "opts": ["5W2H原则（Why/What/Where/When/Who/How/HOW much）", "仅Why原则", "仅How原则", "仅Who原则"], "ans": 0, "type": "单选", "explain": "纠正措施应遵循5W2H原则", "module": "不合格控制"},
+  {"id": 135, "q": "纠正措施报告（通用版）编号原则是什么？", "opts": ["厂别-部门-年份(四位)-流水号(三位)", "仅年份-流水号", "仅部门-流水号", "仅厂别-流水号"], "ans": 0, "type": "单选", "explain": "编号原则如北京总厂-品保-2016-001", "module": "不合格控制"},
+  {"id": 136, "q": "纠正措施报告时效性要求是？", "opts": ["1-5项5个工作日内完成，6-8项1个月内完成", "全部5个工作日", "全部1个月", "无时限要求"], "ans": 0, "type": "单选", "explain": "报告1-5项5个工作日，6-8项1个月内完成", "module": "不合格控制"},
+  {"id": 137, "q": "原物料异常处理时，应填写什么表单？", "opts": ["原物料品质异常处理单", "仅口头汇报", "仅微信通知", "仅电话记录"], "ans": 0, "type": "单选", "explain": "原物料异常需填写原物料品质异常处理单", "module": "原物料异常"},
+  {"id": 138, "q": "不合格追踪确认表的用途是什么？", "opts": ["追踪确认不合格项的改善落实情况", "仅记录不合格", "仅汇总数据", "仅通知相关部门"], "ans": 0, "type": "单选", "explain": "追踪确认表用于跟踪改善落实情况", "module": "不合格控制"},
+  {"id": 139, "q": "验证改善效果的原则是什么？", "opts": ["不合格是否完全消除或降至最低水平、是否确保不会再发生", "仅看是否消除", "仅看是否降低", "仅看是否不再发生"], "ans": 0, "type": "多选", "explain": "验证原则包括是否消除/降低和是否确保不再发生", "module": "不合格控制"},
+  {"id": 140, "q": "原物料异常需反馈供应商时，应按什么办法处理？", "opts": ["原物料异常处理作业办法", "仅口头通知供应商", "仅内部报废", "仅退货处理"], "ans": 0, "type": "单选", "explain": "原物料异常反馈供应商按原物料异常处理作业办法", "module": "原物料异常"},
+  {"id": 141, "q": "异常品控制中，对潜在不安全产品的处理包括？", "opts": ["标识、隔离、评估、放行或报废", "仅标识", "仅隔离", "仅报废"], "ans": 0, "type": "多选", "explain": "潜在不安全产品需标识、隔离、评估、放行或报废", "module": "异常品控制"},
+  {"id": 142, "q": "不合格追踪主导部门的职责是？", "opts": ["识别、追踪纠正、落实改善措施、效果确认、归档管理", "仅识别", "仅追踪", "仅归档"], "ans": 0, "type": "多选", "explain": "追踪主导部门负责识别、追踪、落实、确认、归档", "module": "不合格控制"},
+  {"id": 143, "q": "验证改善效果应在多长时间内完成？", "opts": ["1个月内", "3个月内", "半年内", "1年内"], "ans": 0, "type": "单选", "explain": "改善效果验证应在1个月内完成", "module": "不合格控制"},
+  {"id": 144, "q": "验证无效或效果不理想时应？", "opts": ["重新立案、原因分析、制定及实施纠正措施、验证效果", "仅重新立案", "仅原因分析", "仅继续观察"], "ans": 0, "type": "多选", "explain": "验证无效需重新立案分析改善验证", "module": "不合格控制"},
+  {"id": 145, "q": "异常品及潜在不安全产品评估后，可放行的条件是？", "opts": ["评估确认无食品安全风险且符合相关标准", "仅品保主管同意", "仅生产主管同意", "任何人同意即可"], "ans": 0, "type": "单选", "explain": "评估确认无食品安全风险且符合标准方可放行", "module": "异常品控制"},
+  {"id": 146, "q": "原物料异常中，以下哪些属于异常情况？", "opts": ["品质指标超标、包装破损、数量不足、交期延迟", "仅品质超标", "仅包装破损", "仅交期延迟"], "ans": 0, "type": "多选", "explain": "原物料异常涵盖品质、包装、数量、交期等", "module": "原物料异常"},
+  {"id": 147, "q": "纠正措施报告确认流程中，签核版应发给谁？", "opts": ["总部品保处、对口生产处、国际事务部（外销）、风险评估部", "仅总部品保", "仅生产处", "仅国际事务部"], "ans": 0, "type": "多选", "explain": "签核版需发送总部品保、生产处、国际事务部、风险评估部", "module": "不合格控制"},
+  {"id": 148, "q": "总部对纠正措施报告有异议时应在多长时间内回复？", "opts": ["3个工作日内", "5个工作日内", "1周内", "2周内"], "ans": 0, "type": "单选", "explain": "总部有异议应在3个工作日内回复，否则视为认同", "module": "不合格控制"},
+  {"id": 149, "q": "异常品处理中，以下哪些产品必须报废？", "opts": ["确认不安全的产品、无法返工恢复安全的产品", "仅过期产品", "仅口感差的产品", "仅外观不佳的产品"], "ans": 0, "type": "多选", "explain": "确认不安全和无法返工恢复安全的产品必须报废", "module": "异常品控制"},
+  {"id": 150, "q": "不合格控制程序的相关文件包括？", "opts": ["文件与记录控制程序、异常品控制程序、原物料异常处理办法、生产线设备故障审核规范", "仅文件控制程序", "仅异常品控制程序", "仅原物料异常办法"], "ans": 0, "type": "多选", "explain": "不合格控制与文件控制、异常品控制、原物料异常、设备故障审核等相关", "module": "不合格控制"},
+  {"id": 151, "q": "工厂报废作业办法的文件编号是？", "opts": ["品保-3-WQ-073", "品保-3-WQ-058", "品保-3-WQ-051", "品保-3-WQ-077"], "ans": 0, "type": "单选", "explain": "工厂报废作业办法编号为品保-3-WQ-073", "module": "工厂报废"},
+  {"id": 152, "q": "产品换箱作业办法的文件编号是？", "opts": ["品保-3-WQ-058", "品保-3-WQ-073", "品保-3-WQ-051", "品保-3-WQ-077"], "ans": 0, "type": "单选", "explain": "产品换箱作业办法编号为品保-3-WQ-058", "module": "产品换箱"},
+  {"id": 153, "q": "喷码返工操作规范的文件编号是？", "opts": ["品保-3-WQ-051", "品保-3-WQ-058", "品保-3-WQ-073", "品保-3-WQ-077"], "ans": 0, "type": "单选", "explain": "喷码返工操作规范编号为品保-3-WQ-051", "module": "喷码返工"},
+  {"id": 154, "q": "工厂报废的审批流程是什么？", "opts": ["责任部门申请→品保审核→主管核准→执行报废", "仅品保审核即可", "仅责任部门申请即可", "无需审批直接报废"], "ans": 0, "type": "单选", "explain": "报废需经责任部门申请、品保审核、主管核准", "module": "工厂报废"},
+  {"id": 155, "q": "以下哪些产品可以申请报废？", "opts": ["品质不合格品、过期产品、损坏无法修复产品、召回产品", "仅品质不合格品", "仅过期产品", "仅损坏产品"], "ans": 0, "type": "多选", "explain": "报废适用于不合格品、过期、损坏、召回等多种情况", "module": "工厂报废"},
+  {"id": 156, "q": "报废产品的销毁方式有哪些？", "opts": ["粉碎、焚烧、深埋、交专业销毁机构", "仅粉碎", "仅焚烧", "仅深埋"], "ans": 0, "type": "多选", "explain": "报废销毁可采用粉碎、焚烧、深埋或交专业机构", "module": "工厂报废"},
+  {"id": 157, "q": "报废处理必须确保什么？", "opts": ["报废产品不再流入市场、销毁过程有记录、销毁有监销人", "仅不再流入市场", "仅过程有记录", "仅有监销人"], "ans": 0, "type": "多选", "explain": "报废需确保不流入市场、有记录、有监销人", "module": "工厂报废"},
+  {"id": 158, "q": "产品换箱的适用条件是什么？", "opts": ["产品品质合格但外包装有损伤或喷码不清", "仅包装损伤", "仅喷码不清", "任何产品都可换箱"], "ans": 0, "type": "单选", "explain": "换箱适用于品质合格但外包装损伤或喷码不清的产品", "module": "产品换箱"},
+  {"id": 159, "q": "产品换箱操作中，换箱前应做什么？", "opts": ["品质判定确认产品内容物合格", "直接换箱", "随意操作", "不需检查"], "ans": 0, "type": "单选", "explain": "换箱前必须先确认产品内容物品质合格", "module": "产品换箱"},
+  {"id": 160, "q": "喷码返工的适用条件是什么？", "opts": ["喷码不清、喷码错误、喷码位置偏移但产品内容物合格", "仅喷码不清", "仅喷码错误", "任何喷码问题都可返工"], "ans": 0, "type": "多选", "explain": "喷码返工适用于不清、错误、偏移等情况但内容物须合格", "module": "喷码返工"},
+  {"id": 161, "q": "工厂报废作业办法中，报废记录应保存多久？", "opts": ["至少3年", "1年", "2年", "5年"], "ans": 0, "type": "单选", "explain": "报废记录应至少保存3年", "module": "工厂报废"},
+  {"id": 162, "q": "产品换箱后，新包装上应标示什么？", "opts": ["原生产日期、换箱日期标识、换箱操作人员记录", "仅原生产日期", "仅换箱日期", "仅换箱人员"], "ans": 0, "type": "多选", "explain": "换箱后需标示原日期、换箱日期、操作人员", "module": "产品换箱"},
+  {"id": 163, "q": "喷码返工操作中，返工后应做什么检查？", "opts": ["检查喷码清晰度、位置准确性、内容正确性", "仅检查清晰度", "仅检查位置", "仅检查内容"], "ans": 0, "type": "多选", "explain": "返工后需检查喷码清晰度、位置、内容正确性", "module": "喷码返工"},
+  {"id": 164, "q": "报废处理中，监销人应由谁担任？", "opts": ["品保人员和非责任部门人员", "仅品保人员", "仅责任部门人员", "仅厂长"], "ans": 0, "type": "单选", "explain": "监销人应由品保和非责任部门人员担任", "module": "工厂报废"},
+  {"id": 165, "q": "产品换箱操作中，拆箱时应注意什么？", "opts": ["不损伤产品内容物、保持内容物完整清洁", "随意拆即可", "不用注意", "允许损伤内容物"], "ans": 0, "type": "单选", "explain": "拆箱时不得损伤产品内容物", "module": "产品换箱"},
+  {"id": 166, "q": "喷码返工中，旧喷码应如何处理？", "opts": ["彻底清除旧喷码后再重新喷码", "直接覆盖旧喷码", "不用处理旧喷码", "随意处理"], "ans": 0, "type": "单选", "explain": "返工前应彻底清除旧喷码再重新喷码", "module": "喷码返工"},
+  {"id": 167, "q": "报废产品中，食品类报废品的销毁应特别注意什么？", "opts": ["确保完全销毁不可再食用、防止二次流通", "仅注意记录", "仅注意人员安全", "仅注意环境"], "ans": 0, "type": "多选", "explain": "食品报废需确保完全销毁不可再食用、防止二次流通", "module": "工厂报废"},
+  {"id": 168, "q": "产品换箱完成后，品保应做什么？", "opts": ["验收换箱产品质量、记录换箱数量、确认换箱合格率", "仅验收质量", "仅记录数量", "仅确认合格率"], "ans": 0, "type": "多选", "explain": "品保需验收质量、记录数量、确认合格率", "module": "产品换箱"},
+  {"id": 169, "q": "喷码返工操作规范中，返工次数限制是？", "opts": ["同一产品最多返工一次", "可无限返工", "最多两次", "最多三次"], "ans": 0, "type": "单选", "explain": "同一产品最多返工一次，不可反复返工", "module": "喷码返工"},
+  {"id": 170, "q": "工厂报废的申请表单应包含什么信息？", "opts": ["报废原因、产品名称、批号、数量、预估报废方式", "仅报废原因", "仅产品名称", "仅数量"], "ans": 0, "type": "多选", "explain": "报废申请需填写原因、名称、批号、数量、方式", "module": "工厂报废"},
+  {"id": 171, "q": "产品换箱过程中发现内容物异常时应？", "opts": ["停止换箱、报告品保处、按不合格品处理", "继续换箱", "直接报废内容物", "忽略继续"], "ans": 0, "type": "多选", "explain": "发现内容物异常应停止换箱、报告品保、按不合格处理", "module": "产品换箱"},
+  {"id": 172, "q": "喷码返工使用的设备应符合什么要求？", "opts": ["符合食品安全要求、喷码清晰持久、不影响产品品质", "仅喷码清晰", "仅食品安全", "仅不影响品质"], "ans": 0, "type": "多选", "explain": "返工设备需符合食品安全要求、喷码清晰持久", "module": "喷码返工"},
+  {"id": 173, "q": "报废处理完成后，应编制什么报告？", "opts": ["报废处理报告（含监销记录）", "仅口头汇报", "仅内部通知", "无需报告"], "ans": 0, "type": "单选", "explain": "报废完成后编制报废处理报告含监销记录", "module": "工厂报废"},
+  {"id": 174, "q": "产品换箱作业办法的相关文件包括？", "opts": ["喷码返工操作规范、不合格控制程序、工厂报废作业办法", "仅喷码返工规范", "仅不合格控制程序", "仅报废办法"], "ans": 0, "type": "多选", "explain": "换箱与喷码返工、不合格控制、报废办法相关", "module": "产品换箱"},
+  {"id": 175, "q": "以下哪些情况不允许换箱？", "opts": ["内容物品质不合格、产品已变质、产品超出保质期", "仅内容物不合格", "仅变质", "仅超出保质期"], "ans": 0, "type": "多选", "explain": "内容物不合格、变质、超保质期均不允许换箱", "module": "产品换箱"},
+  {"id": 176, "q": "喷码返工操作应由谁执行？", "opts": ["经培训合格的专门人员", "任何人", "仅品保人员", "仅操作工"], "ans": 0, "type": "单选", "explain": "喷码返工应由经培训合格的专门人员执行", "module": "喷码返工"},
+  {"id": 177, "q": "工厂报废中，包材类报废品的处理方式是什么？", "opts": ["分类回收或销毁，不可回收的按规定销毁", "全部回收", "全部焚烧", "随意丢弃"], "ans": 0, "type": "单选", "explain": "包材报废品分类回收或销毁", "module": "工厂报废"},
+  {"id": 178, "q": "产品换箱记录应保存多久？", "opts": ["产品保质期后至少2年", "1年", "3年", "5年"], "ans": 0, "type": "单选", "explain": "换箱记录保存保质期后至少2年", "module": "产品换箱"},
+  {"id": 179, "q": "喷码返工后，品保应做什么验证？", "opts": ["验证喷码内容与原信息一致、喷码清晰可识别", "仅验证内容一致", "仅验证清晰可识别", "无需验证"], "ans": 0, "type": "多选", "explain": "品保需验证喷码内容一致和清晰可识别", "module": "喷码返工"},
+  {"id": 180, "q": "报废、换箱、喷码返工三者的共同原则是什么？", "opts": ["品质优先、记录完整、操作规范、追溯可查", "仅品质优先", "仅记录完整", "仅操作规范"], "ans": 0, "type": "多选", "explain": "三者共同遵循品质优先、记录完整、操作规范、追溯可查", "module": "报废与返工"},
+  {"id": 181, "q": "异物防治作业办法的文件编号是？", "opts": ["品保-3-WQ-077", "品保-3-WQ-073", "品保-3-WQ-058", "品保-3-WQ-051"], "ans": 0, "type": "单选", "explain": "异物防治作业办法编号为品保-3-WQ-077", "module": "异物防治"},
+  {"id": 182, "q": "异物防治的目的是什么？", "opts": ["防止异物混入产品，确保食品安全", "仅提高品质", "仅减少投诉", "仅控制成本"], "ans": 0, "type": "单选", "explain": "异物防治旨在防止异物混入产品确保食品安全", "module": "异物防治"},
+  {"id": 183, "q": "以下哪些属于常见异物类型？", "opts": ["金属异物、塑料异物、玻璃异物、毛发、虫害", "仅金属异物", "仅塑料异物", "仅毛发"], "ans": 0, "type": "多选", "explain": "常见异物包括金属、塑料、玻璃、毛发、虫害等", "module": "异物防治"},
+  {"id": 184, "q": "异物防治措施包括以下哪些？", "opts": ["原料筛选、设备防护、人员管控、环境管控、检查检测", "仅原料筛选", "仅设备防护", "仅人员管控"], "ans": 0, "type": "多选", "explain": "异物防治需从原料、设备、人员、环境、检测多方面管控", "module": "异物防治"},
+  {"id": 185, "q": "发现产品中有异物时应？", "opts": ["立即停止生产、隔离相关产品、启动调查、制定改善措施", "仅停止生产", "仅隔离产品", "仅启动调查"], "ans": 0, "type": "多选", "explain": "发现异物需停线、隔离、调查、改善", "module": "异物防治"},
+  {"id": 186, "q": "异物防治中，金属检测设备的校准频率是？", "opts": ["按规定定期校准（至少每班次验证）", "每月一次", "每季度一次", "每年一次"], "ans": 0, "type": "单选", "explain": "金属检测设备应至少每班次验证校准", "module": "异物防治"},
+  {"id": 187, "q": "品保岗位挑战赛涵盖了哪些SOP文件类别？", "opts": ["产品服务、风险评估、品保操作、经营管理", "仅产品服务", "仅风险评估", "仅品保操作"], "ans": 0, "type": "多选", "explain": "品保挑战赛覆盖产品服务、风险评估、品保操作、经营管理等多类别", "module": "品保综合"},
+  {"id": 188, "q": "以下哪些是品保处主导追踪的异常类型？", "opts": ["原物料异常、客诉异常、制程异常、抽检异常", "仅原物料异常", "仅客诉异常", "仅制程异常"], "ans": 0, "type": "多选", "explain": "品保处主导追踪原物料、客诉、制程、抽检等质量相关异常", "module": "品保综合"},
+  {"id": 189, "q": "异物防治中，员工个人卫生管控包括哪些？", "opts": ["工作服整洁无 loose 线头、不带首饰、头发包覆、不得携带个人物品进入车间", "仅工作服整洁", "仅不带首饰", "仅头发包覆"], "ans": 0, "type": "多选", "explain": "员工卫生管控需整洁、不带首饰、包覆头发、不携个人物品", "module": "异物防治"},
+  {"id": 190, "q": "品保体系中，文件版本控制的规则是什么？", "opts": ["文件修订需审批、版本号递增、旧版本收回、修订记录保存", "仅版本号递增", "仅审批", "仅收回旧版本"], "ans": 0, "type": "多选", "explain": "文件修订需审批、递增版本、收回旧版、保存修订记录", "module": "品保综合"},
+  {"id": 191, "q": "异物防治中，玻璃制品管控的要求是什么？", "opts": ["车间禁止使用玻璃制品、灯具加防护罩、玻璃器具登记管理", "仅禁止使用玻璃", "仅灯具防护", "仅登记管理"], "ans": 0, "type": "多选", "explain": "玻璃管控需禁止使用、灯具防护、登记管理", "module": "异物防治"},
+  {"id": 192, "q": "品保岗位中，以下哪些表单是品保人员日常使用的？", "opts": ["纠正措施报告(通用版)、原物料品质异常处理单、不合格追踪确认表、报废处理报告", "仅纠正措施报告", "仅异常处理单", "仅追踪确认表"], "ans": 0, "type": "多选", "explain": "品保日常使用纠正措施报告、异常处理单、追踪表、报废报告等", "module": "品保综合"},
+  {"id": 193, "q": "异物防治中，原料验收的异物检查应关注什么？", "opts": ["原料包装完整性、有无异物痕迹、供应商异物控制记录", "仅包装完整性", "仅异物痕迹", "仅供应商记录"], "ans": 0, "type": "多选", "explain": "原料验收需检查包装、异物痕迹、供应商记录", "module": "异物防治"},
+  {"id": 194, "q": "品保工作中，以下哪些属于品保处审核职责？", "opts": ["纠正措施审核、报废审批、品质判定、文件修订审核", "仅纠正措施审核", "仅报废审批", "仅品质判定"], "ans": 0, "type": "多选", "explain": "品保处审核涵盖纠正措施、报废、品质判定、文件修订", "module": "品保综合"},
+  {"id": 195, "q": "异物防治中，设备防护的具体措施有哪些？", "opts": ["设备定期维护保养、易损件更换记录、设备防护罩完好、润滑油使用食品级", "仅定期维护", "仅更换记录", "仅防护罩完好"], "ans": 0, "type": "多选", "explain": "设备防护需定期维护、记录更换、防护罩完好、食品级润滑油", "module": "异物防治"},
+  {"id": 196, "q": "品保体系中，稽核检查的类型有哪些？", "opts": ["总部稽核、交叉稽查、大区稽核、工厂内审", "仅总部稽核", "仅交叉稽查", "仅工厂内审"], "ans": 0, "type": "多选", "explain": "稽核涵盖总部、交叉、大区、内审多种类型", "module": "品保综合"},
+  {"id": 197, "q": "异物防治中，虫害防控的措施包括？", "opts": ["车间门窗封闭、灭虫灯设置、定期消杀、虫害监测记录", "仅门窗封闭", "仅灭虫灯", "仅定期消杀"], "ans": 0, "type": "多选", "explain": "虫害防控需封闭门窗、设灭虫灯、定期消杀、记录监测", "module": "异物防治"},
+  {"id": 198, "q": "品保岗位涉及的所有SOP文件中，以下哪些属于风险评估类别？", "opts": ["WQ-001（应急响应）、WQ-015（标示追溯）、WQ-017（召回）、WQ-018（异常品）、WQ-021（不合格）、WQ-031（原物料异常）", "仅WQ-001", "仅WQ-021", "仅WQ-018"], "ans": 0, "type": "多选", "explain": "风险评估类别包含应急、追溯、召回、异常品、不合格、原物料异常", "module": "品保综合"},
+  {"id": 199, "q": "异物投诉产品应如何处理？", "opts": ["保留样品、启动调查、追溯异物来源、制定防治改善措施", "仅保留样品", "仅启动调查", "仅追溯来源"], "ans": 0, "type": "多选", "explain": "异物投诉需保留样品、调查、追溯来源、改善防治", "module": "异物防治"},
+  {"id": 200, "q": "品保岗位的核心理念是什么？", "opts": ["预防为主、全员参与、持续改善、追溯可查", "仅预防为主", "仅全员参与", "仅持续改善"], "ans": 0, "type": "多选", "explain": "品保核心理念是预防为主、全员参与、持续改善、追溯可查", "module": "品保综合"},
+];
+
+
+
+// ==================== 关卡系统（7关，难度递进） ====================
+const LEVELS = [
+  {"id": 1, "name": "抽检与客诉", "icon": "🔍", "desc": "产品抽检与质量客诉流程", "star": 1, "qRange": [1, 30]},
+  {"id": 2, "name": "退货与判定", "icon": "📦", "desc": "市场退货与厂外品质判定", "star": 1, "qRange": [31, 60]},
+  {"id": 3, "name": "应急与异常", "icon": "🚨", "desc": "质量突发事件与重大异常处理", "star": 2, "qRange": [61, 90]},
+  {"id": 4, "name": "追溯与召回", "icon": "🔗", "desc": "产品标示追溯与召回撤回", "star": 2, "qRange": [91, 120]},
+  {"id": 5, "name": "不合格控制", "icon": "⚠️", "desc": "不合格品与异常品控制处理", "star": 3, "qRange": [121, 150]},
+  {"id": 6, "name": "报废与返工", "icon": "🔧", "desc": "工厂报废、换箱与喷码返工", "star": 3, "qRange": [151, 180]},
+  {"id": 7, "name": "异物与综合", "icon": "🏆", "desc": "异物防治与品保综合挑战", "star": 4, "qRange": [181, 200]},
+];
+
+
+
+// ==================== 音效系统（Web Audio API合成） ====================
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playCorrectSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playWrongSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 180;
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } catch(e) {}
+}
+
+function playTimeoutSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [440, 330].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.15);
+      osc.stop(now + i * 0.15 + 0.3);
+    });
+  } catch(e) {}
+}
+
+function playLevelUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, now + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.12);
+      osc.stop(now + i * 0.12 + 0.35);
+    });
+  } catch(e) {}
+}
+
+function playRankUpSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.1, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.4);
+    });
+  } catch(e) {}
+}
+
+// ==================== 段位系统（总分7000+王者，每题满分35分） ====================
+// 一轮10题满分350，200题全满分7000分
+const RANKS = [
+  {name:'青铜段位', icon:'🥉', min:0,    max:999,   cls:'rank-bronze'},
+  {name:'白银段位', icon:'🥈', min:1000, max:2499,  cls:'rank-silver'},
+  {name:'黄金段位', icon:'🥇', min:2500, max:4499,  cls:'rank-gold'},
+  {name:'钻石段位', icon:'💎', min:4500, max:6999,  cls:'rank-diamond'},
+  {name:'王者段位', icon:'👑', min:7000, max:99999, cls:'rank-master'},
+];
+
+// ==================== 状态管理 ====================
+const STORAGE_KEY = 'sop_game_data_pinbao';
+const LB_KEY = 'sop_game_leaderboard';
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  showSaveBadge();
+}
+function showSaveBadge() {
+  const b = document.getElementById('saveBadge');
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 1500);
+}
+
+let state = {
+  userName: '',
+  totalScore: 0,
+  totalQuestions: 0,
+  totalCorrect: 0,
+  currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+  wrongBook: [],
+  answeredToday: 0,
+  lastPlayDate: '',
+  quizActive: false,
+  currentLevel: 0,      // 当前关卡ID（0=随机模式）
+  levelCleared: {},     // {1:true, 2:true, ...}
+  levelScores: {},      // {1:245, 2:180, ...}
+};
+
+// ==================== 初始化 ====================
+function init() {
+  const saved = getData();
+  if (saved.userName) {
+    state.userName = saved.userName;
+    state.totalScore = saved.totalScore || 0;
+    state.totalQuestions = saved.totalQuestions || 0;
+    state.totalCorrect = saved.totalCorrect || 0;
+    state.wrongBook = saved.wrongBook || [];
+    state.answeredToday = saved.answeredToday || 0;
+    state.lastPlayDate = saved.lastPlayDate || '';
+    state.levelCleared = saved.levelCleared || {};
+    state.levelScores = saved.levelScores || {};
+
+    // 检查是否新的一天
+    const today = new Date().toDateString();
+    if (state.lastPlayDate !== today) {
+      state.answeredToday = 0;
+      state.lastPlayDate = today;
+    }
+
+    // 恢复未完成的答题
+    if (saved.quizState && saved.quizState.questions && saved.quizState.questions.length > 0) {
+      state.quizActive = true;
+      state.currentRound = saved.quizState;
+    }
+
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+  }
+
+  // 检查是否有未完成的答题 — 弹窗询问，不直接跳入
+  if (state.quizActive && state.currentRound.questions.length > 0) {
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('menuGrid').style.display = 'grid';
+    updateHomeDisplay();
+    updateWrongCount();
+    // 弹窗询问是否继续
+    setTimeout(() => {
+      if (confirm('检测到上次未完成的答题，是否继续？\n（选择"取消"将放弃本轮进度）')) {
+        showPage('pageQuiz');
+        renderQuestion();
+      } else {
+        // 放弃进度
+        state.quizActive = false;
+        state.currentRound = { questions:[], currentIndex:0, score:0, correct:0 };
+        const saved = getData();
+        delete saved.quizState;
+        saveData(saved);
+      }
+    }, 300);
+  }
+}
+
+function startGame() {
+  const nameInput = document.getElementById('userName');
+  const name = nameInput.value.trim();
+  if (!name) { alert('请输入你的姓名'); return; }
+  state.userName = name;
+  state.totalScore = 0;
+  state.totalQuestions = 0;
+  state.totalCorrect = 0;
+  state.wrongBook = [];
+  state.answeredToday = 0;
+  state.lastPlayDate = new Date().toDateString();
+
+  document.getElementById('loginArea').style.display = 'none';
+  document.getElementById('menuGrid').style.display = 'grid';
+  updateHomeDisplay();
+  persistAll();
+  updateLeaderboard();
+}
+
+// ==================== 关卡系统 ====================
+function showLevels() {
+  showPage('pageLevels');
+  renderLevels();
+}
+
+function renderLevels() {
+  const list = document.getElementById('levelList');
+  if (!list) { console.error('levelList not found'); return; }
+  let html = '';
+  LEVELS.forEach(lv => {
+    const cleared = state.levelCleared[lv.id];
+    const score = state.levelScores[lv.id] || 0;
+    const stars = '⭐'.repeat(lv.star);
+    const prevCleared = lv.id === 1 || state.levelCleared[lv.id - 1];
+    const locked = !prevCleared;
+    const qCount = lv.qRange[1] - lv.qRange[0] + 1;
+    const clickHandler = locked ? '' : 'onclick="startLevel(' + lv.id + ')"';
+    const borderColor = cleared ? 'var(--green)' : (locked ? 'var(--border)' : 'var(--gold)');
+    const cursor = locked ? 'not-allowed' : 'pointer';
+    const opacity = locked ? '0.5' : '1';
+    const statusIcon = cleared ? '✅ ' : (locked ? '🔒 ' : '');
+    const bestScore = cleared ? '<div style="font-size:11px;color:var(--green);margin-top:2px;">🏆 最佳成绩：' + score + '分</div>' : '';
+    const lockHint = locked ? '<div style="font-size:11px;color:var(--red);margin-top:2px;">需先通关上一关</div>' : '';
+    const arrow = (!locked && !cleared) ? '<div style="font-size:24px;">▶</div>' : '';
+
+    html += '<div ' + clickHandler + ' style="background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;border:2px solid ' + borderColor + ';cursor:' + cursor + ';opacity:' + opacity + ';">';
+    html += '<div style="display:flex;align-items:center;gap:12px;">';
+    html += '<div style="font-size:32px;">' + lv.icon + '</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:15px;font-weight:bold;">' + statusIcon + lv.name + ' <span style="font-size:11px;color:var(--text3);">' + stars + ' · ' + qCount + '题</span></div>';
+    html += '<div style="font-size:12px;color:var(--text2);">' + lv.desc + '</div>';
+    html += bestScore + lockHint;
+    html += '</div>' + arrow;
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function startLevel(levelId) {
+  state.currentLevel = levelId;
+  const lv = LEVELS.find(l => l.id === levelId);
+  // 从该关卡的题目范围中取全部题目
+  const pool = QUESTION_BANK.filter(q => q.id >= lv.qRange[0] && q.id <= lv.qRange[1]);
+  shuffle(pool);
+  const questions = pool;
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startQuickRound() {
+  state.currentLevel = 0; // 0=随机模式
+  const pool = [...QUESTION_BANK];
+  shuffle(pool);
+  const questions = pool.slice(0, 10);
+
+  state.currentRound = {
+    questions: questions.map(q => ({...q, userAnswer:null, earnedScore:0})),
+    currentIndex: 0,
+    score: 0,
+    correct: 0,
+  };
+  state.quizActive = true;
+
+  showPage('pageQuiz');
+  renderQuestion();
+  persistAll();
+}
+
+function startRound() {
+  // 兼容旧入口，默认快速挑战
+  startQuickRound();
+}
+
+function renderQuestion() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 重置多选状态
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+
+  document.getElementById('qNum').textContent = `第${idx+1}/${round.questions.length}题`;
+  document.getElementById('qScore').textContent = round.score;
+  document.getElementById('quizProgressBar').style.width = `${(idx/round.questions.length)*100}%`;
+  document.getElementById('qType').textContent = q.type + ' · 模块' + getModuleName(q.id);
+  document.getElementById('qText').textContent = q.q;
+
+  const optsList = document.getElementById('optionsList');
+  optsList.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+
+  // 判断是否已答过
+  const answered = q.userAnswer !== null && q.userAnswer !== undefined;
+
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option-item fade-in';
+    if (answered) {
+      li.classList.add('disabled');
+      if (q.type === '多选') {
+        const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+        const userSet = new Set(q.userAnswer);
+        if (correctSet.has(i) && userSet.has(i)) li.classList.add('correct');
+        else if (!correctSet.has(i) && userSet.has(i)) li.classList.add('wrong');
+        else if (correctSet.has(i)) li.classList.add('correct');
+      } else {
+        if (i === q.ans) li.classList.add('correct');
+        if (i === q.userAnswer && i !== q.ans) li.classList.add('wrong');
+      }
+    }
+    li.innerHTML = `<span class="opt-label">${labels[i]}</span>${opt}`;
+    if (!answered) {
+      li.onclick = () => selectAnswer(i);
+    }
+    optsList.appendChild(li);
+  });
+
+  // 如果已答过，显示反馈
+  if (answered) {
+    const fb = document.getElementById('feedback');
+    const earned = q.earnedScore || 0;
+    if (q.type === '多选') {
+      const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+      const userSet = new Set(q.userAnswer);
+      const isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+      fb.className = isCorrect ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = isCorrect ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    } else {
+      fb.className = q.userAnswer === q.ans ? 'feedback correct-fb' : 'feedback wrong-fb';
+      fb.textContent = q.userAnswer === q.ans ? `✅ 回答正确！ +${earned}分` : '❌ 回答错误！ +0分';
+    }
+    fb.innerHTML += `<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">${q.explain}</span>`;
+    document.getElementById('nextBtn').classList.add('show');
+    document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+  } else {
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('nextBtn').classList.remove('show');
+    // 启动倒计时
+    startTimer();
+  }
+}
+
+let multiSelectAnswers = [];
+let timerInterval = null;
+let timerSeconds = 30;
+let questionStartTime = 0; // 答题开始时间戳
+const FULL_SCORE = 35;     // 满分
+const FAST_BONUS = 3;      // 3秒内答对满分
+const SCORE_DECAY = 30;    // 30秒线性衰减到最低分
+const MIN_SCORE = 5;       // 最低得分（避免答对只得1-2分）
+
+function startTimer() {
+  clearTimer();
+  timerSeconds = 30;
+  questionStartTime = Date.now();
+  updateTimerDisplay();
+  const circle = document.getElementById('timerCircle');
+  circle.classList.remove('warning');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 10) {
+      document.getElementById('timerCircle').classList.add('warning');
+    }
+    if (timerSeconds <= 0) {
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function calcScore() {
+  // 计算实际得分：3秒内满分35，之后线性衰减，最低5分
+  const elapsed = (Date.now() - questionStartTime) / 1000;
+  if (elapsed <= FAST_BONUS) return FULL_SCORE;
+  const decay = (elapsed - FAST_BONUS) / (SCORE_DECAY - FAST_BONUS); // 0~1
+  const score = Math.round(FULL_SCORE - decay * (FULL_SCORE - MIN_SCORE));
+  return Math.max(MIN_SCORE, Math.min(FULL_SCORE, score));
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timerText').textContent = timerSeconds;
+}
+
+function clearTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function handleTimeout() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return; // 已答过
+
+  // 超时视为答错
+  q.userAnswer = -1; // 标记为超时
+  checkTimeoutAnswer();
+}
+
+function checkTimeoutAnswer() {
+  playTimeoutSound();
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  // 加入错题本
+  const correctAnswerText = q.type === '多选'
+    ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+    : q.opts[q.ans];
+
+  const exists = state.wrongBook.find(w => w.qid === q.id);
+  if (!exists) {
+    state.wrongBook.push({
+      qid: q.id,
+      question: q.q,
+      correctAnswer: correctAnswerText,
+      userAnswer: '⏰ 超时未答',
+      explain: q.explain,
+      type: q.type,
+      module: getModuleName(q.id),
+    });
+  }
+
+  persistAll();
+  renderQuestion();
+
+  // 显示超时反馈
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback wrong-fb';
+  fb.innerHTML = '⏰ 时间到！<br><span style="font-size:12px;font-weight:normal;color:var(--text2);">正确答案：' + correctAnswerText + ' | ' + q.explain + '</span>';
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtn').textContent = idx < round.questions.length - 1 ? '下一题 ▶' : '查看结果 📊';
+}
+
+function selectAnswer(index) {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+
+  if (q.type === '多选') {
+    // 多选：点击切换选择，显示确认按钮
+    if (!multiSelectAnswers.includes(index)) {
+      multiSelectAnswers.push(index);
+    } else {
+      multiSelectAnswers = multiSelectAnswers.filter(i => i !== index);
+    }
+    // 更新UI高亮
+    const items = document.querySelectorAll('#optionsList .option-item');
+    items.forEach((item, i) => {
+      if (multiSelectAnswers.includes(i)) {
+        item.style.borderColor = 'var(--blue)';
+        item.style.background = 'rgba(52,152,219,0.1)';
+      } else {
+        item.style.borderColor = 'var(--border)';
+        item.style.background = '';
+      }
+    });
+    // 显示/隐藏确认按钮
+    const confirmBtn = document.getElementById('confirmMultiBtn');
+    if (multiSelectAnswers.length > 0) {
+      confirmBtn.style.display = 'block';
+    } else {
+      confirmBtn.style.display = 'none';
+    }
+  } else {
+    // 单选/判断：直接提交
+    q.userAnswer = index;
+    checkAnswer();
+  }
+}
+
+function submitMultiSelect() {
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+  if (q.userAnswer !== null && q.userAnswer !== undefined) return;
+  if (multiSelectAnswers.length === 0) return; // 没选不能提交
+  q.userAnswer = [...multiSelectAnswers];
+  multiSelectAnswers = [];
+  document.getElementById('confirmMultiBtn').style.display = 'none';
+  checkAnswer();
+}
+
+function checkAnswer() {
+  clearTimer(); // 已作答，停止倒计时
+  const round = state.currentRound;
+  const idx = round.currentIndex;
+  const q = round.questions[idx];
+
+  let isCorrect = false;
+  if (q.type === '多选') {
+    const correctSet = new Set(Array.isArray(q.ans) ? q.ans : [q.ans]);
+    const userSet = new Set(q.userAnswer);
+    isCorrect = correctSet.size === userSet.size && [...correctSet].every(v => userSet.has(v));
+  } else {
+    isCorrect = q.userAnswer === q.ans;
+  }
+
+  if (isCorrect) {
+    const earned = calcScore();
+    round.score += earned;
+    round.correct++;
+    q.earnedScore = earned;
+    playCorrectSound();
+  } else {
+    q.earnedScore = 0;
+    playWrongSound();
+    // 加入错题本
+    const correctAnswerText = q.type === '多选'
+      ? (Array.isArray(q.ans) ? q.ans.map(i => q.opts[i]).join('、') : q.opts[q.ans])
+      : q.opts[q.ans];
+    const userAnswerText = q.type === '多选'
+      ? q.userAnswer.map(i => q.opts[i]).join('、')
+      : q.opts[q.userAnswer];
+
+    // 避免重复加入
+    const exists = state.wrongBook.find(w => w.qid === q.id);
+    if (!exists) {
+      state.wrongBook.push({
+        qid: q.id,
+        question: q.q,
+        correctAnswer: correctAnswerText,
+        userAnswer: userAnswerText,
+        explain: q.explain,
+        type: q.type,
+        module: getModuleName(q.id),
+      });
+    }
+  }
+
+  persistAll();
+  renderQuestion();
+}
+
+function nextQuestion() {
+  clearTimer();
+  const round = state.currentRound;
+  round.currentIndex++;
+
+  if (round.currentIndex >= round.questions.length) {
+    finishRound();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishRound() {
+  clearTimer();
+  const round = state.currentRound;
+  state.totalScore += round.score;
+  state.totalQuestions += round.questions.length;
+  state.totalCorrect += round.correct;
+  state.answeredToday += round.questions.length;
+  state.lastPlayDate = new Date().toDateString();
+  state.quizActive = false;
+
+  // 关卡模式：记录关卡成绩
+  const levelId = state.currentLevel;
+  const rate = Math.round((round.correct / round.questions.length) * 100);
+  const passed = rate >= 70;
+
+  if (levelId > 0) {
+    // 更新关卡最佳成绩
+    if (!state.levelScores[levelId] || round.score > state.levelScores[levelId]) {
+      state.levelScores[levelId] = round.score;
+    }
+    // 通关标记
+    if (passed) {
+      state.levelCleared[levelId] = true;
+    }
+  }
+
+  // 清除答题状态
+  const saved = getData();
+  delete saved.quizState;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  }));
+
+  // 检查段位变化
+  const oldRank = getRank(saved.totalScore || 0);
+  const newRank = getRank(state.totalScore);
+
+  // 关卡模式走关卡结算页
+  if (levelId > 0) {
+    showLevelResult(levelId, round, rate, passed, oldRank, newRank);
+  } else {
+    // 快速挑战模式走通用结算页
+    showQuickResult(round, rate, oldRank, newRank);
+  }
+
+  updateLeaderboard();
+  updateWrongCount();
+}
+
+function showQuickResult(round, rate, oldRank, newRank) {
+  document.getElementById('resultScore').textContent = `+${round.score}分`;
+  document.getElementById('rCorrect').textContent = round.correct;
+  document.getElementById('rWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('rRate').textContent = rate + '%';
+
+  if (rate >= 90) {
+    document.getElementById('resultIcon').textContent = '🏆';
+    document.getElementById('resultTitle').textContent = '太厉害了！';
+    document.getElementById('resultDetail').textContent = '你已熟练掌握SOP知识';
+  } else if (rate >= 70) {
+    document.getElementById('resultIcon').textContent = '👍';
+    document.getElementById('resultTitle').textContent = '表现不错！';
+    document.getElementById('resultDetail').textContent = '继续加油，还有提升空间';
+  } else if (rate >= 50) {
+    document.getElementById('resultIcon').textContent = '💪';
+    document.getElementById('resultTitle').textContent = '还需努力！';
+    document.getElementById('resultDetail').textContent = '多看看错题本复习一下吧';
+  } else {
+    document.getElementById('resultIcon').textContent = '📚';
+    document.getElementById('resultTitle').textContent = '加油学习！';
+    document.getElementById('resultDetail').textContent = '建议重新阅读SOP后再来挑战';
+  }
+
+  const rankUpCard = document.getElementById('rankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('rankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageResult');
+}
+
+function showLevelResult(levelId, round, rate, passed, oldRank, newRank) {
+  const lv = LEVELS.find(l => l.id === levelId);
+  document.getElementById('lvResultScore').textContent = `+${round.score}分`;
+  document.getElementById('lvCorrect').textContent = round.correct;
+  document.getElementById('lvWrong').textContent = round.questions.length - round.correct;
+  document.getElementById('lvRate').textContent = rate + '%';
+
+  if (passed) {
+    document.getElementById('lvResultIcon').textContent = '🎉';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」通关！`;
+    document.getElementById('lvResultDetail').textContent = lv.id < 7 ? '下一关已解锁，继续挑战！' : '全部7关通关！你是利乐大师！';
+    playLevelUpSound();
+
+    // 下一关按钮
+    const nextBtn = document.getElementById('lvNextBtn');
+    if (lv.id < 7) {
+      nextBtn.textContent = '▶ 挑战下一关';
+      nextBtn.onclick = () => startLevel(lv.id + 1);
+    } else {
+      nextBtn.textContent = '🏆 全部通关！';
+      nextBtn.onclick = () => goHome();
+    }
+  } else {
+    document.getElementById('lvResultIcon').textContent = '💪';
+    document.getElementById('lvResultTitle').textContent = `「${lv.name}」未通过`;
+    document.getElementById('lvResultDetail').textContent = '正确率需≥70%，再试一次吧！';
+    const nextBtn = document.getElementById('lvNextBtn');
+    nextBtn.textContent = '🔄 重新挑战';
+    nextBtn.onclick = () => startLevel(levelId);
+  }
+
+  // 段位晋升
+  const rankUpCard = document.getElementById('lvRankUpCard');
+  if (oldRank.name !== newRank.name && state.totalScore > 0) {
+    rankUpCard.classList.add('show');
+    document.getElementById('lvRankUpText').textContent = `🎉 恭喜晋升为【${newRank.name}】！`;
+    playRankUpSound();
+  } else {
+    rankUpCard.classList.remove('show');
+  }
+
+  showPage('pageLevelResult');
+}
+
+function retryLevel() {
+  if (state.currentLevel > 0) {
+    startLevel(state.currentLevel);
+  } else {
+    startQuickRound();
+  }
+}
+
+function quitQuiz() {
+  if (confirm('确定退出本轮答题吗？进度将自动保存。')) {
+    clearTimer();
+    // 保存当前进度
+    const saved = getData();
+    saved.quizState = state.currentRound;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({...saved,
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      totalCorrect: state.totalCorrect,
+    }));
+    state.quizActive = true;
+    goHome();
+  }
+}
+
+// ==================== 页面切换 ====================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function goHome() {
+  clearTimer();
+  showPage('pageHome');
+  updateHomeDisplay();
+  updateWrongCount();
+}
+
+function showLeaderboard() {
+  showPage('pageLeaderboard');
+  renderLeaderboard('total');
+}
+
+function showWrongBook() {
+  showPage('pageWrongBook');
+  renderWrongBook();
+}
+
+function showRankInfo() {
+  showPage('pageRankInfo');
+}
+
+// ==================== 首页显示 ====================
+function updateHomeDisplay() {
+  const rd = document.getElementById('rankDisplay');
+  if (state.userName) {
+    rd.classList.add('show');
+    document.getElementById('userName').value = state.userName;
+    const rank = getRank(state.totalScore);
+    document.getElementById('rankIcon').textContent = rank.icon;
+    document.getElementById('rankName').textContent = rank.name;
+    document.getElementById('rankName').className = 'rank-name ' + rank.cls;
+    document.getElementById('totalScore').textContent = state.totalScore;
+    document.getElementById('totalQuestions').textContent = state.totalQuestions;
+    const acc = state.totalQuestions > 0 ? Math.round((state.totalCorrect / state.totalQuestions) * 100) : 0;
+    document.getElementById('accuracy').textContent = acc + '%';
+
+    // 进度条
+    const nextRank = getNextRank(state.totalScore);
+    const progress = nextRank ? ((state.totalScore - rank.min) / (nextRank.min - rank.min)) * 100 : 100;
+    document.getElementById('rankBar').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('rankMin').textContent = rank.min + '分';
+    document.getElementById('rankNext').textContent = nextRank ? `下一段位：${nextRank.min}分` : '已达最高段位！';
+    document.getElementById('rankMax').textContent = nextRank ? nextRank.min + '分' : '∞';
+  }
+}
+
+function updateWrongCount() {
+  const el = document.getElementById('wrongCount');
+  if (el) el.textContent = state.wrongBook.length + '道待复习';
+}
+
+// ==================== 段位计算 ====================
+function getRank(score) {
+  for (let i = RANKS.length - 1; i >= 0; i--) {
+    if (score >= RANKS[i].min) return RANKS[i];
+  }
+  return RANKS[0];
+}
+
+function getNextRank(score) {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (score < RANKS[i].max) return RANKS[i];
+  }
+  return null;
+}
+
+// ==================== 排行榜 ====================
+function updateLeaderboard() {
+  if (!state.userName) return;
+  const lb = getLeaderboard();
+  const existing = lb.find(e => e.name === state.userName);
+  if (existing) {
+    existing.totalScore = Math.max(existing.totalScore, state.totalScore);
+    existing.totalQuestions = state.totalQuestions;
+    existing.rankName = getRank(state.totalScore).name;
+    existing.lastPlay = new Date().toISOString();
+  } else {
+    lb.push({
+      name: state.userName,
+      totalScore: state.totalScore,
+      totalQuestions: state.totalQuestions,
+      rankName: getRank(state.totalScore).name,
+      lastPlay: new Date().toISOString(),
+    });
+  }
+  lb.sort((a, b) => b.totalScore - a.totalScore);
+  localStorage.setItem(LB_KEY, JSON.stringify(lb.slice(0, 50)));
+}
+
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; } catch(e) { return []; }
+}
+
+function renderLeaderboard(type) {
+  const lb = getLeaderboard();
+  let filtered = lb;
+  const now = new Date();
+  if (type === 'today') {
+    const today = now.toDateString();
+    filtered = lb.filter(e => new Date(e.lastPlay).toDateString() === today);
+  } else if (type === 'week') {
+    const weekAgo = new Date(now - 7*24*60*60*1000);
+    filtered = lb.filter(e => new Date(e.lastPlay) >= weekAgo);
+  }
+
+  const list = document.getElementById('lbList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>暂无数据，快来答题吧！</div></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((e, i) => {
+    let rankClass = 'normal';
+    if (i === 0) rankClass = 'top1';
+    else if (i === 1) rankClass = 'top2';
+    else if (i === 2) rankClass = 'top3';
+
+    const isMe = state.userName && e.name === state.userName;
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1);
+
+    return `<li class="leaderboard-item${isMe ? ' me' : ''}">
+      <div class="lb-rank ${rankClass}">${rankIcon}</div>
+      <div class="lb-name">${e.name}<br><span style="font-size:11px;color:var(--text3);">${e.rankName || ''}</span></div>
+      <div class="lb-score">${e.totalScore}分</div>
+    </li>`;
+  }).join('');
+}
+
+function switchLbTab(type) {
+  document.querySelectorAll('#lbTabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLeaderboard(type);
+}
+
+// ==================== 错题本 ====================
+function renderWrongBook() {
+  const list = document.getElementById('wrongList');
+  const empty = document.getElementById('wrongEmpty');
+
+  if (state.wrongBook.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = state.wrongBook.map((w, i) => `
+    <li class="wrong-item">
+      <div class="wq">${i+1}. [${w.type}] ${w.question}</div>
+      <div class="wa">✅ 正确答案：${w.correctAnswer}</div>
+      <div class="wu">❌ 你的答案：${w.userAnswer}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;">💡 ${w.explain}</div>
+    </li>
+  `).join('');
+}
+
+// ==================== 工具函数 ====================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function getModuleName(qid) {
+  if (qid <= 30) return '产品抽检与客诉';
+  if (qid <= 60) return '退货与判定';
+  if (qid <= 90) return '应急与异常';
+  if (qid <= 120) return '追溯与召回';
+  if (qid <= 150) return '不合格控制';
+  if (qid <= 180) return '报废与返工';
+  return '异物防治与综合';
+}
+
+
+function persistAll() {
+  const saved = getData();
+  const data = {
+    ...saved,
+    userName: state.userName,
+    totalScore: state.totalScore,
+    totalQuestions: state.totalQuestions,
+    totalCorrect: state.totalCorrect,
+    wrongBook: state.wrongBook,
+    answeredToday: state.answeredToday,
+    lastPlayDate: state.lastPlayDate,
+    levelCleared: state.levelCleared,
+    levelScores: state.levelScores,
+  };
+  if (state.quizActive) {
+    data.quizState = state.currentRound;
+  } else {
+    delete data.quizState;
+  }
+  saveData(data);
+}
+
+function resetData() {
+  if (confirm('确定要清除所有记录重新开始吗？此操作不可恢复！')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {
+      userName: '',
+      totalScore: 0,
+      totalQuestions: 0,
+      totalCorrect: 0,
+      currentRound: { questions:[], currentIndex:0, score:0, correct:0 },
+      wrongBook: [],
+      answeredToday: 0,
+      lastPlayDate: '',
+      quizActive: false,
+    };
+    document.getElementById('loginArea').style.display = 'block';
+    document.getElementById('menuGrid').style.display = 'none';
+    document.getElementById('rankDisplay').classList.remove('show');
+    document.getElementById('userName').value = '';
+  }
+}
+
+// ==================== 启动 ====================
+init();
+</script>
+</body>
+</html>
