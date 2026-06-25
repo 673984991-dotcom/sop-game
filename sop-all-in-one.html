@@ -3736,12 +3736,13 @@ function renderJobList() {
   const list = document.getElementById('jobList');
   list.innerHTML = GAMES_META.map((g, i) => {
     const qCount = ALL_QUESTION_BANKS[i] ? ALL_QUESTION_BANKS[i].length : 0;
-    return '<div class="game-card" onclick="selectJob(' + i + ')">' +
+    return '<div class="game-card" data-job="' + i + '">' +
       '<div class="icon">' + g.icon + '</div>' +
       '<div class="info"><div class="name">' + g.name + '</div><div class="desc">' + g.desc + ' · ' + qCount + '题</div></div>' +
       '<span class="arrow">▶</span></div>';
   }).join('');
   document.getElementById('totalJobs').textContent = GAMES_META.length;
+  setTimeout(fixTouch, 30);
 }
 
 function selectJob(idx) {
@@ -3872,7 +3873,7 @@ function renderLevels() {
     const prevCleared = lv.id === 1 || state.levelCleared[lv.id - 1];
     const locked = !prevCleared;
     const qCount = lv.qRange[1] - lv.qRange[0] + 1;
-    const clickHandler = locked ? '' : 'onclick="startLevel(' + lv.id + ')"';
+    const clickHandler = locked ? '' : 'data-level="' + lv.id + '"';
     const borderColor = cleared ? 'var(--green)' : (locked ? 'var(--border)' : 'var(--gold)');
     const cursor = locked ? 'not-allowed' : 'pointer';
     const opacity = locked ? '0.5' : '1';
@@ -3891,6 +3892,8 @@ function renderLevels() {
     html += '</div></div>';
   });
   list.innerHTML = html;
+  // 手机端：重新绑定关卡按钮触摸事件
+  setTimeout(fixTouch, 30);
 }
 
 function startLevel(levelId) {
@@ -3994,6 +3997,8 @@ function renderQuestion() {
     document.getElementById('nextBtn').classList.remove('show');
     startTimer();
   }
+  // 手机端：每次渲染题目后重新绑定选项触摸事件
+  setTimeout(fixTouch, 30);
 }
 
 function startTimer() {
@@ -4240,6 +4245,8 @@ function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   window.scrollTo(0, 0);
+  // 手机端修复：重新绑定所有 onclick 属性为 touch+click 双事件
+  setTimeout(fixTouch, 50);
 }
 
 function goHome() {
@@ -4446,6 +4453,76 @@ function playRankUpSound() {
   } catch(e) {}
 }
 
+// ==================== 手机端触摸修复 ====================
+// 解决手机浏览器 touchend 不触发动态元素 click 的问题
+// 使用事件委托 + touchend/click 双事件
+function fixTouch() {
+  // 1. 关卡按钮：通过 data-level 属性识别
+  document.querySelectorAll('#levelList [data-level]').forEach(el => {
+    if (el._touchFixed) return;
+    el._touchFixed = true;
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault(); e.stopPropagation();
+      const levelId = parseInt(this.getAttribute('data-level'));
+      if (!isNaN(levelId)) startLevel(levelId);
+    }, { passive: false });
+    // click 作为后备
+    el.addEventListener('click', function(e) {
+      const levelId = parseInt(this.getAttribute('data-level'));
+      if (!isNaN(levelId)) startLevel(levelId);
+    });
+  });
+
+  // 2. 岗位卡片：通过 data-job 属性识别
+  document.querySelectorAll('.game-card[data-job]').forEach(el => {
+    if (el._touchFixed2) return;
+    el._touchFixed2 = true;
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault(); e.stopPropagation();
+      const jobIdx = parseInt(this.getAttribute('data-job'));
+      if (!isNaN(jobIdx)) selectJob(jobIdx);
+    }, { passive: false });
+    el.addEventListener('click', function(e) {
+      const jobIdx = parseInt(this.getAttribute('data-job'));
+      if (!isNaN(jobIdx)) selectJob(jobIdx);
+    });
+  });
+
+  // 3. 静态 onclick 属性元素（菜单项、按钮等）
+  // 这些在 PC 端正常，手机端 touchend 可能不触发 onclick 属性
+  // 对这些元素也加上 touchend 转发
+  document.querySelectorAll('[onclick]').forEach(el => {
+    if (el._touchFixed3) return;
+    el._touchFixed3 = true;
+    const handlerStr = el.getAttribute('onclick');
+    if (!handlerStr) return;
+    el.removeAttribute('onclick'); // 避免重复执行
+    const doAction = function(e) {
+      try { new Function(handlerStr)(); } catch(err) { console.error('fixTouch:', err); }
+    };
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault(); e.stopPropagation();
+      doAction(e);
+    }, { passive: false });
+    el.addEventListener('click', function(e) { doAction(e); });
+  });
+
+  // 4. 答题选项 li（renderQuestion 动态生成，用 .opt-item 类识别）
+  document.querySelectorAll('#optsList li:not([data-touch-fixed])').forEach(li => {
+    li.setAttribute('data-touch-fixed', '1');
+    const origHandler = li.onclick;
+    if (origHandler) {
+      li.onclick = null; // 清除原来的 onclick
+      li.addEventListener('touchend', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        origHandler.call(this, e);
+      }, { passive: false });
+      li.addEventListener('click', function(e) {
+        origHandler.call(this, e);
+      });
+    }
+  });
+}
 // ==================== 启动 ====================
 renderJobList();
 </script>
